@@ -410,25 +410,54 @@ input[type="range"]::-webkit-slider-thumb {
   font-weight: 700; margin-left: 6px; vertical-align: middle;
 }
 
-/* ===================== ОТЗЫВЫ ===================== */
+/* ===================== ОТЗЫВЫ (2 колонки) ===================== */
+.reviews-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .reviews-two-col { grid-template-columns: 1fr; }
+}
 .reviews-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 640px) { .reviews-controls { grid-template-columns: 1fr; } }
-.reviews-output { margin-top: 22px; display: flex; flex-direction: column; gap: 14px; }
+.reviews-output { display: flex; flex-direction: column; gap: 12px; }
 .review-card {
   background: var(--surface-2); border: 1px solid var(--border);
-  border-radius: 16px; padding: 18px; transition: all .2s;
+  border-radius: 16px; padding: 16px; transition: all .2s;
   animation: fadeIn .4s ease;
 }
 .review-card:hover { border-color: var(--accent); }
-.review-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.review-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .review-avatar {
-  width: 42px; height: 42px; border-radius: 50%;
+  width: 40px; height: 40px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.2rem; font-weight: 700; color: #fff; flex-shrink: 0;
+  font-size: 1.1rem; font-weight: 700; color: #fff; flex-shrink: 0;
 }
-.review-name { font-weight: 700; }
-.review-stars { color: #f0b45a; font-size: .9rem; }
-.review-text { font-size: .94rem; color: var(--text-soft); }
+.review-name { font-weight: 700; font-size: .95rem; }
+.review-stars { color: #f0b45a; font-size: .85rem; }
+.review-text { font-size: .92rem; color: var(--text-soft); line-height: 1.5; }
+
+.prompt-output {
+  background: var(--bg-soft); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px;
+  font-family: 'Courier New', monospace; font-size: .88rem;
+  white-space: pre-wrap; word-break: break-word;
+  min-height: 100px; color: var(--text); line-height: 1.5;
+}
+.prompt-output.empty {
+  color: var(--text-soft); font-family: inherit; font-style: italic;
+  display: flex; align-items: center; justify-content: center;
+}
+.prompt-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
+.copy-toast {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--ok); color: #fff; padding: 4px 12px;
+  border-radius: 999px; font-size: .75rem; font-weight: 700;
+  opacity: 0; transition: opacity .3s;
+}
+.copy-toast.show { opacity: 1; }
 
 /* ===================== ФРИЛАНС ===================== */
 .link-block { margin-bottom: 26px; }
@@ -651,7 +680,7 @@ input[type="range"]::-webkit-slider-thumb {
     <a href="#" data-page="calculator"><span class="nav-icon">🧮</span> Калькулятор</a>
     <a href="#" data-page="weather"><span class="nav-icon">🌤</span> Погода</a>
     <a href="#" data-page="news"><span class="nav-icon">📰</span> Новости</a>
-    <a href="#" data-page="reviews"><span class="nav-icon">💬</span> Генератор отзывов</a>
+    <a href="#" data-page="reviews"><span class="nav-icon">💬</span> Отзывы</a>
     <a href="#" data-page="freelance"><span class="nav-icon">💼</span> Фриланс-биржи</a>
     <a href="#" data-page="games"><span class="nav-icon">🎮</span> Игры</a>
   </nav>
@@ -699,11 +728,11 @@ input[type="range"]::-webkit-slider-thumb {
       </div>
       <div class="preview-card" onclick="showPage('news')">
         <div class="pc-icon">📰</div><h3>Новости</h3>
-        <p>Свежие новости из Lenta, ТАСС, РИА.</p>
+        <p>Свежие новости с Lenta.ru.</p>
       </div>
       <div class="preview-card" onclick="showPage('reviews')">
-        <div class="pc-icon">💬</div><h3>Генератор отзывов</h3>
-        <p>Правдоподобные отзывы от нейросети.</p>
+        <div class="pc-icon">💬</div><h3>Отзывы</h3>
+        <p>Мысли → промт → отзывы. Всё в одном окне.</p>
       </div>
       <div class="preview-card" onclick="showPage('freelance')">
         <div class="pc-icon">💼</div><h3>Фриланс-биржи</h3>
@@ -834,53 +863,70 @@ input[type="range"]::-webkit-slider-thumb {
     </div>
   </section>
 
-  <!-- ===== НОВОСТИ (без РБК) ===== -->
+  <!-- ===== НОВОСТИ (только Lenta.ru) ===== -->
   <section class="page" id="page-news">
     <h2 class="section-title">📰 Новости</h2>
-    <p class="section-sub">Свежие новости из открытых RSS-лент: <b>Lenta.ru</b>, <b>ТАСС</b>, <b>РИА Новости</b>. Кнопка «Обновить» подгружает новые материалы.</p>
+    <p class="section-sub">Свежие новости с <b>Lenta.ru</b>. Кнопка «Обновить» подгружает новые материалы.</p>
 
     <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
       <button class="btn" id="newsReload">🔄 Обновить</button>
-      <a class="btn secondary" id="newsOpenSite" href="https://lenta.ru" target="_blank" rel="noopener">Открыть сайт →</a>
-    </div>
-
-    <div class="weather-tabs" id="newsSources" style="margin-bottom:16px;">
-      <button class="wtab active" data-src="lenta">Lenta.ru</button>
-      <button class="wtab" data-src="tass">ТАСС</button>
-      <button class="wtab" data-src="ria">РИА Новости</button>
+      <a class="btn secondary" id="newsOpenSite" href="https://lenta.ru" target="_blank" rel="noopener">Открыть Lenta.ru →</a>
     </div>
 
     <p id="newsStatus" style="font-size:.85rem;color:var(--text-soft);margin-bottom:14px;"></p>
     <div id="newsList" class="news-list"></div>
   </section>
 
-  <!-- ===== ОТЗЫВЫ ===== -->
+  <!-- ===== ОТЗЫВЫ (2 колонки) ===== -->
   <section class="page" id="page-reviews">
-    <h2 class="section-title">💬 Генератор отзывов</h2>
-    <p class="section-sub">Отзывы генерирует бесплатная нейросеть (Pollinations.AI, без ключа). Запрос уходит с твоими параметрами, ответ сразу выводится здесь.</p>
-    <div class="card">
-      <div class="reviews-controls">
-        <div>
-          <label>Пол автора</label>
-          <select id="reviewGender">
-            <option value="male">Мужской</option>
-            <option value="female">Женский</option>
-            <option value="any" selected>Любой</option>
-          </select>
+    <h2 class="section-title">💬 Отзывы: промт + генерация</h2>
+    <p class="section-sub">Справа введи свои мысли — получишь готовый промт. Скопируй его в левую колонку и нажми «Сгенерировать» — нейросеть выдаст отзывы.</p>
+
+    <div class="reviews-two-col">
+      <!-- ЛЕВАЯ: промт → отзывы -->
+      <div class="card">
+        <h3 style="margin-bottom:12px;">⬅️ Промт → Отзывы</h3>
+        <div class="form-row">
+          <label>Вставь промт (или напиши свой)</label>
+          <textarea id="reviewsPromptInput" rows="6" placeholder="Вставь сюда промт из правой колонки или напиши свой..."></textarea>
         </div>
-        <div>
-          <label>Количество отзывов (1–25)</label>
-          <input type="number" id="reviewCount" min="1" max="25" value="5">
+        <button class="btn" id="reviewsGenerateBtn" style="width:100%;">✨ Сгенерировать отзывы</button>
+        <p id="reviewsStatus" style="margin-top:10px;font-size:.85rem;color:var(--text-soft);text-align:center;"></p>
+        <div class="reviews-output" id="reviewsOutput" style="margin-top:16px;"></div>
+      </div>
+
+      <!-- ПРАВАЯ: мысли → промт -->
+      <div class="card">
+        <h3 style="margin-bottom:12px;">➡️ Мысли → Промт</h3>
+        <div class="reviews-controls">
+          <div>
+            <label>Пол автора отзывов</label>
+            <select id="reviewGender">
+              <option value="male">Мужской</option>
+              <option value="female">Женский</option>
+              <option value="any" selected>Любой</option>
+            </select>
+          </div>
+          <div>
+            <label>Сколько отзывов</label>
+            <input type="number" id="reviewCount" min="1" max="50" value="10">
+          </div>
+        </div>
+        <div class="form-row" style="margin-top:12px;">
+          <label>Твои мысли / слова / детали</label>
+          <textarea id="reviewCriteria" rows="4" placeholder="Например: писал курсовую, автор помог быстро, отвечал вежливо, сдал на 5, немного задержал, но предупредил. Дороговато, но качественно."></textarea>
+        </div>
+        <button class="btn secondary" id="promptMakeBtn" style="width:100%;">🪄 Сделать промт</button>
+        <p id="promptStatus" style="margin-top:10px;font-size:.85rem;color:var(--text-soft);text-align:center;"></p>
+
+        <div class="prompt-output empty" id="promptOutput" style="margin-top:12px;">Здесь появится готовый промт</div>
+        <div class="prompt-actions">
+          <button class="btn small" id="promptCopy" disabled>📋 Скопировать</button>
+          <button class="btn small secondary" id="promptToLeft" disabled>➡️ Вставить в левую колонку</button>
+          <span class="copy-toast" id="copyToast">✓ Скопировано</span>
         </div>
       </div>
-      <div class="form-row" style="margin-top:12px;">
-        <label>О чём отзыв, стиль, детали</label>
-        <textarea id="reviewCriteria" rows="3" placeholder="Например: качественная работа, быстро, вежливо, рекомендую"></textarea>
-      </div>
-      <button class="btn" id="reviewGenerate" style="width:100%;">✨ Сгенерировать отзывы</button>
-      <p id="reviewStatus" style="margin-top:10px;font-size:.85rem;color:var(--text-soft);text-align:center;"></p>
     </div>
-    <div class="reviews-output" id="reviewsOutput"></div>
   </section>
 
   <!-- ===== ФРИЛАНС ===== -->
@@ -1167,7 +1213,7 @@ window.showPage = function (name) {
   $$('.sidebar-nav a').forEach(a => a.classList.toggle('active', a.dataset.page === name));
   closeSidebar();
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  if (name === 'news') loadNews(currentNewsSource);
+  if (name === 'news') loadNews();
 };
 $$('.sidebar-nav a').forEach(a => {
   a.addEventListener('click', e => { e.preventDefault(); showPage(a.dataset.page); });
@@ -1515,38 +1561,64 @@ $$('.wtab[data-wtab]').forEach(tab => {
 });
 loadWeather();
 
-/* ===================== НОВОСТИ (без РБК) ===================== */
-const NEWS_SOURCES = {
-  lenta: {
-    name: 'Lenta.ru',
-    site: 'https://lenta.ru',
-    feeds: ['https://lenta.ru/rss/news']
-  },
-  tass: {
-    name: 'ТАСС',
-    site: 'https://tass.ru',
-    feeds: ['https://tass.ru/rss/v2.xml']
-  },
-  ria: {
-    name: 'РИА Новости',
-    site: 'https://ria.ru',
-    feeds: ['https://ria.ru/export/rss2/archive/index.xml']
-  }
-};
+/* ===================== НОВОСТИ (только Lenta.ru) ===================== */
+const LENTA_FEEDS = [
+  'https://lenta.ru/rss/news',
+  'https://lenta.ru/rss/articles',
+  'https://lenta.ru/rss/top7'
+];
 
-let currentNewsSource = 'lenta';
-let newsFeedIndexBySource = {};
+const NEWS_PROXIES = [
+  async (rssUrl) => {
+    const url = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rssUrl) + '&count=30';
+    const r = await fetch(url, { cache: 'no-store' });
+    if (!r.ok) throw new Error('rss2json HTTP ' + r.status);
+    const data = await r.json();
+    if (data.status !== 'ok' || !Array.isArray(data.items)) throw new Error('rss2json bad');
+    return data.items.map(it => ({
+      title: it.title, link: it.link,
+      description: it.description || it.content || '',
+      pubDate: it.pubDate
+    }));
+  },
+  async (rssUrl) => {
+    const url = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(rssUrl);
+    const r = await fetch(url, { cache: 'no-store' });
+    if (!r.ok) throw new Error('allorigins HTTP ' + r.status);
+    return parseRSSXml(await r.text());
+  },
+  async (rssUrl) => {
+    const url = 'https://api.allorigins.win/get?url=' + encodeURIComponent(rssUrl);
+    const r = await fetch(url, { cache: 'no-store' });
+    if (!r.ok) throw new Error('allorigins-get HTTP ' + r.status);
+    const data = await r.json();
+    if (!data.contents) throw new Error('allorigins-get empty');
+    return parseRSSXml(data.contents);
+  },
+  async (rssUrl) => {
+    const url = 'https://corsproxy.io/?url=' + encodeURIComponent(rssUrl);
+    const r = await fetch(url, { cache: 'no-store' });
+    if (!r.ok) throw new Error('corsproxy HTTP ' + r.status);
+    return parseRSSXml(await r.text());
+  }
+];
+
+let lentaFeedIndex = 0;
+let newsProxyIndex = 0;
 let seenNewsLinks = new Set();
 
-async function fetchNewsJson(rssUrl) {
-  const url = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rssUrl) + '&count=30';
-  const r = await fetch(url, { cache: 'no-store' });
-  if (!r.ok) throw new Error('HTTP ' + r.status);
-  const data = await r.json();
-  if (data.status !== 'ok' || !Array.isArray(data.items)) {
-    throw new Error(data.message || 'bad response');
-  }
-  return data;
+function parseRSSXml(xmlText) {
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xmlText, 'text/xml');
+    if (doc.querySelector('parsererror')) return [];
+    return [...doc.querySelectorAll('item')].slice(0, 30).map(item => ({
+      title: item.querySelector('title')?.textContent || '',
+      link: item.querySelector('link')?.textContent || '',
+      description: item.querySelector('description')?.textContent || '',
+      pubDate: item.querySelector('pubDate')?.textContent || ''
+    }));
+  } catch { return []; }
 }
 function stripHtml(s) {
   return String(s || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
@@ -1557,57 +1629,49 @@ function formatNewsDate(pubDate) {
   if (isNaN(d)) return '';
   return d.toLocaleString('ru-RU', { day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit' });
 }
+async function fetchLentaWithFallback(rssUrl) {
+  let lastError = null;
+  for (let i = 0; i < NEWS_PROXIES.length; i++) {
+    const idx = (newsProxyIndex + i) % NEWS_PROXIES.length;
+    try {
+      const items = await NEWS_PROXIES[idx](rssUrl);
+      if (items && items.length) { newsProxyIndex = idx; return items; }
+      throw new Error('empty');
+    } catch (e) { lastError = e; }
+  }
+  throw lastError || new Error('all proxies failed');
+}
 
-async function loadNews(sourceKey) {
-  if (sourceKey) currentNewsSource = sourceKey;
-  const src = NEWS_SOURCES[currentNewsSource];
+async function loadNews() {
   const status = $('#newsStatus');
   const list = $('#newsList');
-  const openBtn = $('#newsOpenSite');
 
-  if (openBtn) {
-    openBtn.href = src.site;
-    openBtn.textContent = `Открыть ${src.name} →`;
-  }
-
-  $$('#newsSources .wtab').forEach(t => {
-    t.classList.toggle('active', t.dataset.src === currentNewsSource);
-  });
-
-  status.textContent = `Загружаем новости (${src.name})...`;
+  status.textContent = 'Загружаем новости с Lenta.ru...';
   list.innerHTML = '<div class="card"><p style="color:var(--text-soft);">⏳ Загрузка...</p></div>';
-
-  if (newsFeedIndexBySource[currentNewsSource] === undefined) {
-    newsFeedIndexBySource[currentNewsSource] = 0;
-  }
 
   let items = [];
   let lastError = null;
-  const feeds = src.feeds;
 
-  for (let attempt = 0; attempt < feeds.length; attempt++) {
-    const idx = (newsFeedIndexBySource[currentNewsSource] + attempt) % feeds.length;
+  // Пробуем фиды по кругу (каждый «Обновить» берёт следующий)
+  for (let attempt = 0; attempt < LENTA_FEEDS.length; attempt++) {
+    const idx = (lentaFeedIndex + attempt) % LENTA_FEEDS.length;
     try {
-      const data = await fetchNewsJson(feeds[idx]);
-      if (data.items && data.items.length) {
-        items = data.items;
-        newsFeedIndexBySource[currentNewsSource] = (idx + 1) % feeds.length;
+      const fetched = await fetchLentaWithFallback(LENTA_FEEDS[idx]);
+      if (fetched && fetched.length) {
+        items = fetched;
+        lentaFeedIndex = (idx + 1) % LENTA_FEEDS.length;
         break;
       }
-    } catch (e) {
-      lastError = e;
-    }
+    } catch (e) { lastError = e; }
   }
 
   if (!items.length) {
-    status.textContent = `Не удалось загрузить ${src.name} (${lastError ? lastError.message : 'нет данных'}).`;
+    status.textContent = `Не удалось загрузить Lenta.ru (${lastError ? lastError.message : 'нет данных'}).`;
     list.innerHTML = `
       <div class="news-item" style="text-align:center;padding:28px;">
-        <div class="news-title">⚠️ ${src.name}: новости временно недоступны</div>
-        <div class="news-desc" style="margin:8px 0 14px;">
-          Попробуй «Обновить» ещё раз или открой сайт напрямую.
-        </div>
-        <a class="btn" href="${src.site}" target="_blank" rel="noopener">Открыть ${src.name} →</a>
+        <div class="news-title">⚠️ Lenta.ru: новости временно недоступны</div>
+        <div class="news-desc" style="margin:8px 0 14px;">Попробуй «Обновить» ещё раз или открой сайт напрямую.</div>
+        <a class="btn" href="https://lenta.ru" target="_blank" rel="noopener">Открыть Lenta.ru →</a>
       </div>`;
     return;
   }
@@ -1618,23 +1682,21 @@ async function loadNews(sourceKey) {
     const link = item.link || '';
     const entry = {
       title: stripHtml(item.title),
-      desc: stripHtml(item.description || item.content || '').slice(0, 220),
-      link: link || src.site,
+      desc: stripHtml(item.description || '').slice(0, 220),
+      link: link || 'https://lenta.ru',
       dateStr: formatNewsDate(item.pubDate)
     };
+    if (!entry.title) return;
     if (link && seenNewsLinks.has(link)) old.push(entry);
     else fresh.push(entry);
     if (link) seenNewsLinks.add(link);
   });
-
-  if (seenNewsLinks.size > 400) {
-    seenNewsLinks = new Set([...seenNewsLinks].slice(-200));
-  }
+  if (seenNewsLinks.size > 400) seenNewsLinks = new Set([...seenNewsLinks].slice(-200));
 
   const show = [...fresh, ...old].slice(0, 20);
   status.textContent = fresh.length
-    ? `Источник: ${src.name} · свежих: ${fresh.length} · всего показано: ${show.length}`
-    : `Источник: ${src.name} · новых нет, показываем последние ${show.length}`;
+    ? `Источник: Lenta.ru · свежих: ${fresh.length} · всего: ${show.length}`
+    : `Источник: Lenta.ru · новых нет, показываем последние ${show.length}`;
 
   list.innerHTML = '';
   show.forEach((n, i) => {
@@ -1648,29 +1710,120 @@ async function loadNews(sourceKey) {
       ${n.dateStr ? `<div class="news-date">🕒 ${escapeHtml(n.dateStr)}</div>` : ''}
       <div class="news-title">${escapeHtml(n.title)}${isFresh ? '<span class="news-fresh-badge">новое</span>' : ''}</div>
       ${n.desc ? `<div class="news-desc">${escapeHtml(n.desc)}${n.desc.length >= 220 ? '…' : ''}</div>` : ''}
-      <div class="news-source">Источник: ${escapeHtml(src.name)} →</div>
+      <div class="news-source">Источник: Lenta.ru →</div>
     `;
     list.appendChild(a);
   });
 }
-$$('#newsSources .wtab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    loadNews(tab.dataset.src);
-  });
-});
-$('#newsReload').addEventListener('click', () => loadNews(currentNewsSource));
+$('#newsReload').addEventListener('click', loadNews);
 
-/* ===================== ОТЗЫВЫ ===================== */
-const maleNames = ['Александр','Дмитрий','Сергей','Андрей','Максим','Иван','Артём','Никита','Михаил','Руслан'];
-const femaleNames = ['Анна','Мария','Екатерина','Ольга','Наталья','Ирина','Светлана','Юлия','Дарья','Алина'];
-const starsOptions = ['★★★★★','★★★★★','★★★★★','★★★★☆','★★★★☆'];
-
+/* ===================== ОТЗЫВЫ: 2 колонки ===================== */
 async function askLLM(prompt) {
   const url = 'https://text.pollinations.ai/' + encodeURIComponent(prompt);
   const r = await fetch(url);
   if (!r.ok) throw new Error('HTTP ' + r.status);
   return (await r.text()).trim();
 }
+
+const maleNames = ['Александр','Дмитрий','Сергей','Андрей','Максим','Иван','Артём','Никита','Михаил','Руслан','Владимир','Павел'];
+const femaleNames = ['Анна','Мария','Екатерина','Ольга','Наталья','Ирина','Светлана','Юлия','Дарья','Алина','Татьяна','Елена'];
+const starsOptions = ['★★★★★','★★★★★','★★★★★','★★★★☆','★★★★☆'];
+
+let lastPrompt = '';
+
+/* --- ПРАВАЯ КОЛОНКА: мысли → промт --- */
+$('#promptMakeBtn').addEventListener('click', async () => {
+  const gender = $('#reviewGender').value;
+  let count = parseInt($('#reviewCount').value, 10);
+  if (isNaN(count) || count < 1) count = 1;
+  if (count > 50) count = 50;
+  const criteria = $('#reviewCriteria').value.trim();
+
+  if (!criteria || criteria.length < 5) {
+    toast('Введи хотя бы пару слов о чём нужен отзыв');
+    return;
+  }
+
+  const genderRu = gender === 'male' ? 'мужского' : gender === 'female' ? 'женского' : 'любого';
+  const btn = $('#promptMakeBtn');
+  const status = $('#promptStatus');
+  const output = $('#promptOutput');
+  const copyBtn = $('#promptCopy');
+  const leftBtn = $('#promptToLeft');
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Нейросеть думает...';
+  status.textContent = 'Превращаем мысли в качественный промт...';
+  output.classList.remove('empty');
+  output.textContent = '⏳ Генерируем...';
+  copyBtn.disabled = true;
+  leftBtn.disabled = true;
+
+  const metaPrompt =
+    `Ты — профессиональный prompt-инженер. Пользователь хочет получить промт для генерации отзывов. ` +
+    `Его мысли/детали: "${criteria}". ` +
+    `Нужно: ${count} отзывов. Пол авторов: ${genderRu}.\n\n` +
+    `Составь ОДИН качественный промт на русском языке, который пользователь скопирует и вставит в ChatGPT/Claude, чтобы получить реалистичные отзывы.\n\n` +
+    `Промт должен содержать:\n` +
+    `1. Роль ("Ты — реальный клиент, недавно заказывал услугу/товар").\n` +
+    `2. Конкретные детали из мыслей пользователя (что хвалить, что упомянуть).\n` +
+    `3. Требования: ${count} разных отзывов, живой язык, естественные вариации длины, без markdown, каждый с новой строки, без нумерации.\n` +
+    `4. Ограничения: без штампов, без повторов, звучит как реальные люди.\n\n` +
+    `Выведи ТОЛЬКО готовый промт без пояснений и без markdown.`;
+
+  try {
+    const raw = await askLLM(metaPrompt);
+    lastPrompt = raw.trim();
+    output.textContent = lastPrompt;
+    copyBtn.disabled = false;
+    leftBtn.disabled = false;
+    status.textContent = '✓ Промт готов! Скопируй его или вставь в левую колонку.';
+  } catch (e) {
+    lastPrompt =
+      `Ты — реальный клиент, который недавно заказывал услугу/товар. ` +
+      `Напиши ${count} разных правдоподобных отзывов (пол автора: ${genderRu}) о работе исполнителя.\n\n` +
+      `Детали: ${criteria}\n\n` +
+      `Требования:\n— каждый отзыв 1–3 предложения, живой язык;\n— вариации длины и эмоций;\n` +
+      `— в основном положительные, но правдоподобно;\n— каждый с новой строки, без нумерации, без markdown;\n— без повторов.\n\n` +
+      `Выведи только сами отзывы, без пояснений.`;
+    output.textContent = lastPrompt;
+    copyBtn.disabled = false;
+    leftBtn.disabled = false;
+    status.textContent = `Нейросеть недоступна (${e.message}). Промт собран вручную.`;
+  }
+
+  btn.disabled = false;
+  btn.textContent = '🪄 Сделать промт';
+});
+
+/* Копировать */
+$('#promptCopy').addEventListener('click', async () => {
+  if (!lastPrompt) return;
+  try {
+    await navigator.clipboard.writeText(lastPrompt);
+    const t = $('#copyToast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 1800);
+    toast('Промт скопирован');
+  } catch {
+    const ta = document.createElement('textarea');
+    ta.value = lastPrompt;
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); toast('Промт скопирован'); } catch { toast('Не удалось скопировать'); }
+    document.body.removeChild(ta);
+  }
+});
+
+/* Вставить в левую колонку */
+$('#promptToLeft').addEventListener('click', () => {
+  if (!lastPrompt) return;
+  $('#reviewsPromptInput').value = lastPrompt;
+  toast('Промт вставлен в левую колонку');
+  $('#reviewsPromptInput').focus();
+});
+
+/* --- ЛЕВАЯ КОЛОНКА: промт → отзывы --- */
 function renderReviewCards(items) {
   const out = $('#reviewsOutput');
   out.innerHTML = '';
@@ -1689,44 +1842,42 @@ function renderReviewCards(items) {
     out.appendChild(card);
   });
 }
-$('#reviewGenerate').addEventListener('click', async () => {
-  const gender = $('#reviewGender').value;
-  let count = parseInt($('#reviewCount').value, 10);
-  if (isNaN(count) || count < 1) count = 1;
-  if (count > 25) count = 25;
-  const criteria = $('#reviewCriteria').value.trim() || 'качественная работа, быстро, вежливо, рекомендую';
-  const genderRu = gender === 'male' ? 'мужской' : gender === 'female' ? 'женский' : 'любой';
 
-  const btn = $('#reviewGenerate');
-  const status = $('#reviewStatus');
+$('#reviewsGenerateBtn').addEventListener('click', async () => {
+  const prompt = $('#reviewsPromptInput').value.trim();
+  const status = $('#reviewsStatus');
+  const btn = $('#reviewsGenerateBtn');
+
+  if (!prompt || prompt.length < 10) {
+    toast('Вставь промт в левую колонку');
+    return;
+  }
+
   btn.disabled = true;
-  btn.textContent = '⏳ Нейросеть пишет...';
-  status.textContent = 'Отправляем запрос в бесплатную нейросеть (Pollinations.AI)...';
-
-  const prompt =
-    `Сгенерируй ${count} разных правдоподобных отзыва клиента об исполнителе на фрилансе. ` +
-    `Пол автора отзыва: ${genderRu}. Тема/детали: ${criteria}. ` +
-    `Требования: каждый отзыв 1–2 предложения, живой человеческий язык, без markdown, без нумерации, ` +
-    `каждый отзыв начинается с новой строки. Только текст отзывов.`;
+  btn.textContent = '⏳ Нейросеть пишет отзывы...';
+  status.textContent = 'Отправляем промт в нейросеть...';
+  $('#reviewsOutput').innerHTML = '';
 
   let items = [];
   try {
     const raw = await askLLM(prompt);
     const lines = raw.split('\n')
-      .map(l => l.replace(/^[\d\.\-\)\*\s]+/, '').trim())
+      .map(l => l.replace(/^[\d\.\-\)\*\s"«»]+/, '').trim())
       .filter(l => l.length > 15);
+
     if (!lines.length) throw new Error('empty');
-    const need = Math.min(count, lines.length);
-    for (let i = 0; i < need; i++) {
-      const isMale = gender === 'male' || (gender === 'any' && Math.random() > 0.5);
+
+    lines.slice(0, 30).forEach(text => {
+      const isMale = Math.random() > 0.5;
       items.push({
         name: isMale ? pick(maleNames) : pick(femaleNames),
-        text: lines[i],
+        text,
         color: `hsl(${Math.floor(Math.random()*360)}, 55%, 62%)`,
         stars: pick(starsOptions)
       });
-    }
-    status.textContent = `Готово! Отзывов от нейросети: ${items.length}`;
+    });
+
+    status.textContent = `✓ Отзывов готово: ${items.length}`;
   } catch (e) {
     const templates = [
       'Отличная работа! Всё сделано быстро и качественно. Рекомендую.',
@@ -1736,20 +1887,18 @@ $('#reviewGenerate').addEventListener('click', async () => {
       'Хороший специалист, всегда на связи, отвечает быстро. Результатом доволен.',
       'Сделано даже лучше, чем ожидал! Пунктуально и профессионально.'
     ];
-    for (let i = 0; i < count; i++) {
-      const isMale = gender === 'male' || (gender === 'any' && Math.random() > 0.5);
-      let text = pick(templates);
-      if (!isMale) text = text.replace(/доволен/g, 'довольна').replace(/ожидал/g, 'ожидала');
-      if (criteria) text += ` Понравилось: ${criteria.split(/[,\s]+/).filter(w => w.length > 2).slice(0, 3).join(', ')}.`;
+    for (let i = 0; i < 8; i++) {
+      const isMale = Math.random() > 0.5;
       items.push({
         name: isMale ? pick(maleNames) : pick(femaleNames),
-        text,
+        text: pick(templates),
         color: `hsl(${Math.floor(Math.random()*360)}, 55%, 62%)`,
         stars: pick(starsOptions)
       });
     }
     status.textContent = `Нейросеть недоступна (${e.message}). Показаны шаблонные отзывы.`;
   }
+
   renderReviewCards(items);
   btn.disabled = false;
   btn.textContent = '✨ Сгенерировать отзывы';
@@ -2261,7 +2410,6 @@ function initRace() {
     running = false;
     const finalScore = Math.floor(score);
     $('#raceProgressLabel').textContent = `🏁 ФИНИШ! Время: ${raceTime.toFixed(1)} с`;
-
     let isRecord = false;
     if (best === null || raceTime < best) {
       best = raceTime;
@@ -2269,7 +2417,6 @@ function initRace() {
       renderBest();
       isRecord = true;
     }
-
     ctx.fillStyle = 'rgba(0,0,0,.72)';
     ctx.fillRect(0, 0, W, H);
     ctx.textAlign = 'center';
@@ -2292,7 +2439,6 @@ function initRace() {
     ctx.fillStyle = '#aaa';
     ctx.fillText('Нажми «Заново»', W / 2, H / 2 + 122);
   }
-
   function crash() {
     running = false; finished = true;
     drawRoad(0);
@@ -2569,11 +2715,7 @@ function initSnake() {
   $('#snakeRecord').textContent = record;
 
   function reset() {
-    snake = [
-      { x: 5, y: 11 },
-      { x: 4, y: 11 },
-      { x: 3, y: 11 }
-    ];
+    snake = [{ x: 5, y: 11 }, { x: 4, y: 11 }, { x: 3, y: 11 }];
     dir = { x: 1, y: 0 };
     nextDir = { x: 1, y: 0 };
     score = 0;
@@ -2594,29 +2736,18 @@ function initSnake() {
     while (tries++ < 500) {
       const x = Math.floor(Math.random() * COLS);
       const y = Math.floor(Math.random() * ROWS);
-      if (!snake.some(s => s.x === x && s.y === y)) {
-        food = { x, y };
-        return;
-      }
+      if (!snake.some(s => s.x === x && s.y === y)) { food = { x, y }; return; }
     }
     food = { x: 0, y: 0 };
   }
 
   function step() {
-    if (!(nextDir.x === -dir.x && nextDir.y === -dir.y)) {
-      dir = nextDir;
-    }
+    if (!(nextDir.x === -dir.x && nextDir.y === -dir.y)) dir = nextDir;
     const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
-
-    if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) {
-      return endGame();
-    }
+    if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) return endGame();
     const willEat = (head.x === food.x && head.y === food.y);
     const bodyToCheck = willEat ? snake : snake.slice(0, -1);
-    if (bodyToCheck.some(s => s.x === head.x && s.y === head.y)) {
-      return endGame();
-    }
-
+    if (bodyToCheck.some(s => s.x === head.x && s.y === head.y)) return endGame();
     snake.unshift(head);
     if (willEat) {
       score += 1;
@@ -2661,7 +2792,6 @@ function initSnake() {
   function draw() {
     ctx.fillStyle = '#1a1723';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     ctx.strokeStyle = 'rgba(255,255,255,.04)';
     ctx.lineWidth = 1;
     for (let c = 0; c <= COLS; c++) {
@@ -2670,7 +2800,6 @@ function initSnake() {
     for (let r = 0; r <= ROWS; r++) {
       ctx.beginPath(); ctx.moveTo(0, r * CELL); ctx.lineTo(canvas.width, r * CELL); ctx.stroke();
     }
-
     const fx = food.x * CELL + CELL / 2;
     const fy = food.y * CELL + CELL / 2;
     ctx.fillStyle = '#e07a8b';
@@ -2681,7 +2810,6 @@ function initSnake() {
     ctx.beginPath();
     ctx.arc(fx - 3, fy - 3, 2, 0, Math.PI * 2);
     ctx.fill();
-
     for (let i = snake.length - 1; i >= 0; i--) {
       const s = snake[i];
       const isHead = i === 0;
@@ -2715,15 +2843,10 @@ function initSnake() {
     lastTime = t;
     if (!gameOver) {
       timer += dt;
-      if (timer >= stepInterval) {
-        timer = 0;
-        step();
-      }
+      if (timer >= stepInterval) { timer = 0; step(); }
     }
     draw();
-    if (!gameOver) {
-      snakeAnimId = requestAnimationFrame(loop);
-    }
+    if (!gameOver) snakeAnimId = requestAnimationFrame(loop);
   }
 
   keyHandler = e => {
@@ -2736,18 +2859,14 @@ function initSnake() {
     else if (k === 'ArrowDown' || k === 's' || k === 'S' || k === 'ы' || k === 'Ы') nd = { x: 0, y: 1 };
     if (nd) {
       e.preventDefault();
-      if (!(nd.x === -dir.x && nd.y === -dir.y)) {
-        nextDir = nd;
-      }
+      if (!(nd.x === -dir.x && nd.y === -dir.y)) nextDir = nd;
     }
   };
   document.addEventListener('keydown', keyHandler);
 
   let touchStart = null;
   canvas.addEventListener('touchstart', e => {
-    if (e.touches.length) {
-      touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    }
+    if (e.touches.length) touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
   }, { passive: true });
   canvas.addEventListener('touchend', e => {
     if (!touchStart || !e.changedTouches.length) return;
