@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Master.Web — Полезные инструменты</title>
 <style>
-/* ===================== ПЕРЕМЕННЫЕ ТЕМ ===================== */
 :root {
   --accent: #9b7ede;
   --bg: #faf7fc;
@@ -21,6 +20,7 @@
   --grad-hero: linear-gradient(135deg, #c9b8e8 0%, #b8e8d5 45%, #b8d8e8 100%);
   --danger: #e07a8b;
   --ok: #6dbf9a;
+  --gold: #f0b45a;
   --chess-light: #f0e9f8;
   --chess-dark: #b9a8d8;
 }
@@ -39,11 +39,11 @@
   --accent: #b5a0e8;
   --danger: #e08a9b;
   --ok: #7ad0ac;
+  --gold: #f0c47a;
   --chess-light: #5a5270;
   --chess-dark: #2e2840;
 }
 
-/* ===================== БАЗА ===================== */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
@@ -57,7 +57,6 @@ a { color: var(--accent); }
 img { max-width: 100%; }
 .container { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
 
-/* ===================== HEADER ===================== */
 header {
   position: sticky; top: 0; z-index: 100;
   background: color-mix(in srgb, var(--surface) 82%, transparent);
@@ -80,7 +79,6 @@ header {
 }
 .logo:hover { transform: scale(1.04); }
 .logo .dot { color: #e8c8d5; -webkit-text-fill-color: #e8c8d5; }
-
 .hamburger {
   display: flex; flex-direction: column; gap: 5px;
   background: var(--surface-2); border: 1px solid var(--border);
@@ -89,7 +87,6 @@ header {
 }
 .hamburger:hover { border-color: var(--accent); transform: translateY(-1px); }
 .hamburger span { width: 20px; height: 2.5px; background: var(--text); border-radius: 2px; }
-
 .theme-toggle {
   display: flex; align-items: center; gap: 8px;
   background: var(--surface-2); border: 1px solid var(--border);
@@ -98,7 +95,6 @@ header {
 }
 .theme-toggle:hover { border-color: var(--accent); }
 
-/* ===================== SIDEBAR ===================== */
 .overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,.35);
   opacity: 0; pointer-events: none; transition: opacity .3s; z-index: 200;
@@ -156,7 +152,6 @@ header {
 }
 .online-counter b { color: var(--ok); }
 
-/* ===================== MAIN ===================== */
 main { padding: 32px 0 80px; }
 .page { display: none; animation: fadeIn .45s ease; }
 .page.active { display: block; }
@@ -208,7 +203,6 @@ input:focus, textarea:focus, select:focus {
 label { font-weight: 600; font-size: .9rem; display: block; margin-bottom: 6px; }
 .form-row { margin-bottom: 16px; }
 
-/* ===================== HERO ===================== */
 .hero {
   position: relative; overflow: hidden;
   border-radius: 28px; padding: 56px 40px;
@@ -260,7 +254,6 @@ label { font-weight: 600; font-size: .9rem; display: block; margin-bottom: 6px; 
 .preview-card h3 { font-size: 1.1rem; margin-bottom: 6px; }
 .preview-card p { font-size: .88rem; color: var(--text-soft); }
 
-/* ===================== ПАРОЛИ ===================== */
 .pw-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
 @media (max-width: 860px) { .pw-layout { grid-template-columns: 1fr; } }
 .pw-output { display: flex; gap: 10px; margin-bottom: 18px; }
@@ -306,7 +299,6 @@ input[type="range"]::-webkit-slider-thumb {
 }
 .note-del:hover { background: color-mix(in srgb, var(--danger) 15%, transparent); }
 
-/* ===================== КАЛЬКУЛЯТОР ===================== */
 .calc-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 22px; }
 @media (max-width: 860px) { .calc-layout { grid-template-columns: 1fr; } }
 .calc-display {
@@ -340,7 +332,6 @@ input[type="range"]::-webkit-slider-thumb {
 .history-item .h-expr { color: var(--text-soft); word-break: break-all; }
 .history-item .h-res { font-weight: 700; color: var(--accent); }
 
-/* ===================== ПОГОДА ===================== */
 .weather-search { display: flex; gap: 10px; margin-bottom: 20px; }
 .weather-search input { flex: 1; }
 .weather-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
@@ -391,37 +382,34 @@ input[type="range"]::-webkit-slider-thumb {
   padding: 12px 16px; font-size: .88rem; color: var(--text-soft); margin-top: 16px;
 }
 
-/* ===================== НОВОСТИ ===================== */
-.news-list { display: flex; flex-direction: column; gap: 14px; }
-.news-item {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 16px; padding: 18px 20px;
-  transition: all .25s; display: block; text-decoration: none; color: inherit;
-}
-.news-item:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 10px 28px var(--shadow-lg); }
-.news-item .news-date { font-size: .78rem; color: var(--text-soft); margin-bottom: 4px; }
-.news-item .news-title { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.35; }
-.news-item .news-desc { font-size: .9rem; color: var(--text-soft); line-height: 1.5; }
-.news-item .news-source { margin-top: 8px; font-size: .78rem; font-weight: 700; color: var(--accent); }
-.news-item:hover .news-title { color: var(--accent); }
-.news-fresh-badge {
-  display: inline-block; background: var(--ok); color: #fff;
-  padding: 1px 8px; border-radius: 999px; font-size: .7rem;
-  font-weight: 700; margin-left: 6px; vertical-align: middle;
-}
-
-/* ===================== ОТЗЫВЫ (2 колонки) ===================== */
-.reviews-two-col {
+.news-sources-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 22px;
-  align-items: start;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
 }
-@media (max-width: 900px) {
-  .reviews-two-col { grid-template-columns: 1fr; }
+.news-source-card {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 8px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px 14px;
+  text-decoration: none; color: var(--text);
+  transition: all .25s; text-align: center;
+  cursor: pointer; position: relative; overflow: hidden;
 }
-.reviews-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-@media (max-width: 640px) { .reviews-controls { grid-template-columns: 1fr; } }
+.news-source-card:hover {
+  transform: translateY(-4px); border-color: var(--accent);
+  box-shadow: 0 12px 30px var(--shadow-lg);
+}
+.news-source-card .ns-icon {
+  width: 56px; height: 56px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; font-weight: 800;
+  color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+.news-source-card .ns-name { font-weight: 700; font-size: .95rem; margin-top: 4px; }
+.news-source-card .ns-domain { font-size: .72rem; color: var(--text-soft); }
+
 .reviews-output { display: flex; flex-direction: column; gap: 12px; }
 .review-card {
   background: var(--surface-2); border: 1px solid var(--border);
@@ -436,30 +424,24 @@ input[type="range"]::-webkit-slider-thumb {
   font-size: 1.1rem; font-weight: 700; color: #fff; flex-shrink: 0;
 }
 .review-name { font-weight: 700; font-size: .95rem; }
-.review-stars { color: #f0b45a; font-size: .85rem; }
+.review-stars { color: var(--gold); font-size: .85rem; }
 .review-text { font-size: .92rem; color: var(--text-soft); line-height: 1.5; }
 
-.prompt-output {
-  background: var(--bg-soft); border: 1px solid var(--border);
-  border-radius: 14px; padding: 16px;
-  font-family: 'Courier New', monospace; font-size: .88rem;
-  white-space: pre-wrap; word-break: break-word;
-  min-height: 100px; color: var(--text); line-height: 1.5;
+.reviews-loader {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 16px; padding: 40px 20px; text-align: center;
 }
-.prompt-output.empty {
-  color: var(--text-soft); font-family: inherit; font-style: italic;
-  display: flex; align-items: center; justify-content: center;
+.reviews-loader .spinner {
+  width: 50px; height: 50px;
+  border: 4px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
-.prompt-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
-.copy-toast {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: var(--ok); color: #fff; padding: 4px 12px;
-  border-radius: 999px; font-size: .75rem; font-weight: 700;
-  opacity: 0; transition: opacity .3s;
-}
-.copy-toast.show { opacity: 1; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.reviews-loader .loader-text { color: var(--text-soft); font-size: .95rem; font-weight: 600; }
+.reviews-loader .loader-sub { color: var(--text-soft); font-size: .8rem; opacity: .7; }
 
-/* ===================== ФРИЛАНС ===================== */
 .link-block { margin-bottom: 26px; }
 .link-block h3 { font-size: 1.1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
 .link-list { display: flex; flex-wrap: wrap; gap: 8px 18px; }
@@ -476,7 +458,62 @@ input[type="range"]::-webkit-slider-thumb {
 .link-group { margin-bottom: 18px; }
 .link-group .lg-title { font-weight: 700; font-size: .95rem; margin-bottom: 8px; color: var(--text); }
 
-/* ===================== ИГРЫ ===================== */
+.exchange-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+.exchange-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 18px; padding: 22px;
+  transition: all .3s; position: relative;
+  display: flex; flex-direction: column;
+}
+.exchange-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: 0 14px 34px var(--shadow-lg);
+}
+.exchange-card .ex-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.exchange-card .ex-name {
+  font-size: 1.15rem; font-weight: 800;
+  background: linear-gradient(120deg, var(--accent), #6dbf9a);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.exchange-card .ex-tag {
+  font-size: .7rem; font-weight: 700;
+  background: var(--bg-soft); color: var(--text-soft);
+  padding: 3px 10px; border-radius: 999px;
+}
+.exchange-card .ex-desc {
+  font-size: .88rem; color: var(--text-soft);
+  line-height: 1.5; margin-bottom: 12px; flex: 1;
+}
+.exchange-card .ex-tasks {
+  font-size: .82rem; color: var(--text-soft);
+  margin-bottom: 12px; line-height: 1.5;
+}
+.exchange-card .ex-tasks b { color: var(--text); font-weight: 700; display: block; margin-bottom: 4px; }
+.exchange-card .ex-prices {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 10px 12px; background: var(--bg-soft);
+  border-radius: 10px; font-size: .82rem; margin-bottom: 12px;
+}
+.exchange-card .ex-prices .price-row { display: flex; justify-content: space-between; gap: 10px; }
+.exchange-card .ex-prices .price-row b { color: var(--accent); font-weight: 700; }
+.exchange-card .ex-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  align-self: flex-start;
+  color: var(--accent); font-weight: 700; font-size: .88rem;
+  text-decoration: none; transition: gap .2s;
+}
+.exchange-card .ex-link:hover { gap: 10px; }
+
 .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
 .game-card {
   aspect-ratio: 1 / 1; border-radius: 22px; padding: 26px;
@@ -521,7 +558,25 @@ input[type="range"]::-webkit-slider-thumb {
 .diff-btn:hover { border-color: var(--accent); }
 .diff-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-/* ---------- ШАХМАТЫ ---------- */
+.game-progress-card {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 15%, var(--surface)), color-mix(in srgb, var(--ok) 15%, var(--surface)));
+  border: 1px solid var(--border); border-radius: 14px;
+  padding: 14px 18px; margin-bottom: 16px;
+}
+.game-progress-card .gp-title { font-weight: 700; margin-bottom: 8px; font-size: .95rem; }
+.gp-bar-wrap {
+  background: var(--surface-2); border-radius: 999px; height: 12px;
+  overflow: hidden; margin-bottom: 8px; border: 1px solid var(--border);
+}
+.gp-bar {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--ok), var(--accent));
+  transition: width .5s ease;
+}
+.gp-quests { font-size: .85rem; color: var(--text-soft); line-height: 1.6; }
+.gp-quests .q-done { color: var(--ok); text-decoration: line-through; }
+.gp-quests .q-active { color: var(--text); font-weight: 600; }
+
 .chess-board-wrap {
   display: flex; flex-direction: column; align-items: center;
   gap: 6px; width: 100%;
@@ -569,14 +624,12 @@ input[type="range"]::-webkit-slider-thumb {
   color: var(--accent); min-height: 24px;
 }
 
-/* ---------- ТЕТРИС ---------- */
 .tetris-wrap { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; justify-content: center; }
 #tetrisCanvas { border-radius: 10px; border: 2px solid var(--border); background: #1a1723; touch-action: none; }
-.tetris-side { display: flex; flex-direction: column; gap: 10px; font-size: .9rem; }
+.tetris-side { display: flex; flex-direction: column; gap: 10px; font-size: .9rem; min-width: 200px; }
 .tetris-side .stat { background: var(--bg-soft); border-radius: 10px; padding: 10px 14px; }
 .tetris-side .stat b { color: var(--accent); font-size: 1.15rem; }
 
-/* ---------- ГОНКА ---------- */
 .race-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 #raceCanvas { border-radius: 12px; border: 2px solid var(--border); max-width: 100%; }
 .race-stats { display: flex; gap: 24px; font-size: .95rem; flex-wrap: wrap; justify-content: center; }
@@ -597,7 +650,6 @@ input[type="range"]::-webkit-slider-thumb {
   font-size: .75rem; font-weight: 700; color: var(--text);
 }
 
-/* ---------- ЗМЕЙКА ---------- */
 .snake-wrap {
   display: flex; gap: 24px; flex-wrap: wrap;
   align-items: flex-start; justify-content: center;
@@ -607,13 +659,15 @@ input[type="range"]::-webkit-slider-thumb {
   background: #1a1723; max-width: 100%;
   touch-action: none;
 }
-.snake-side { display: flex; flex-direction: column; gap: 10px; font-size: .9rem; }
-.snake-side .stat {
-  background: var(--bg-soft); border-radius: 10px; padding: 10px 14px;
-}
+.snake-side { display: flex; flex-direction: column; gap: 10px; font-size: .9rem; min-width: 200px; }
+.snake-side .stat { background: var(--bg-soft); border-radius: 10px; padding: 10px 14px; }
 .snake-side .stat b { color: var(--accent); font-size: 1.15rem; }
 
-/* ===================== COOKIE / TOAST ===================== */
+.football-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+#footballCanvas { border-radius: 12px; border: 2px solid var(--border); background: #1a3d1a; max-width: 100%; touch-action: none; }
+.football-stats { display: flex; gap: 24px; font-size: .95rem; flex-wrap: wrap; justify-content: center; }
+.football-stats b { color: var(--accent); font-size: 1.15rem; }
+
 .cookie-banner {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 500;
   background: var(--surface); border-top: 1px solid var(--border);
@@ -651,7 +705,6 @@ input[type="range"]::-webkit-slider-thumb {
 </head>
 <body>
 
-<!-- ===================== HEADER ===================== -->
 <header>
   <div class="header-inner">
     <div class="header-left">
@@ -667,7 +720,6 @@ input[type="range"]::-webkit-slider-thumb {
   </div>
 </header>
 
-<!-- ===================== SIDEBAR ===================== -->
 <div class="overlay" id="overlay"></div>
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-head">
@@ -687,15 +739,13 @@ input[type="range"]::-webkit-slider-thumb {
   <div class="sidebar-foot">
     <div class="online-counter">
       <span class="online-dot"></span>
-      Онлайн на сайте: <b id="onlineCount">—</b>
+      Онлайн на сайте: <b id="onlineCount">1</b>
     </div>
   </div>
 </aside>
 
-<!-- ===================== MAIN ===================== -->
 <main class="container">
 
-  <!-- ===== ГЛАВНАЯ ===== -->
   <section class="page active" id="page-home">
     <div class="hero">
       <div class="hero-content">
@@ -728,24 +778,23 @@ input[type="range"]::-webkit-slider-thumb {
       </div>
       <div class="preview-card" onclick="showPage('news')">
         <div class="pc-icon">📰</div><h3>Новости</h3>
-        <p>Свежие новости с Lenta.ru.</p>
+        <p>10 новостных сайтов в красивых плитках.</p>
       </div>
       <div class="preview-card" onclick="showPage('reviews')">
         <div class="pc-icon">💬</div><h3>Отзывы</h3>
-        <p>Мысли → промт → отзывы. Всё в одном окне.</p>
+        <p>Введи детали — получи отзывы от нейросети.</p>
       </div>
       <div class="preview-card" onclick="showPage('freelance')">
         <div class="pc-icon">💼</div><h3>Фриланс-биржи</h3>
-        <p>Популярные биржи и полезные сервисы для работы.</p>
+        <p>Популярные биржи с ценами на задания.</p>
       </div>
       <div class="preview-card" onclick="showPage('games')">
         <div class="pc-icon">🎮</div><h3>Игры</h3>
-        <p>Шахматы с ботом, гонка, тетрис и змейка.</p>
+        <p>Шахматы, гонка, тетрис, змейка и футбол. Есть режим «с другом»!</p>
       </div>
     </div>
   </section>
 
-  <!-- ===== ПАРОЛИ ===== -->
   <section class="page" id="page-password">
     <h2 class="section-title">🔐 Генератор паролей</h2>
     <p class="section-sub">Надёжные пароли для регистрации на сайтах, защиты аккаунтов и почты. Всё сохраняется <b>только в localStorage</b> твоего браузера.</p>
@@ -788,10 +837,9 @@ input[type="range"]::-webkit-slider-thumb {
     </div>
   </section>
 
-  <!-- ===== КАЛЬКУЛЯТОР ===== -->
   <section class="page" id="page-calculator">
     <h2 class="section-title">🧮 Расширенный калькулятор</h2>
-    <p class="section-sub">Базовые операции, скобки, степени, корни, тригонометрия, логарифмы, факториал, константы π и e. История сохраняется.</p>
+    <p class="section-sub">Базовые операции, скобки, степени, корни, тригонометрия, логарифмы, факториал, константы π и e.</p>
     <div class="calc-layout">
       <div class="card">
         <div class="calc-display">
@@ -838,10 +886,9 @@ input[type="range"]::-webkit-slider-thumb {
     </div>
   </section>
 
-  <!-- ===== ПОГОДА ===== -->
   <section class="page" id="page-weather">
     <h2 class="section-title">🌤 Погода</h2>
-    <p class="section-sub">Введи город на русском. Данные берутся из Open-Meteo (бесплатный API, без ключа).</p>
+    <p class="section-sub">Введи город на русском. Данные берутся из Open-Meteo (бесплатный API).</p>
     <div class="weather-search">
       <input type="text" id="weatherCity" placeholder="Например: Москва" value="Москва">
       <button class="btn" id="weatherSearch">🔍 Найти</button>
@@ -850,7 +897,7 @@ input[type="range"]::-webkit-slider-thumb {
       <button class="wtab active" data-wtab="now">Сейчас</button>
       <button class="wtab" data-wtab="hourly">По часам</button>
       <button class="wtab" data-wtab="week">Неделя</button>
-      <button class="wtab" data-wtab="month">Месяц</button>
+      <button class="wtab" data-wtab="month">16 дней</button>
     </div>
     <div class="weather-panel active" id="weather-now">
       <div class="card"><p style="color:var(--text-soft);">Введи город и нажми «Найти».</p></div>
@@ -859,101 +906,61 @@ input[type="range"]::-webkit-slider-thumb {
     <div class="weather-panel" id="weather-week"></div>
     <div class="weather-panel" id="weather-month"></div>
     <div class="info-note">
-      💡 Источник: Open-Meteo.com. Прогноз на месяц недоступен в бесплатном API — показываем 16 дней (максимум).
+      💡 Источник: Open-Meteo.com. Прогноз на 16 дней — максимум бесплатного API.
     </div>
   </section>
 
-  <!-- ===== НОВОСТИ (только Lenta.ru) ===== -->
   <section class="page" id="page-news">
     <h2 class="section-title">📰 Новости</h2>
-    <p class="section-sub">Свежие новости с <b>Lenta.ru</b>. Кнопка «Обновить» подгружает новые материалы.</p>
-
-    <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
-      <button class="btn" id="newsReload">🔄 Обновить</button>
-      <a class="btn secondary" id="newsOpenSite" href="https://lenta.ru" target="_blank" rel="noopener">Открыть Lenta.ru →</a>
-    </div>
-
-    <p id="newsStatus" style="font-size:.85rem;color:var(--text-soft);margin-bottom:14px;"></p>
-    <div id="newsList" class="news-list"></div>
+    <p class="section-sub">Выбери новостной сайт — откроется его страница в новой вкладке.</p>
+    <div class="news-sources-grid" id="newsSourcesGrid"></div>
   </section>
 
-  <!-- ===== ОТЗЫВЫ (2 колонки) ===== -->
   <section class="page" id="page-reviews">
-    <h2 class="section-title">💬 Отзывы: промт + генерация</h2>
-    <p class="section-sub">Справа введи свои мысли — получишь готовый промт. Скопируй его в левую колонку и нажми «Сгенерировать» — нейросеть выдаст отзывы.</p>
+    <h2 class="section-title">💬 Генератор отзывов</h2>
+    <p class="section-sub">Опиши подробно: <b>о чём отзыв, кто исполнитель, что именно понравилось, какой стиль, сколько символов</b> — нейросеть проанализирует и напишет отзывы своими словами, не копируя твой текст.</p>
 
-    <div class="reviews-two-col">
-      <!-- ЛЕВАЯ: промт → отзывы -->
-      <div class="card">
-        <h3 style="margin-bottom:12px;">⬅️ Промт → Отзывы</h3>
-        <div class="form-row">
-          <label>Вставь промт (или напиши свой)</label>
-          <textarea id="reviewsPromptInput" rows="6" placeholder="Вставь сюда промт из правой колонки или напиши свой..."></textarea>
+    <div class="card">
+      <div class="reviews-controls" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div>
+          <label>Пол автора отзывов</label>
+          <select id="reviewGender">
+            <option value="male">Мужской</option>
+            <option value="female">Женский</option>
+            <option value="any" selected>Любой</option>
+          </select>
         </div>
-        <button class="btn" id="reviewsGenerateBtn" style="width:100%;">✨ Сгенерировать отзывы</button>
-        <p id="reviewsStatus" style="margin-top:10px;font-size:.85rem;color:var(--text-soft);text-align:center;"></p>
-        <div class="reviews-output" id="reviewsOutput" style="margin-top:16px;"></div>
+        <div>
+          <label>Сколько отзывов</label>
+          <input type="number" id="reviewCount" min="1" max="30" value="10">
+        </div>
       </div>
 
-      <!-- ПРАВАЯ: мысли → промт -->
-      <div class="card">
-        <h3 style="margin-bottom:12px;">➡️ Мысли → Промт</h3>
-        <div class="reviews-controls">
-          <div>
-            <label>Пол автора отзывов</label>
-            <select id="reviewGender">
-              <option value="male">Мужской</option>
-              <option value="female">Женский</option>
-              <option value="any" selected>Любой</option>
-            </select>
-          </div>
-          <div>
-            <label>Сколько отзывов</label>
-            <input type="number" id="reviewCount" min="1" max="50" value="10">
-          </div>
-        </div>
-        <div class="form-row" style="margin-top:12px;">
-          <label>Твои мысли / слова / детали</label>
-          <textarea id="reviewCriteria" rows="4" placeholder="Например: писал курсовую, автор помог быстро, отвечал вежливо, сдал на 5, немного задержал, но предупредил. Дороговато, но качественно."></textarea>
-        </div>
-        <button class="btn secondary" id="promptMakeBtn" style="width:100%;">🪄 Сделать промт</button>
-        <p id="promptStatus" style="margin-top:10px;font-size:.85rem;color:var(--text-soft);text-align:center;"></p>
-
-        <div class="prompt-output empty" id="promptOutput" style="margin-top:12px;">Здесь появится готовый промт</div>
-        <div class="prompt-actions">
-          <button class="btn small" id="promptCopy" disabled>📋 Скопировать</button>
-          <button class="btn small secondary" id="promptToLeft" disabled>➡️ Вставить в левую колонку</button>
-          <span class="copy-toast" id="copyToast">✓ Скопировано</span>
-        </div>
+      <div class="form-row" style="margin-top:12px;">
+        <label>Подробно опиши требования</label>
+        <textarea id="reviewCriteria" rows="6" placeholder="Например: писал курсовую по экономике. Автор — студент-старшекурсник, помог за 2 дня, объяснил сложные моменты. Работа сдана на 5. Немного задержал ответ в первый день, но потом всё было быстро. Стиль: живой, эмоциональный, с благодарностью. Длина каждого отзыва: около 200 символов."></textarea>
       </div>
+
+      <button class="btn" id="reviewGenerate" style="width:100%;">✨ Сгенерировать отзывы</button>
+      <p id="reviewStatus" style="margin-top:10px;font-size:.85rem;color:var(--text-soft);text-align:center;"></p>
     </div>
+
+    <div class="reviews-output" id="reviewsOutput" style="margin-top:20px;"></div>
   </section>
 
-  <!-- ===== ФРИЛАНС ===== -->
   <section class="page" id="page-freelance">
     <h2 class="section-title">💼 Фриланс-биржи</h2>
-    <p class="section-sub">Заработок из дома: доход зависит от свободного времени и готовности выполнять задания.</p>
-    <div class="card" style="margin-bottom:22px;">
-      <div class="link-block">
-        <h3>🔥 Популярные биржи</h3>
-        <div class="link-list">
-          <a href="https://unu.im" target="_blank" rel="noopener">UNU</a>
-          <a href="https://socpublic.com" target="_blank" rel="noopener">socpublic</a>
-          <a href="https://zelenka.work" target="_blank" rel="noopener">Зеленка Work</a>
-          <a href="https://mjpublic.ru" target="_blank" rel="noopener">mjpublic</a>
-          <a href="https://surfearner.com" target="_blank" rel="noopener">Surfearner</a>
-          <a href="https://advego.com" target="_blank" rel="noopener">Advego</a>
-          <a href="https://qcomment.ru" target="_blank" rel="noopener">Qcomment</a>
-        </div>
-      </div>
-    </div>
-    <div class="card">
+    <p class="section-sub">Популярные буксы и биржи для заработка из дома. Ниже — описание, типичные задания и цены.</p>
+
+    <div class="exchange-grid" id="exchangeGrid"></div>
+
+    <div class="card" style="margin-top:24px;">
       <h3 style="margin-bottom:16px;">🛠 Полезные сервисы для работы</h3>
       <div class="link-group">
         <div class="lg-title">✉️ Временные почты</div>
         <div class="link-list">
           <a href="https://mail.tm" target="_blank" rel="noopener">mail.tm (с паролем)</a>
-          <a href="https://temp-mail.org" target="_blank" rel="noopener">temp-mail.org (самая популярная)</a>
+          <a href="https://temp-mail.org" target="_blank" rel="noopener">temp-mail.org</a>
           <a href="https://t.me/TempMail_org_bot" target="_blank" rel="noopener">бот в ТГ @TempMail_org_bot</a>
           <a href="https://tempmail.lol" target="_blank" rel="noopener">tempmail.lol</a>
         </div>
@@ -968,38 +975,37 @@ input[type="range"]::-webkit-slider-thumb {
       <div class="link-group">
         <div class="lg-title">🖥 Браузеры</div>
         <div class="link-list">
-          <a href="https://dolphin-anty.com" target="_blank" rel="noopener">Dolphin Anty (самый популярный, с лимитом)</a>
-          <a href="https://nstbrowser.com" target="_blank" rel="noopener">Nstbrowser (бесплатный, много профилей)</a>
+          <a href="https://dolphin-anty.com" target="_blank" rel="noopener">Dolphin Anty</a>
+          <a href="https://nstbrowser.com" target="_blank" rel="noopener">Nstbrowser</a>
         </div>
       </div>
       <div class="link-group">
         <div class="lg-title">📁 Облачные хранилища</div>
         <div class="link-list">
-          <a href="https://drive.google.com" target="_blank" rel="noopener">Google Drive (15 ГБ бесплатно)</a>
-          <a href="https://disk.yandex.ru" target="_blank" rel="noopener">Яндекс.Диск (лучший для РФ, 10 ГБ бесплатно)</a>
+          <a href="https://drive.google.com" target="_blank" rel="noopener">Google Drive</a>
+          <a href="https://disk.yandex.ru" target="_blank" rel="noopener">Яндекс.Диск</a>
         </div>
       </div>
       <div class="link-group">
         <div class="lg-title">🔗 Сократить ссылку</div>
         <div class="link-list">
-          <a href="https://bitly.com" target="_blank" rel="noopener">bitly.com (лучший)</a>
-          <a href="https://clck.ru" target="_blank" rel="noopener">clck.ru (недоступен в РФ)</a>
-          <a href="https://vk.ru/cc" target="_blank" rel="noopener">vk.ru/cc (от команды ВК)</a>
+          <a href="https://bitly.com" target="_blank" rel="noopener">bitly.com</a>
+          <a href="https://clck.ru" target="_blank" rel="noopener">clck.ru</a>
+          <a href="https://vk.ru/cc" target="_blank" rel="noopener">vk.ru/cc</a>
         </div>
       </div>
       <div class="link-group">
         <div class="lg-title">🖼 Фотохостинги</div>
         <div class="link-list">
-          <a href="https://skrinshoter.ru" target="_blank" rel="noopener">skrinshoter.ru (только с программой)</a>
-          <a href="https://postimages.org" target="_blank" rel="noopener">postimages.org (недоступен в РФ)</a>
+          <a href="https://skrinshoter.ru" target="_blank" rel="noopener">skrinshoter.ru</a>
           <a href="https://iimg.su" target="_blank" rel="noopener">iimg.su</a>
-          <a href="https://photo-screen.ru" target="_blank" rel="noopener">photo-screen.ru (лучший по стабильности)</a>
+          <a href="https://photo-screen.ru" target="_blank" rel="noopener">photo-screen.ru</a>
         </div>
       </div>
       <div class="link-group">
         <div class="lg-title">🔐 Генераторы паролей</div>
         <div class="link-list">
-          <a href="https://randstuff.ru" target="_blank" rel="noopener">randstuff.ru (лучший)</a>
+          <a href="https://randstuff.ru" target="_blank" rel="noopener">randstuff.ru</a>
           <a href="https://randomus.ru" target="_blank" rel="noopener">randomus.ru</a>
         </div>
       </div>
@@ -1017,62 +1023,68 @@ input[type="range"]::-webkit-slider-thumb {
       </div>
     </div>
     <div class="info-note" style="margin-top:22px;">
-      📌 Вспомогательные ресурсы для заработка на биржах — расширения, скрипты и т.д. — публикуются в <a href="https://t.me/pytayus_zarabotat" target="_blank" rel="noopener">Telegram-канале создателя</a>.
+      📌 Вспомогательные ресурсы — в <a href="https://t.me/pytayus_zarabotat" target="_blank" rel="noopener">Telegram-канале создателя</a>.
     </div>
   </section>
 
-  <!-- ===== ИГРЫ ===== -->
   <section class="page" id="page-games">
     <h2 class="section-title">🎮 Игры</h2>
-    <p class="section-sub">Выбери игру. Прогресс и рекорды сохраняются локально.</p>
+    <p class="section-sub">Шахматы и футбол — есть режим против бота и режим игры с другом на одном устройстве.</p>
     <div class="games-grid" id="gamesGrid">
       <div class="game-card" data-game="chess">
         <div class="game-icon">♟</div>
         <h3>Шахматы</h3>
-        <p>Выбор цвета и уровня бота до 3000.</p>
+        <p>Игра с ботом (до 3000) или с другом на одном устройстве.</p>
         <div class="game-play">Играть →</div>
       </div>
       <div class="game-card" data-game="race">
         <div class="game-icon">🏎</div>
         <h3>Гонка</h3>
-        <p>Доедь до финиша, объезжая препятствия. Без соперника — только ты и трасса.</p>
+        <p>Объезжай препятствия и доедь до финиша.</p>
         <div class="game-play">Играть →</div>
       </div>
       <div class="game-card" data-game="tetris">
         <div class="game-icon">🧩</div>
         <h3>Тетрис</h3>
-        <p>Классика: вращай, перемещай, собирай линии.</p>
+        <p>Классика с прогресс-заданиями.</p>
         <div class="game-play">Играть →</div>
       </div>
       <div class="game-card" data-game="snake">
         <div class="game-icon">🐍</div>
         <h3>Змейка</h3>
-        <p>Собирай яблоки, расти и не врезайся в границы.</p>
+        <p>Собирай яблоки, выполняй квесты.</p>
+        <div class="game-play">Играть →</div>
+      </div>
+      <div class="game-card" data-game="football">
+        <div class="game-icon">⚽</div>
+        <h3>Футбол 1×1</h3>
+        <p>С ботом или с другом. Матч до 5 голов.</p>
         <div class="game-play">Играть →</div>
       </div>
     </div>
 
-    <!-- Шахматы -->
+    <!-- ШАХМАТЫ -->
     <div class="game-window hidden" id="game-chess">
       <div class="game-head">
-        <h3>♟ Шахматы против бота</h3>
+        <h3>♟ Шахматы</h3>
         <button class="game-close" data-close="chess">✕ Закрыть</button>
       </div>
-      <div class="rules">Выбери цвет и уровень. Кликни по фигуре, затем по подсвеченной клетке. Бот отвечает автоматически.</div>
-
+      <div class="rules" id="chessRules">Выбери режим и цвет.</div>
+      <div class="difficulty-row" id="chessMode">
+        <button class="diff-btn active" data-mode="bot">🤖 С ботом</button>
+        <button class="diff-btn" data-mode="friend">👥 С другом</button>
+      </div>
       <div class="difficulty-row" id="chessColor">
         <button class="diff-btn" data-color="white">♔ Играю белыми</button>
         <button class="diff-btn active" data-color="black">♚ Играю чёрными</button>
         <button class="diff-btn" data-color="random">🎲 Случайно</button>
       </div>
-
       <div class="difficulty-row" id="chessDiff">
         <button class="diff-btn active" data-elo="800">Новичок (800)</button>
         <button class="diff-btn" data-elo="1500">Средний (1500)</button>
         <button class="diff-btn" data-elo="2200">Сложный (2200)</button>
         <button class="diff-btn" data-elo="3000">Мастер (3000)</button>
       </div>
-
       <div class="chess-board-wrap">
         <div class="chess-board" id="chessBoard"></div>
         <div class="chess-coords files" id="chessFiles">
@@ -1082,7 +1094,7 @@ input[type="range"]::-webkit-slider-thumb {
       </div>
     </div>
 
-    <!-- Гонка -->
+    <!-- ГОНКА -->
     <div class="game-window hidden" id="game-race">
       <div class="game-head">
         <h3>🏎 Гонка</h3>
@@ -1090,7 +1102,11 @@ input[type="range"]::-webkit-slider-thumb {
       </div>
       <div class="rules">
         Управление: <b>стрелочки ← ↑ → ↓</b>. <b>Shift</b> — ускорение.
-        Доедь до финиша, объезжая препятствия. Твоё время сохраняется как лучший результат.
+      </div>
+      <div class="game-progress-card" id="raceProgressCard">
+        <div class="gp-title">📋 Квесты</div>
+        <div class="gp-bar-wrap"><div class="gp-bar" id="raceGpBar"></div></div>
+        <div class="gp-quests" id="raceQuests"></div>
       </div>
       <div class="difficulty-row" id="raceDiff">
         <button class="diff-btn active" data-diff="easy">Лёгкий</button>
@@ -1098,7 +1114,7 @@ input[type="range"]::-webkit-slider-thumb {
         <button class="diff-btn" data-diff="hard">Сложный</button>
       </div>
       <div class="race-wrap">
-        <canvas id="raceCanvas" width="420" height="460"></canvas>
+        <canvas id="raceCanvas" width="440" height="520"></canvas>
         <div class="race-progress-wrap">
           <div class="race-progress" id="raceProgress"></div>
           <div class="race-progress-label" id="raceProgressLabel">До финиша: 100%</div>
@@ -1106,19 +1122,24 @@ input[type="range"]::-webkit-slider-thumb {
         <div class="race-stats">
           <span>Счёт: <b id="raceScore">0</b></span>
           <span>Лучшее время: <b id="raceRecord">—</b></span>
-          <span>Скорость: <b id="raceSpeed">1</b>×</span>
+          <span>Финишей: <b id="raceFinishCount">0</b></span>
         </div>
         <button class="btn small" id="raceRestart">🔄 Заново</button>
       </div>
     </div>
 
-    <!-- Тетрис -->
+    <!-- ТЕТРИС -->
     <div class="game-window hidden" id="game-tetris">
       <div class="game-head">
         <h3>🧩 Тетрис</h3>
         <button class="game-close" data-close="tetris">✕ Закрыть</button>
       </div>
       <div class="rules">Клавиши <b>← →</b> — движение, <b>↑ / клик</b> — вращение, <b>↓</b> — ускорить, <b>Space</b> — мгновенно вниз.</div>
+      <div class="game-progress-card" id="tetrisProgressCard">
+        <div class="gp-title">📋 Квесты</div>
+        <div class="gp-bar-wrap"><div class="gp-bar" id="tetrisGpBar"></div></div>
+        <div class="gp-quests" id="tetrisQuests"></div>
+      </div>
       <div class="tetris-wrap">
         <canvas id="tetrisCanvas" width="300" height="600"></canvas>
         <div class="tetris-side">
@@ -1130,15 +1151,17 @@ input[type="range"]::-webkit-slider-thumb {
       </div>
     </div>
 
-    <!-- Змейка -->
+    <!-- ЗМЕЙКА -->
     <div class="game-window hidden" id="game-snake">
       <div class="game-head">
         <h3>🐍 Змейка</h3>
         <button class="game-close" data-close="snake">✕ Закрыть</button>
       </div>
-      <div class="rules">
-        Управление: <b>стрелочки ← ↑ → ↓</b> или <b>WASD</b>. Собирай яблоки, чтобы расти.
-        Врезался в границу или в себя — проиграл. Рекорд сохраняется.
+      <div class="rules">Управление: <b>стрелочки ← ↑ → ↓</b> или <b>WASD</b>. Собирай яблоки, чтобы расти.</div>
+      <div class="game-progress-card" id="snakeProgressCard">
+        <div class="gp-title">📋 Квесты</div>
+        <div class="gp-bar-wrap"><div class="gp-bar" id="snakeGpBar"></div></div>
+        <div class="gp-quests" id="snakeQuests"></div>
       </div>
       <div class="snake-wrap">
         <canvas id="snakeCanvas" width="440" height="440"></canvas>
@@ -1150,11 +1173,44 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
       </div>
     </div>
+
+    <!-- ФУТБОЛ -->
+    <div class="game-window hidden" id="game-football">
+      <div class="game-head">
+        <h3>⚽ Футбол 1×1</h3>
+        <button class="game-close" data-close="football">✕ Закрыть</button>
+      </div>
+      <div class="rules" id="footballRules">
+        Управление: <b>← → ↑ ↓</b> или <b>WASD</b>.
+      </div>
+      <div class="difficulty-row" id="footballMode">
+        <button class="diff-btn active" data-fmode="bot">🤖 С ботом</button>
+        <button class="diff-btn" data-fmode="friend">👥 С другом</button>
+      </div>
+      <div class="game-progress-card" id="footballProgressCard">
+        <div class="gp-title">📋 Квесты</div>
+        <div class="gp-bar-wrap"><div class="gp-bar" id="footballGpBar"></div></div>
+        <div class="gp-quests" id="footballQuests"></div>
+      </div>
+      <div class="difficulty-row" id="footballDiff">
+        <button class="diff-btn active" data-fdiff="easy">Лёгкий</button>
+        <button class="diff-btn" data-fdiff="normal">Средний</button>
+        <button class="diff-btn" data-fdiff="hard">Сложный</button>
+      </div>
+      <div class="football-wrap">
+        <canvas id="footballCanvas" width="720" height="460"></canvas>
+        <div class="football-stats">
+          <span>Игрок 1: <b id="fbPlayerScore">0</b></span>
+          <span>Игрок 2: <b id="fbBotScore">0</b></span>
+          <span>Побед (против бота): <b id="fbWins">0</b></span>
+        </div>
+        <button class="btn small" id="footballRestart">🔄 Начать матч заново</button>
+      </div>
+    </div>
   </section>
 
 </main>
 
-<!-- ===================== COOKIE / TOAST ===================== -->
 <div class="cookie-banner" id="cookieBanner">
   <p>🍪 Мы используем localStorage/cookies, чтобы сохранять твои настройки, заметки и прогресс <b>только на этом устройстве</b>. Данные никуда не отправляются.</p>
   <button class="btn" id="cookieAccept">Согласен</button>
@@ -1175,7 +1231,7 @@ function toast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
 }
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
@@ -1213,19 +1269,29 @@ window.showPage = function (name) {
   $$('.sidebar-nav a').forEach(a => a.classList.toggle('active', a.dataset.page === name));
   closeSidebar();
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  if (name === 'news') loadNews();
 };
 $$('.sidebar-nav a').forEach(a => {
   a.addEventListener('click', e => { e.preventDefault(); showPage(a.dataset.page); });
 });
 
-(function onlineSim() {
-  const el = $('#onlineCount');
-  const base = 40 + Math.floor(Math.random() * 60);
-  const update = () => { el.textContent = base + Math.floor(Math.random() * 25); };
-  update();
-  setInterval(update, 8000);
-})();
+/* ===================== ОНЛАЙН ===================== */
+$('#onlineCount').textContent = '1';
+function updateOnlineCount() {
+  try {
+    const key = 'mw_online_tabs';
+    let tabs = LS.get(key, {});
+    const now = Date.now();
+    const myId = sessionStorage.getItem('mw_tab_id') || ('tab_' + Math.random().toString(36).slice(2));
+    sessionStorage.setItem('mw_tab_id', myId);
+    Object.keys(tabs).forEach(id => { if (now - tabs[id] > 30000) delete tabs[id]; });
+    tabs[myId] = now;
+    LS.set(key, tabs);
+    const count = Math.max(1, Object.keys(tabs).length);
+    $('#onlineCount').textContent = String(count);
+  } catch { $('#onlineCount').textContent = '1'; }
+}
+updateOnlineCount();
+setInterval(updateOnlineCount, 8000);
 
 /* ===================== COOKIE ===================== */
 const COOKIE_KEY = 'mw_cookie_ok';
@@ -1488,7 +1554,7 @@ async function loadWeather() {
     toast('Погода загружена для ' + geo.name);
   } catch (e) {
     toast('Не удалось получить погоду: ' + e.message);
-    $('#weather-now').innerHTML = `<div class="card"><p style="color:var(--danger);">Не удалось загрузить погоду. Проверь название города и интернет.</p></div>`;
+    $('#weather-now').innerHTML = `<div class="card"><p style="color:var(--danger);">Не удалось загрузить погоду.</p></div>`;
   }
 }
 function renderWeather(data, cityName) {
@@ -1500,7 +1566,7 @@ function renderWeather(data, cityName) {
           <div class="city">${escapeHtml(cityName)}</div>
           <div class="desc">${weatherDesc(cur.weather_code)}</div>
           <div style="margin-top:8px;font-size:.9rem;color:var(--text-soft);">
-            💧 Влажность: ${cur.relative_humidity_2m}% · 💨 Ветер: ${cur.wind_speed_10m} км/ч
+            💧 ${cur.relative_humidity_2m}% · 💨 ${cur.wind_speed_10m} км/ч
           </div>
         </div>
         <div style="text-align:center;">
@@ -1511,7 +1577,7 @@ function renderWeather(data, cityName) {
     </div>`;
   const hourly = data.hourly;
   const today = data.current.time.slice(0, 10);
-  let hourHtml = '<div class="card"><h3 style="margin-bottom:14px;">По часам (сегодня)</h3><div class="hourly-grid">';
+  let hourHtml = '<div class="card"><h3 style="margin-bottom:14px;">По часам</h3><div class="hourly-grid">';
   for (let i = 0; i < hourly.time.length; i++) {
     if (hourly.time[i].slice(0, 10) !== today) continue;
     hourHtml += `<div class="hour-card">
@@ -1525,7 +1591,7 @@ function renderWeather(data, cityName) {
 
   const daily = data.daily;
   const weekNames = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
-  let weekHtml = '<div class="card"><h3 style="margin-bottom:14px;">Прогноз на неделю</h3><div class="weekly-grid">';
+  let weekHtml = '<div class="card"><h3 style="margin-bottom:14px;">На неделю</h3><div class="weekly-grid">';
   for (let i = 0; i < Math.min(7, daily.time.length); i++) {
     const d = new Date(daily.time[i] + 'T00:00:00');
     weekHtml += `<div class="day-card">
@@ -1537,7 +1603,7 @@ function renderWeather(data, cityName) {
   weekHtml += '</div></div>';
   $('#weather-week').innerHTML = weekHtml;
 
-  let monthHtml = '<div class="card"><h3 style="margin-bottom:14px;">Прогноз на 16 дней (максимум API)</h3><div class="weekly-grid">';
+  let monthHtml = '<div class="card"><h3 style="margin-bottom:14px;">На 16 дней</h3><div class="weekly-grid">';
   for (let i = 0; i < daily.time.length; i++) {
     const d = new Date(daily.time[i] + 'T00:00:00');
     monthHtml += `<div class="day-card">
@@ -1561,269 +1627,186 @@ $$('.wtab[data-wtab]').forEach(tab => {
 });
 loadWeather();
 
-/* ===================== НОВОСТИ (только Lenta.ru) ===================== */
-const LENTA_FEEDS = [
-  'https://lenta.ru/rss/news',
-  'https://lenta.ru/rss/articles',
-  'https://lenta.ru/rss/top7'
+/* ===================== НОВОСТИ ===================== */
+const NEWS_SITES = [
+  { name: 'Lenta.ru', domain: 'lenta.ru', url: 'https://lenta.ru', icon: 'L', color: '#e53935' },
+  { name: 'РИА Новости', domain: 'ria.ru', url: 'https://ria.ru', icon: 'РИА', color: '#1976d2' },
+  { name: 'ТАСС', domain: 'tass.ru', url: 'https://tass.ru', icon: 'ТАСС', color: '#1a237e' },
+  { name: 'РБК', domain: 'rbc.ru', url: 'https://www.rbc.ru', icon: 'РБК', color: '#43a047' },
+  { name: 'Известия', domain: 'iz.ru', url: 'https://iz.ru', icon: 'ИЗ', color: '#c62828' },
+  { name: 'Коммерсантъ', domain: 'kommersant.ru', url: 'https://www.kommersant.ru', icon: 'Ъ', color: '#000000' },
+  { name: 'Ведомости', domain: 'vedomosti.ru', url: 'https://www.vedomosti.ru', icon: 'В', color: '#5e35b1' },
+  { name: 'Газета.ru', domain: 'gazeta.ru', url: 'https://www.gazeta.ru', icon: 'Г', color: '#ef6c00' },
+  { name: 'Российская газета', domain: 'rg.ru', url: 'https://rg.ru', icon: 'РГ', color: '#00695c' },
+  { name: 'Forbes', domain: 'forbes.ru', url: 'https://www.forbes.ru', icon: 'F', color: '#b71c1c' }
 ];
-
-const NEWS_PROXIES = [
-  async (rssUrl) => {
-    const url = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rssUrl) + '&count=30';
-    const r = await fetch(url, { cache: 'no-store' });
-    if (!r.ok) throw new Error('rss2json HTTP ' + r.status);
-    const data = await r.json();
-    if (data.status !== 'ok' || !Array.isArray(data.items)) throw new Error('rss2json bad');
-    return data.items.map(it => ({
-      title: it.title, link: it.link,
-      description: it.description || it.content || '',
-      pubDate: it.pubDate
-    }));
-  },
-  async (rssUrl) => {
-    const url = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(rssUrl);
-    const r = await fetch(url, { cache: 'no-store' });
-    if (!r.ok) throw new Error('allorigins HTTP ' + r.status);
-    return parseRSSXml(await r.text());
-  },
-  async (rssUrl) => {
-    const url = 'https://api.allorigins.win/get?url=' + encodeURIComponent(rssUrl);
-    const r = await fetch(url, { cache: 'no-store' });
-    if (!r.ok) throw new Error('allorigins-get HTTP ' + r.status);
-    const data = await r.json();
-    if (!data.contents) throw new Error('allorigins-get empty');
-    return parseRSSXml(data.contents);
-  },
-  async (rssUrl) => {
-    const url = 'https://corsproxy.io/?url=' + encodeURIComponent(rssUrl);
-    const r = await fetch(url, { cache: 'no-store' });
-    if (!r.ok) throw new Error('corsproxy HTTP ' + r.status);
-    return parseRSSXml(await r.text());
-  }
-];
-
-let lentaFeedIndex = 0;
-let newsProxyIndex = 0;
-let seenNewsLinks = new Set();
-
-function parseRSSXml(xmlText) {
-  try {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(xmlText, 'text/xml');
-    if (doc.querySelector('parsererror')) return [];
-    return [...doc.querySelectorAll('item')].slice(0, 30).map(item => ({
-      title: item.querySelector('title')?.textContent || '',
-      link: item.querySelector('link')?.textContent || '',
-      description: item.querySelector('description')?.textContent || '',
-      pubDate: item.querySelector('pubDate')?.textContent || ''
-    }));
-  } catch { return []; }
-}
-function stripHtml(s) {
-  return String(s || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-}
-function formatNewsDate(pubDate) {
-  if (!pubDate) return '';
-  const d = new Date(pubDate);
-  if (isNaN(d)) return '';
-  return d.toLocaleString('ru-RU', { day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit' });
-}
-async function fetchLentaWithFallback(rssUrl) {
-  let lastError = null;
-  for (let i = 0; i < NEWS_PROXIES.length; i++) {
-    const idx = (newsProxyIndex + i) % NEWS_PROXIES.length;
-    try {
-      const items = await NEWS_PROXIES[idx](rssUrl);
-      if (items && items.length) { newsProxyIndex = idx; return items; }
-      throw new Error('empty');
-    } catch (e) { lastError = e; }
-  }
-  throw lastError || new Error('all proxies failed');
-}
-
-async function loadNews() {
-  const status = $('#newsStatus');
-  const list = $('#newsList');
-
-  status.textContent = 'Загружаем новости с Lenta.ru...';
-  list.innerHTML = '<div class="card"><p style="color:var(--text-soft);">⏳ Загрузка...</p></div>';
-
-  let items = [];
-  let lastError = null;
-
-  // Пробуем фиды по кругу (каждый «Обновить» берёт следующий)
-  for (let attempt = 0; attempt < LENTA_FEEDS.length; attempt++) {
-    const idx = (lentaFeedIndex + attempt) % LENTA_FEEDS.length;
-    try {
-      const fetched = await fetchLentaWithFallback(LENTA_FEEDS[idx]);
-      if (fetched && fetched.length) {
-        items = fetched;
-        lentaFeedIndex = (idx + 1) % LENTA_FEEDS.length;
-        break;
-      }
-    } catch (e) { lastError = e; }
-  }
-
-  if (!items.length) {
-    status.textContent = `Не удалось загрузить Lenta.ru (${lastError ? lastError.message : 'нет данных'}).`;
-    list.innerHTML = `
-      <div class="news-item" style="text-align:center;padding:28px;">
-        <div class="news-title">⚠️ Lenta.ru: новости временно недоступны</div>
-        <div class="news-desc" style="margin:8px 0 14px;">Попробуй «Обновить» ещё раз или открой сайт напрямую.</div>
-        <a class="btn" href="https://lenta.ru" target="_blank" rel="noopener">Открыть Lenta.ru →</a>
-      </div>`;
-    return;
-  }
-
-  const fresh = [];
-  const old = [];
-  items.forEach(item => {
-    const link = item.link || '';
-    const entry = {
-      title: stripHtml(item.title),
-      desc: stripHtml(item.description || '').slice(0, 220),
-      link: link || 'https://lenta.ru',
-      dateStr: formatNewsDate(item.pubDate)
-    };
-    if (!entry.title) return;
-    if (link && seenNewsLinks.has(link)) old.push(entry);
-    else fresh.push(entry);
-    if (link) seenNewsLinks.add(link);
-  });
-  if (seenNewsLinks.size > 400) seenNewsLinks = new Set([...seenNewsLinks].slice(-200));
-
-  const show = [...fresh, ...old].slice(0, 20);
-  status.textContent = fresh.length
-    ? `Источник: Lenta.ru · свежих: ${fresh.length} · всего: ${show.length}`
-    : `Источник: Lenta.ru · новых нет, показываем последние ${show.length}`;
-
-  list.innerHTML = '';
-  show.forEach((n, i) => {
+function renderNewsSources() {
+  const grid = $('#newsSourcesGrid');
+  grid.innerHTML = '';
+  NEWS_SITES.forEach(site => {
     const a = document.createElement('a');
-    a.className = 'news-item';
-    a.href = n.link;
+    a.className = 'news-source-card';
+    a.href = site.url;
     a.target = '_blank';
     a.rel = 'noopener';
-    const isFresh = i < fresh.length;
     a.innerHTML = `
-      ${n.dateStr ? `<div class="news-date">🕒 ${escapeHtml(n.dateStr)}</div>` : ''}
-      <div class="news-title">${escapeHtml(n.title)}${isFresh ? '<span class="news-fresh-badge">новое</span>' : ''}</div>
-      ${n.desc ? `<div class="news-desc">${escapeHtml(n.desc)}${n.desc.length >= 220 ? '…' : ''}</div>` : ''}
-      <div class="news-source">Источник: Lenta.ru →</div>
+      <div class="ns-icon" style="background:${site.color};">${escapeHtml(site.icon)}</div>
+      <div class="ns-name">${escapeHtml(site.name)}</div>
+      <div class="ns-domain">${escapeHtml(site.domain)}</div>
     `;
-    list.appendChild(a);
+    grid.appendChild(a);
   });
 }
-$('#newsReload').addEventListener('click', loadNews);
+renderNewsSources();
 
-/* ===================== ОТЗЫВЫ: 2 колонки ===================== */
-async function askLLM(prompt) {
-  const url = 'https://text.pollinations.ai/' + encodeURIComponent(prompt);
-  const r = await fetch(url);
-  if (!r.ok) throw new Error('HTTP ' + r.status);
-  return (await r.text()).trim();
+/* ===================== ОТЗЫВЫ ===================== */
+async function askLLM(prompt, timeoutMs = 40000) {
+  const endpoints = [
+    'https://text.pollinations.ai/' + encodeURIComponent(prompt) + '?model=openai',
+    'https://text.pollinations.ai/' + encodeURIComponent(prompt),
+    'https://text.pollinations.ai/openai/' + encodeURIComponent(prompt),
+    'https://text.pollinations.ai/prompt/' + encodeURIComponent(prompt)
+  ];
+  let lastError = null;
+  for (const url of endpoints) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+    try {
+      const r = await fetch(url, {
+        signal: ctrl.signal,
+        cache: 'no-store',
+        headers: { 'Accept': 'text/plain, application/json' }
+      });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const text = await r.text();
+      if (!text || !text.trim()) throw new Error('empty');
+      let result = text.trim();
+      if (result.startsWith('{') || result.startsWith('[')) {
+        try {
+          const j = JSON.parse(result);
+          if (Array.isArray(j) && j[0]?.content) result = j[0].content;
+          else if (j.choices && j.choices[0]?.message?.content) result = j.choices[0].message.content;
+          else if (j.content) result = j.content;
+          else if (j.text) result = j.text;
+          else if (j.response) result = j.response;
+          else if (j.message) result = j.message;
+        } catch {}
+      }
+      if (result && result.trim().length > 30 && !/^(error|not found|404|model not found)/i.test(result.trim())) {
+        return result.trim();
+      }
+      throw new Error('bad content');
+    } catch (e) {
+      lastError = e;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  throw lastError || new Error('все эндпоинты недоступны');
 }
 
 const maleNames = ['Александр','Дмитрий','Сергей','Андрей','Максим','Иван','Артём','Никита','Михаил','Руслан','Владимир','Павел'];
 const femaleNames = ['Анна','Мария','Екатерина','Ольга','Наталья','Ирина','Светлана','Юлия','Дарья','Алина','Татьяна','Елена'];
 const starsOptions = ['★★★★★','★★★★★','★★★★★','★★★★☆','★★★★☆'];
 
-let lastPrompt = '';
+function pickNameByGender(gender, index) {
+  if (gender === 'male') return maleNames[index % maleNames.length];
+  if (gender === 'female') return femaleNames[index % femaleNames.length];
+  return (index % 2 === 0)
+    ? maleNames[Math.floor(index / 2) % maleNames.length]
+    : femaleNames[Math.floor(index / 2) % femaleNames.length];
+}
 
-/* --- ПРАВАЯ КОЛОНКА: мысли → промт --- */
-$('#promptMakeBtn').addEventListener('click', async () => {
-  const gender = $('#reviewGender').value;
-  let count = parseInt($('#reviewCount').value, 10);
-  if (isNaN(count) || count < 1) count = 1;
-  if (count > 50) count = 50;
-  const criteria = $('#reviewCriteria').value.trim();
+function extractRequirements(text) {
+  const req = { chars: null, style: null, tone: null };
+  const charsMatch = text.match(/(\d{2,4})\s*(?:символ|знак)/i);
+  if (charsMatch) req.chars = parseInt(charsMatch[1], 10);
+  if (/жив|эмоц|восторж/i.test(text)) req.style = 'живой, эмоциональный';
+  else if (/делов|офиц|формал/i.test(text)) req.style = 'деловой, сдержанный';
+  else if (/нейтрал|спокой/i.test(text)) req.style = 'нейтральный';
+  if (/негатив|плох|ругат/i.test(text)) req.tone = 'смешанный, с критикой';
+  else if (/восторг|идеал|супер|отлич/i.test(text)) req.tone = 'восторженный, положительный';
+  return req;
+}
 
-  if (!criteria || criteria.length < 5) {
-    toast('Введи хотя бы пару слов о чём нужен отзыв');
-    return;
+/* Обобщённые темы — НЕ сырые фразы пользователя */
+function analyzeTheme(text) {
+  if (/курсов|диплом|реферат|эссе|контрольн|учебн/i.test(text)) return 'учебную работу';
+  if (/стат|текст|копирайт|рерайт|контент/i.test(text)) return 'текст';
+  if (/сайт|верстк|вёрстк|лендинг|веб/i.test(text)) return 'сайт';
+  if (/дизайн|макет|логотип|баннер/i.test(text)) return 'дизайн';
+  if (/перевод|перевести|английск/i.test(text)) return 'перевод';
+  if (/код|программ|скрипт|бот|парсер/i.test(text)) return 'код';
+  if (/презентац|слайд|pitch/i.test(text)) return 'презентацию';
+  if (/чертеж|чертёж|3d|модель/i.test(text)) return 'чертёж';
+  if (/таблиц|excel|данн/i.test(text)) return 'таблицу';
+  if (/фото|видео|монтаж|обработ/i.test(text)) return 'видео';
+  return 'заказ';
+}
+function analyzeQualities(text) {
+  const q = [];
+  if (/быстр|скоро|срок|оператив/i.test(text)) q.push('быстро');
+  if (/качеств|хорошо|отличн|профессион|аккурат/i.test(text)) q.push('качественно');
+  if (/вежлив|приятн|общен|отзывчив/i.test(text)) q.push('вежливо и на связи');
+  if (/цен|стои|недорог|бюджет|дешев/i.test(text)) q.push('по адекватной цене');
+  if (/объясн|помог|разобра|подсказ/i.test(text)) q.push('всё объяснил');
+  if (/сдал|сдана|сдано|принят|оценк/i.test(text)) q.push('работа принята без правок');
+  if (/задерж/i.test(text)) q.push('немного задержал, но предупредил');
+  if (/правк|доработ/i.test(text)) q.push('внёс правки без проблем');
+  if (!q.length) q.push('всё сделал как договаривались');
+  return q;
+}
+
+function generateReviewsLocally(criteria, gender, count, req) {
+  const theme = analyzeTheme(criteria);
+  const qualities = analyzeQualities(criteria);
+  const isNeg = req.tone && req.tone.includes('критик');
+
+  const positive = [
+    `Заказывал ${theme} — результатом полностью доволен! Автор ${qualities[0]}, ${qualities[1] || 'всё по делу'}. Спасибо за работу, буду обращаться ещё.`,
+    `Работа с исполнителем оставила только хорошие впечатления: ${qualities[0]}, ${qualities[1] || 'качественно'}. ${theme.charAt(0).toUpperCase() + theme.slice(1)} сделана как надо. Рекомендую!`,
+    `Понравилось, что автор ${qualities[0]} и ${qualities[2] || 'всегда на связи'}. Заказывал ${theme}, всё выполнено в срок. Рекомендую этого специалиста.`,
+    `Брал ${theme} у этого исполнителя. Всё ${qualities[0]}, ${qualities[1] || 'без нареканий'}. Цена адекватная, результат отличный. Обращусь ещё.`,
+    `Хороший специалист. ${theme.charAt(0).toUpperCase() + theme.slice(1)} выполнена ${qualities[0]}, ${qualities[1] || 'аккуратно'}. Отдельно отмечу: ${qualities[2] || 'всё объяснил и показал'}. Спасибо!`,
+    `Сотрудничество прошло отлично. ${theme.charAt(0).toUpperCase() + theme.slice(1)} готова в срок, автор ${qualities[0]}. Если что — ${qualities[2] || 'быстро отвечает'}. Рекомендую.`,
+    `Заказывал ${theme} не первый раз — всегда ${qualities[0]}. ${qualities[1] ? 'Порадовало, что ' + qualities[1] : 'Всё супер'}. Продолжу работать.`,
+    `Всё понравилось: ${qualities.slice(0, 3).join(', ')}. ${theme.charAt(0).toUpperCase() + theme.slice(1)} выполнена как надо. Спасибо исполнителю, рекомендую.`
+  ];
+  const negative = [
+    `В целом ${theme} выполнена нормально, но ${qualities[0] || 'были нюансы'}. Пришлось немного подождать.`,
+    `Работа с ${theme} прошла со средней оценкой. ${qualities[0] || 'Всё в срок'}, но ожидал большего.`,
+    `Заказывал ${theme}. В целом ок, но ${qualities[0] || 'были мелкие недочёты'}. Есть куда расти.`
+  ];
+
+  const pool = isNeg ? negative : positive;
+  const items = [];
+  for (let i = 0; i < count; i++) {
+    let text = pool[i % pool.length];
+    if (gender === 'female') {
+      text = text
+        .replace(/доволен/g, 'довольна')
+        .replace(/обращался/g, 'обращалась')
+        .replace(/Заказывал/g, 'Заказывала')
+        .replace(/Брал/g, 'Брала')
+        .replace(/ожидал/g, 'ожидала')
+        .replace(/получил/g, 'получила');
+    }
+    if (req.chars) {
+      if (text.length > req.chars * 1.2) text = text.slice(0, Math.floor(req.chars * 1.1)) + '...';
+      while (text.length < req.chars * 0.85) {
+        text += ' ' + (i % 2 === 0 ? 'Всем рекомендую этого исполнителя!' : 'Очень доволен сотрудничеством.');
+      }
+    }
+    items.push({
+      name: pickNameByGender(gender, i),
+      text,
+      color: `hsl(${Math.floor(Math.random()*360)}, 55%, 62%)`,
+      stars: pick(starsOptions)
+    });
   }
+  return items;
+}
 
-  const genderRu = gender === 'male' ? 'мужского' : gender === 'female' ? 'женского' : 'любого';
-  const btn = $('#promptMakeBtn');
-  const status = $('#promptStatus');
-  const output = $('#promptOutput');
-  const copyBtn = $('#promptCopy');
-  const leftBtn = $('#promptToLeft');
-
-  btn.disabled = true;
-  btn.textContent = '⏳ Нейросеть думает...';
-  status.textContent = 'Превращаем мысли в качественный промт...';
-  output.classList.remove('empty');
-  output.textContent = '⏳ Генерируем...';
-  copyBtn.disabled = true;
-  leftBtn.disabled = true;
-
-  const metaPrompt =
-    `Ты — профессиональный prompt-инженер. Пользователь хочет получить промт для генерации отзывов. ` +
-    `Его мысли/детали: "${criteria}". ` +
-    `Нужно: ${count} отзывов. Пол авторов: ${genderRu}.\n\n` +
-    `Составь ОДИН качественный промт на русском языке, который пользователь скопирует и вставит в ChatGPT/Claude, чтобы получить реалистичные отзывы.\n\n` +
-    `Промт должен содержать:\n` +
-    `1. Роль ("Ты — реальный клиент, недавно заказывал услугу/товар").\n` +
-    `2. Конкретные детали из мыслей пользователя (что хвалить, что упомянуть).\n` +
-    `3. Требования: ${count} разных отзывов, живой язык, естественные вариации длины, без markdown, каждый с новой строки, без нумерации.\n` +
-    `4. Ограничения: без штампов, без повторов, звучит как реальные люди.\n\n` +
-    `Выведи ТОЛЬКО готовый промт без пояснений и без markdown.`;
-
-  try {
-    const raw = await askLLM(metaPrompt);
-    lastPrompt = raw.trim();
-    output.textContent = lastPrompt;
-    copyBtn.disabled = false;
-    leftBtn.disabled = false;
-    status.textContent = '✓ Промт готов! Скопируй его или вставь в левую колонку.';
-  } catch (e) {
-    lastPrompt =
-      `Ты — реальный клиент, который недавно заказывал услугу/товар. ` +
-      `Напиши ${count} разных правдоподобных отзывов (пол автора: ${genderRu}) о работе исполнителя.\n\n` +
-      `Детали: ${criteria}\n\n` +
-      `Требования:\n— каждый отзыв 1–3 предложения, живой язык;\n— вариации длины и эмоций;\n` +
-      `— в основном положительные, но правдоподобно;\n— каждый с новой строки, без нумерации, без markdown;\n— без повторов.\n\n` +
-      `Выведи только сами отзывы, без пояснений.`;
-    output.textContent = lastPrompt;
-    copyBtn.disabled = false;
-    leftBtn.disabled = false;
-    status.textContent = `Нейросеть недоступна (${e.message}). Промт собран вручную.`;
-  }
-
-  btn.disabled = false;
-  btn.textContent = '🪄 Сделать промт';
-});
-
-/* Копировать */
-$('#promptCopy').addEventListener('click', async () => {
-  if (!lastPrompt) return;
-  try {
-    await navigator.clipboard.writeText(lastPrompt);
-    const t = $('#copyToast');
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 1800);
-    toast('Промт скопирован');
-  } catch {
-    const ta = document.createElement('textarea');
-    ta.value = lastPrompt;
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand('copy'); toast('Промт скопирован'); } catch { toast('Не удалось скопировать'); }
-    document.body.removeChild(ta);
-  }
-});
-
-/* Вставить в левую колонку */
-$('#promptToLeft').addEventListener('click', () => {
-  if (!lastPrompt) return;
-  $('#reviewsPromptInput').value = lastPrompt;
-  toast('Промт вставлен в левую колонку');
-  $('#reviewsPromptInput').focus();
-});
-
-/* --- ЛЕВАЯ КОЛОНКА: промт → отзывы --- */
 function renderReviewCards(items) {
   const out = $('#reviewsOutput');
   out.innerHTML = '';
@@ -1843,60 +1826,92 @@ function renderReviewCards(items) {
   });
 }
 
-$('#reviewsGenerateBtn').addEventListener('click', async () => {
-  const prompt = $('#reviewsPromptInput').value.trim();
-  const status = $('#reviewsStatus');
-  const btn = $('#reviewsGenerateBtn');
+function showReviewsLoader() {
+  const out = $('#reviewsOutput');
+  out.innerHTML = `
+    <div class="reviews-loader">
+      <div class="spinner"></div>
+      <div class="loader-text">Нейросеть анализирует запрос и генерирует отзывы...</div>
+      <div class="loader-sub">Это может занять 15–40 секунд</div>
+    </div>`;
+}
 
-  if (!prompt || prompt.length < 10) {
-    toast('Вставь промт в левую колонку');
+$('#reviewGenerate').addEventListener('click', async () => {
+  const gender = $('#reviewGender').value;
+  let count = parseInt($('#reviewCount').value, 10);
+  if (isNaN(count) || count < 1) count = 1;
+  if (count > 30) count = 30;
+  const criteria = $('#reviewCriteria').value.trim();
+
+  if (!criteria || criteria.length < 10) {
+    toast('Опиши подробнее: о чём отзыв, детали, стиль');
     return;
   }
 
+  const genderRu = gender === 'male' ? 'мужской' : gender === 'female' ? 'женский' : 'любой';
+  const btn = $('#reviewGenerate');
+  const status = $('#reviewStatus');
+
   btn.disabled = true;
-  btn.textContent = '⏳ Нейросеть пишет отзывы...';
-  status.textContent = 'Отправляем промт в нейросеть...';
-  $('#reviewsOutput').innerHTML = '';
+  btn.textContent = '⏳ Генерируем...';
+  status.textContent = 'Идёт генерация, подожди...';
+  showReviewsLoader();
+
+  const req = extractRequirements(criteria);
+
+  let strictReq = '';
+  if (req.chars) strictReq += `— КАЖДЫЙ отзыв должен быть примерно ${req.chars} символов.\n`;
+  if (req.style) strictReq += `— Стиль: ${req.style}.\n`;
+  if (req.tone) strictReq += `— Тональность: ${req.tone}.\n`;
+
+  const prompt =
+    `Ты — профессиональный копирайтер. Тебе дан запрос от пользователя, где он описывает, о чём должны быть отзывы.\n\n` +
+    `ЗАПРОС ПОЛЬЗОВАТЕЛЯ:\n"""${criteria}"""\n\n` +
+    `Пол автора отзывов: ${genderRu}. Количество отзывов: ${count}.\n\n` +
+    `ТВОЯ ЗАДАЧА:\n` +
+    `1. Проанализируй запрос: что за услуга/работа, что важное нужно упомянуть, какие эмоции, какой стиль.\n` +
+    `2. Напиши ${count} ЖИВЫХ отзывов от лица реального клиента. Описывай детали СВОИМИ СЛОВАМИ — НЕ КОПИРУЙ фразы из запроса дословно.\n` +
+    `3. Например, если в запросе «писал курсовую по экономике, автор помог за 2 дня», пиши: «Заказывал курсовую — автор справился за пару дней» (не «писал курсовую по экономике»).\n\n` +
+    `ТРЕБОВАНИЯ:\n${strictReq}` +
+    `— Каждый отзыв с новой строки, без нумерации, без markdown.\n` +
+    `— Не повторяй одни и те же фразы между отзывами.\n` +
+    `— Учти ВСЕ детали, но перескажи их своими словами.\n` +
+    `— Живой человеческий язык.\n\n` +
+    `Выведи только сами отзывы.`;
 
   let items = [];
+  let success = false;
   try {
-    const raw = await askLLM(prompt);
+    const raw = await askLLM(prompt, 40000);
     const lines = raw.split('\n')
-      .map(l => l.replace(/^[\d\.\-\)\*\s"«»]+/, '').trim())
-      .filter(l => l.length > 15);
+      .map(l => l.replace(/^[\d\.\-\)\*\s"«»„“]+/, '').replace(/\*\*/g, '').trim())
+      .filter(l => l.length > 20 && l.length < 1500);
 
-    if (!lines.length) throw new Error('empty');
-
-    lines.slice(0, 30).forEach(text => {
-      const isMale = Math.random() > 0.5;
-      items.push({
-        name: isMale ? pick(maleNames) : pick(femaleNames),
-        text,
-        color: `hsl(${Math.floor(Math.random()*360)}, 55%, 62%)`,
-        stars: pick(starsOptions)
+    if (lines.length) {
+      let filtered = lines;
+      if (req.chars) {
+        const minL = Math.floor(req.chars * 0.6);
+        const maxL = Math.ceil(req.chars * 1.4);
+        const matched = lines.filter(l => l.length >= minL && l.length <= maxL);
+        if (matched.length >= Math.min(2, count)) filtered = matched;
+      }
+      filtered.slice(0, count).forEach((text, i) => {
+        items.push({
+          name: pickNameByGender(gender, i),
+          text,
+          color: `hsl(${Math.floor(Math.random()*360)}, 55%, 62%)`,
+          stars: pick(starsOptions)
+        });
       });
-    });
-
-    status.textContent = `✓ Отзывов готово: ${items.length}`;
-  } catch (e) {
-    const templates = [
-      'Отличная работа! Всё сделано быстро и качественно. Рекомендую.',
-      'Очень доволен результатом. Всё чётко, по срокам и без нареканий.',
-      'Заказывал не первый раз — всегда на высоте. Спасибо!',
-      'Работа выполнена аккуратно, всё объяснили и помогли. Обращусь ещё.',
-      'Хороший специалист, всегда на связи, отвечает быстро. Результатом доволен.',
-      'Сделано даже лучше, чем ожидал! Пунктуально и профессионально.'
-    ];
-    for (let i = 0; i < 8; i++) {
-      const isMale = Math.random() > 0.5;
-      items.push({
-        name: isMale ? pick(maleNames) : pick(femaleNames),
-        text: pick(templates),
-        color: `hsl(${Math.floor(Math.random()*360)}, 55%, 62%)`,
-        stars: pick(starsOptions)
-      });
+      success = true;
     }
-    status.textContent = `Нейросеть недоступна (${e.message}). Показаны шаблонные отзывы.`;
+  } catch (e) {}
+
+  if (!success) {
+    items = generateReviewsLocally(criteria, gender, count, req);
+    status.textContent = `Нейросеть недоступна. Отзывы сгенерированы локально с учётом темы запроса.`;
+  } else {
+    status.textContent = `✓ Отзывов готово: ${items.length}`;
   }
 
   renderReviewCards(items);
@@ -1904,8 +1919,103 @@ $('#reviewsGenerateBtn').addEventListener('click', async () => {
   btn.textContent = '✨ Сгенерировать отзывы';
 });
 
+/* ===================== ФРИЛАНС ===================== */
+const EXCHANGES = [
+  { name: 'UNU', url: 'https://unu.im/re/2326558', tag: 'Букс',
+    desc: 'Одна из самых популярных русскоязычных буксов. Платят за простые задания.',
+    tasks: 'Подписки, лайки, репосты, регистрации, просмотры.',
+    prices: [['Подписка','0.5–3₽'],['Лайк','0.3–2₽'],['Регистрация','3–20₽'],['Установка','5–50₽']] },
+  { name: 'socpublic', url: 'https://socpublic.com/?i=9360716&slide=1', tag: 'Букс',
+    desc: 'Крупная биржа с заданиями на соцсети. Оплата от 0.5₽ до сотен.',
+    tasks: 'Подписки, лайки, комментарии, репосты, регистрации, опросы.',
+    prices: [['Подписка','1–5₽'],['Лайк','0.5–3₽'],['Комментарий','3–15₽'],['Опрос','5–40₽']] },
+  { name: 'Зеленка Work', url: 'https://zelenka.work/i/userfm5s', tag: 'Букс',
+    desc: 'Молодая, быстрорастущая биржа. Много заданий без вложений.',
+    tasks: 'Подписки, лайки, репосты, опросы, тестирование.',
+    prices: [['Подписка','0.5–2₽'],['Лайк','0.3–1.5₽'],['Опрос','3–25₽'],['Регистрация','2–15₽']] },
+  { name: 'mjpublic', url: 'https://mjpublic.com/r/4851', tag: 'Букс',
+    desc: 'Букс с хорошей репутацией и большим выбором заданий.',
+    tasks: 'Подписки, лайки, репосты, регистрации, установки.',
+    prices: [['Подписка','0.5–3₽'],['Лайк','0.3–2₽'],['Регистрация','3–18₽'],['Установка','5–45₽']] },
+  { name: 'Surfearner', url: 'https://doxod24.net/2321971', tag: 'Букс',
+    desc: 'Англоязычный букс с оплатой в долларах.',
+    tasks: 'Сёрфинг, клики, регистрации, опросы.',
+    prices: [['Клик','$0.001–$0.01'],['Сёрфинг','$0.002–$0.02'],['Опрос','$0.05–$1'],['Регистрация','$0.05–$0.5']] },
+  { name: 'Advego', url: 'https://advego.com/?ref=69fTV4YQ8s', tag: 'Копирайтинг',
+    desc: 'Биржа для копирайтеров и рерайтеров.',
+    tasks: 'Статьи, рерайт, SEO-тексты, вычитка, транскрипция.',
+    prices: [['1000 знаков','50–500₽'],['Рерайт','30–200₽'],['Вычитка','10–50₽'],['Транскрипция','20–100₽/мин']] },
+  { name: 'Qcomment', url: 'https://qcomment.com/rsignup/3836350', tag: 'Комментарии',
+    desc: 'Биржа для комментариев и отзывов на форумах и в соцсетях.',
+    tasks: 'Отзывы, комментарии, посты, ответы на форумах.',
+    prices: [['Отзыв','15–60₽'],['Комментарий','5–25₽'],['Пост в соцсетях','10–50₽'],['Ответ на форуме','5–30₽']] }
+];
+function renderExchanges() {
+  const grid = $('#exchangeGrid');
+  grid.innerHTML = '';
+  EXCHANGES.forEach(ex => {
+    const card = document.createElement('div');
+    card.className = 'exchange-card';
+    const pricesHtml = ex.prices.map(([l, p]) =>
+      `<div class="price-row"><span>${escapeHtml(l)}</span><b>${escapeHtml(p)}</b></div>`
+    ).join('');
+    card.innerHTML = `
+      <div class="ex-head">
+        <div class="ex-name">${escapeHtml(ex.name)}</div>
+        <div class="ex-tag">${escapeHtml(ex.tag)}</div>
+      </div>
+      <div class="ex-desc">${escapeHtml(ex.desc)}</div>
+      <div class="ex-tasks"><b>Типичные задания:</b>${escapeHtml(ex.tasks)}</div>
+      <div class="ex-prices">${pricesHtml}</div>
+      <a class="ex-link" href="${ex.url}" target="_blank" rel="noopener">Перейти на биржу →</a>
+    `;
+    grid.appendChild(card);
+  });
+}
+renderExchanges();
+
 /* ===================== ИГРЫ ===================== */
 const activeGame = { name: null, cleanup: null };
+
+function getQuestData(gameKey) { return LS.get('mw_quests_' + gameKey, { quests: [], rewards: [] }); }
+function saveQuestData(gameKey, data) { LS.set('mw_quests_' + gameKey, data); }
+function initQuests(gameKey, questDefs, containerId) {
+  const data = getQuestData(gameKey);
+  if (!data.quests.length || data.quests.length !== questDefs.length) {
+    data.quests = questDefs.map((q, i) => ({ ...q, progress: 0, done: false, id: i }));
+    saveQuestData(gameKey, data);
+  }
+  renderQuests(gameKey, containerId);
+}
+function renderQuests(gameKey, containerId) {
+  const data = getQuestData(gameKey);
+  const el = $('#' + containerId);
+  if (!el) return;
+  const total = data.quests.length;
+  const done = data.quests.filter(q => q.done).length;
+  const pct = total ? (done / total) * 100 : 0;
+  const barId = containerId.replace('Quests', '') + 'GpBar';
+  const bar = $('#' + barId);
+  if (bar) bar.style.width = pct + '%';
+  el.innerHTML = data.quests.map(q => {
+    const cls = q.done ? 'q-done' : (q.progress > 0 ? 'q-active' : '');
+    const prog = q.done ? '✓' : `${Math.min(q.progress, q.target)}/${q.target}`;
+    return `<div class="${cls}">${q.done ? '🏆' : '🎯'} ${escapeHtml(q.text)} — <b>${prog}</b> · награда: ${escapeHtml(q.reward)}</div>`;
+  }).join('');
+}
+function addQuestProgress(gameKey, containerId, questIndex, amount = 1) {
+  const data = getQuestData(gameKey);
+  if (!data.quests[questIndex]) return;
+  const q = data.quests[questIndex];
+  if (q.done) return;
+  q.progress += amount;
+  if (q.progress >= q.target) {
+    q.done = true;
+    toast(`🏆 Квест выполнен: ${q.text}! Награда: ${q.reward}`);
+  }
+  saveQuestData(gameKey, data);
+  renderQuests(gameKey, containerId);
+}
 
 function openGame(name) {
   closeGame();
@@ -1916,6 +2026,7 @@ function openGame(name) {
   if (name === 'race') initRace();
   if (name === 'tetris') initTetris();
   if (name === 'snake') initSnake();
+  if (name === 'football') initFootball();
   setTimeout(() => {
     const win = $('#game-' + name);
     window.scrollTo({ top: win.offsetTop - 80, behavior: 'smooth' });
@@ -1931,7 +2042,7 @@ function closeGame() {
 $$('.game-card').forEach(card => card.addEventListener('click', () => openGame(card.dataset.game)));
 $$('.game-close').forEach(btn => btn.addEventListener('click', closeGame));
 
-/* ---------- ШАХМАТЫ ---------- */
+/* ===================== ШАХМАТЫ ===================== */
 function initChess() {
   const boardEl = $('#chessBoard');
   const initial = [
@@ -1944,11 +2055,11 @@ function initChess() {
     'P','P','P','P','P','P','P','P',
     'R','N','B','Q','K','B','N','R'
   ];
-
   let board = initial.slice();
   let selected = null;
   let currentHints = [];
   let turn = 'white';
+  let mode = 'bot';
   let playerColor = 'black';
   let elo = 800;
   let gameOver = false;
@@ -1965,13 +2076,13 @@ function initChess() {
   }
 
   function visualToBoard(vis) {
+    if (mode === 'friend') return vis;
     if (playerColor === 'black') {
       const vr = Math.floor(vis / 8), vc = vis % 8;
       return (7 - vr) * 8 + (7 - vc);
     }
     return vis;
   }
-
   function render() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     for (let v = 0; v < 64; v++) {
@@ -1984,26 +2095,22 @@ function initChess() {
       cell.style.color = '';
       cell.style.textShadow = '';
       if (p) {
-        const isWhitePiece = p === p.toUpperCase();
-        const glyph = isWhitePiece
+        const isW = p === p.toUpperCase();
+        const glyph = isW
           ? ({ 'K':'♔','Q':'♕','R':'♖','B':'♗','N':'♘','P':'♙' }[p.toUpperCase()])
           : ({ 'k':'♚','q':'♛','r':'♜','b':'♝','n':'♞','p':'♟' }[p.toLowerCase()]);
         cell.textContent = glyph;
-        if (isWhitePiece) {
+        if (isW) {
           cell.style.color = '#ffffff';
-          cell.style.textShadow = isDark
-            ? '0 0 2px #000, 0 1px 2px rgba(0,0,0,0.8)'
-            : '0 0 1px #4a3f6b, 0 1px 2px rgba(74,63,107,0.5)';
+          cell.style.textShadow = isDark ? '0 0 2px #000, 0 1px 2px rgba(0,0,0,0.8)' : '0 0 1px #4a3f6b';
         } else {
           cell.style.color = '#1a1723';
-          cell.style.textShadow = isDark
-            ? '0 0 2px #cfc6e5, 0 1px 1px rgba(207,198,229,0.4)'
-            : '0 0 1px #000, 0 1px 2px rgba(0,0,0,0.4)';
+          cell.style.textShadow = isDark ? '0 0 2px #cfc6e5' : '0 0 1px #000';
         }
       }
       if (selected === bIdx) cell.classList.add('sel');
       if (currentHints.includes(bIdx)) {
-        if (board[bIdx] && colorOf(board[bIdx]) !== playerColor) cell.classList.add('capture');
+        if (board[bIdx] && colorOf(board[bIdx]) !== turn) cell.classList.add('capture');
         else cell.classList.add('hint');
       }
       if (p === 'K' && inCheck('white')) cell.classList.add('check');
@@ -2011,13 +2118,10 @@ function initChess() {
     }
     const filesRow = $('#chessFiles');
     if (filesRow) {
-      const files = playerColor === 'black'
-        ? ['h','g','f','e','d','c','b','a']
-        : ['a','b','c','d','e','f','g','h'];
+      const files = (mode === 'bot' && playerColor === 'black') ? ['h','g','f','e','d','c','b','a'] : ['a','b','c','d','e','f','g','h'];
       filesRow.innerHTML = files.map(f => `<span>${f}</span>`).join('');
     }
   }
-
   const themeObserver = new MutationObserver(() => render());
   themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
@@ -2080,11 +2184,7 @@ function initChess() {
     }
     return moves;
   }
-
-  function findKing(color, b = board) {
-    const target = color === 'white' ? 'K' : 'k';
-    return b.indexOf(target);
-  }
+  function findKing(color, b = board) { return b.indexOf(color === 'white' ? 'K' : 'k'); }
   function isAttacked(idx, byColor, b = board) {
     for (let i = 0; i < 64; i++) {
       if (!b[i]) continue;
@@ -2099,14 +2199,14 @@ function initChess() {
     return isAttacked(k, opposite(color), b);
   }
   function makeMove(from, to, b = board) {
-    const captured = b[to];
+    const cap = b[to];
     b[to] = b[from];
     b[from] = '';
-    return captured;
+    return cap;
   }
-  function undoMove(from, to, captured, b = board) {
+  function undoMove(from, to, cap, b = board) {
     b[from] = b[to];
-    b[to] = captured || '';
+    b[to] = cap || '';
   }
   function legalMoves(from, b = board) {
     const p = b[from];
@@ -2132,8 +2232,12 @@ function initChess() {
     const hasMoves = allLegalMoves(turn).length > 0;
     if (!hasMoves) {
       if (inCheck(turn)) {
-        const winner = opposite(turn) === playerColor ? 'Ты победил!' : 'Победил бот.';
-        $('#chessStatus').textContent = `Мат! ${winner}`;
+        if (mode === 'friend') {
+          $('#chessStatus').textContent = `Мат! Победили ${turn === 'white' ? 'чёрные' : 'белые'}.`;
+        } else {
+          const winner = opposite(turn) === playerColor ? 'Ты победил!' : 'Победил бот.';
+          $('#chessStatus').textContent = `Мат! ${winner}`;
+        }
       } else {
         $('#chessStatus').textContent = 'Пат — ничья.';
       }
@@ -2144,14 +2248,13 @@ function initChess() {
   }
   function evaluateBoard(b) {
     const vals = { p: 100, n: 320, b: 330, r: 500, q: 900, k: 20000 };
-    let score = 0;
+    let s = 0;
     for (let i = 0; i < 64; i++) {
       const p = b[i];
       if (!p) continue;
-      const v = vals[p.toLowerCase()] || 0;
-      score += isWhite(p) ? v : -v;
+      s += (isWhite(p) ? 1 : -1) * (vals[p.toLowerCase()] || 0);
     }
-    return score;
+    return s;
   }
   function minimax(b, depth, alpha, beta, maximizing, botColor) {
     if (depth === 0) {
@@ -2159,10 +2262,7 @@ function initChess() {
       return botColor === 'white' ? s : -s;
     }
     const moves = allLegalMoves(maximizing ? botColor : opposite(botColor), b);
-    if (!moves.length) {
-      const score = inCheck(maximizing ? botColor : opposite(botColor), b) ? -100000 + depth : 0;
-      return score;
-    }
+    if (!moves.length) return inCheck(maximizing ? botColor : opposite(botColor), b) ? -100000 + depth : 0;
     if (maximizing) {
       let maxEval = -Infinity;
       for (const mv of moves) {
@@ -2187,10 +2287,29 @@ function initChess() {
       return minEval;
     }
   }
-
   function onCellClick(visIdx) {
-    if (gameOver || turn !== playerColor) return;
+    if (gameOver) return;
     const idx = visualToBoard(visIdx);
+    if (mode === 'friend') {
+      if (selected !== null && currentHints.includes(idx)) {
+        makeMove(selected, idx);
+        selected = null;
+        currentHints = [];
+        turn = opposite(turn);
+        render();
+        if (checkGameEnd()) return;
+        $('#chessStatus').textContent = `Ход ${turn === 'white' ? 'белых' : 'чёрных'}`;
+        return;
+      }
+      const p = board[idx];
+      if (p && colorOf(p) === turn) {
+        selected = idx;
+        currentHints = legalMoves(idx);
+      } else { selected = null; currentHints = []; }
+      render();
+      return;
+    }
+    if (turn !== playerColor) return;
     if (selected !== null && currentHints.includes(idx)) {
       makeMove(selected, idx);
       selected = null;
@@ -2206,29 +2325,23 @@ function initChess() {
     if (p && colorOf(p) === playerColor) {
       selected = idx;
       currentHints = legalMoves(idx);
-    } else {
-      selected = null;
-      currentHints = [];
-    }
+    } else { selected = null; currentHints = []; }
     render();
   }
-
   function botMove() {
-    if (gameOver) return;
+    if (gameOver || mode !== 'bot') return;
     const botColor = opposite(playerColor);
     const allMoves = allLegalMoves(botColor);
     if (!allMoves.length) { checkGameEnd(); return; }
     let bestMove;
     const vals = { p: 100, n: 320, b: 330, r: 500, q: 900, k: 20000 };
-
     if (elo <= 1000) {
-      if (Math.random() < 0.7) {
-        bestMove = pick(allMoves);
-      } else {
+      if (Math.random() < 0.7) bestMove = pick(allMoves);
+      else {
         let best = -Infinity;
         for (const mv of allMoves) {
-          const target = board[mv.to];
-          let s = target ? vals[target.toLowerCase()] || 0 : 0;
+          const t = board[mv.to];
+          let s = t ? vals[t.toLowerCase()] || 0 : 0;
           s += Math.random() * 30;
           if (s > best) { best = s; bestMove = mv; }
         }
@@ -2254,7 +2367,6 @@ function initChess() {
         if (score > best) { best = score; bestMove = mv; }
       }
     }
-
     if (!bestMove) bestMove = allMoves[0];
     makeMove(bestMove.from, bestMove.to);
     turn = opposite(turn);
@@ -2264,7 +2376,23 @@ function initChess() {
     if (checkGameEnd()) return;
     $('#chessStatus').textContent = 'Твой ход';
   }
-
+  $$('#chessMode .diff-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('#chessMode .diff-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      mode = btn.dataset.mode;
+      if (mode === 'friend') {
+        $('#chessRules').textContent = 'Режим «с другом»: ходите по очереди. Белые ходят первыми.';
+        $('#chessDiff').style.display = 'none';
+        $('#chessColor').style.display = 'none';
+      } else {
+        $('#chessRules').textContent = 'Режим «с ботом»: выбери цвет и уровень. Кликни по фигуре, затем по подсвеченной клетке.';
+        $('#chessDiff').style.display = '';
+        $('#chessColor').style.display = '';
+      }
+      resetGame();
+    });
+  });
   $$('#chessColor .diff-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       $$('#chessColor .diff-btn').forEach(b => b.classList.remove('active'));
@@ -2280,10 +2408,9 @@ function initChess() {
       $$('#chessDiff .diff-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       elo = parseInt(btn.dataset.elo, 10);
-      toast('Сложность бота: ' + btn.textContent);
+      toast('Сложность: ' + btn.textContent);
     });
   });
-
   function resetGame() {
     board = initial.slice();
     selected = null;
@@ -2291,21 +2418,20 @@ function initChess() {
     turn = 'white';
     gameOver = false;
     render();
-    if (playerColor === 'black') {
+    if (mode === 'bot' && playerColor === 'black') {
       $('#chessStatus').textContent = 'Ход бота (белые)...';
       setTimeout(botMove, 500);
+    } else if (mode === 'friend') {
+      $('#chessStatus').textContent = 'Ход белых';
     } else {
       $('#chessStatus').textContent = 'Твой ход (белые)';
     }
   }
   resetGame();
-  activeGame.cleanup = () => {
-    gameOver = true;
-    themeObserver.disconnect();
-  };
+  activeGame.cleanup = () => { gameOver = true; themeObserver.disconnect(); };
 }
 
-/* ---------- ГОНКА (без бота) ---------- */
+/* ===================== ГОНКА ===================== */
 let raceAnimId = null;
 let raceCleanup = null;
 
@@ -2315,7 +2441,15 @@ function initRace() {
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
 
-  let car = { x: W / 2 - 20, y: H - 100, w: 40, h: 70 };
+  const RACE_QUESTS = [
+    { text: 'Доедь до финиша 1 раз', target: 1, reward: '+10 XP' },
+    { text: 'Доедь 3 раза', target: 3, reward: 'Скин "Неон"' },
+    { text: 'Доедь 5 раз', target: 5, reward: '+50 XP' },
+    { text: 'Финишируй без аварий 3 раза', target: 3, reward: 'Трофей "Ас"' }
+  ];
+  initQuests('race', RACE_QUESTS, 'raceQuests');
+
+  let car = { x: W / 2 - 22, y: H - 130, w: 44, h: 76 };
   let obstacles = [];
   let score = 0;
   let running = true;
@@ -2326,19 +2460,23 @@ function initRace() {
   let finished = false;
   let raceTime = 0;
   let best = LS.get('mw_race_best_time', null);
+  let finishCount = LS.get('mw_race_finish_count', 0);
+  let noCrashCount = LS.get('mw_race_no_crash', 0);
   let keys = {};
   let diff = 'easy';
+  let crashedThisRun = false;
+
+  $('#raceFinishCount').textContent = finishCount;
 
   const cfgMap = {
-    easy:   { obstacleSpeed: 3.0, spawnInterval: 950, speed: 4 },
-    normal: { obstacleSpeed: 4.5, spawnInterval: 720, speed: 4 },
-    hard:   { obstacleSpeed: 6.0, spawnInterval: 540, speed: 4.5 }
+    easy:   { obstacleSpeed: 2.8, spawnInterval: 1000, speed: 4 },
+    normal: { obstacleSpeed: 4.2, spawnInterval: 750, speed: 4 },
+    hard:   { obstacleSpeed: 5.8, spawnInterval: 560, speed: 4.5 }
   };
   let cfg = cfgMap.easy;
 
   function renderBest() {
-    if (best !== null) $('#raceRecord').textContent = `${best.toFixed(1)} с`;
-    else $('#raceRecord').textContent = '—';
+    $('#raceRecord').textContent = best !== null ? `${best.toFixed(1)} с` : '—';
   }
   renderBest();
 
@@ -2367,38 +2505,89 @@ function initRace() {
 
   function spawnObstacle() {
     const lane = Math.floor(Math.random() * 3);
-    const laneW = W / 3;
+    const laneW = (W - 60) / 3;
     const w = 36 + Math.random() * 20;
-    obstacles.push({ x: lane * laneW + (laneW - w) / 2, y: -70, w, h: 50 + Math.random() * 30 });
+    const type = Math.random() < 0.3 ? 'cone' : 'barrier';
+    obstacles.push({ x: 30 + lane * laneW + (laneW - w) / 2, y: -70, w, h: 50 + Math.random() * 30, type });
   }
+
   function drawRoad(scroll) {
-    ctx.fillStyle = '#2a2438';
+    ctx.fillStyle = '#2f6e2f';
     ctx.fillRect(0, 0, W, H);
-    ctx.strokeStyle = 'rgba(255,255,255,.18)';
-    ctx.lineWidth = 3;
-    const dashOffset = (scroll % 44);
-    ctx.setLineDash([22, 22]);
-    ctx.lineDashOffset = -dashOffset;
+    const roadMargin = 30;
+    ctx.fillStyle = '#3a3348';
+    ctx.fillRect(roadMargin, 0, W - roadMargin * 2, H);
+    ctx.fillStyle = '#f0e8c8';
+    ctx.fillRect(roadMargin, 0, 4, H);
+    ctx.fillRect(W - roadMargin - 4, 0, 4, H);
+    ctx.strokeStyle = 'rgba(255,240,180,.65)';
+    ctx.lineWidth = 4;
+    ctx.setLineDash([26, 26]);
+    ctx.lineDashOffset = -(scroll % 52);
     for (let i = 1; i <= 2; i++) {
+      const x = roadMargin + (W - roadMargin * 2) / 3 * i;
       ctx.beginPath();
-      ctx.moveTo(W / 3 * i, 0);
-      ctx.lineTo(W / 3 * i, H);
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, H);
       ctx.stroke();
     }
     ctx.setLineDash([]);
     ctx.lineDashOffset = 0;
   }
-  function drawCar(x, y, w, h, color) {
-    ctx.fillStyle = color;
+
+  function drawCar(x, y, w, h) {
+    ctx.fillStyle = 'rgba(0,0,0,.35)';
     ctx.beginPath();
-    ctx.roundRect(x, y, w, h, 8);
+    ctx.ellipse(x + w / 2, y + h - 4, w / 2 + 4, 6, 0, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,.35)';
-    ctx.fillRect(x + 6, y + 12, w - 12, h * 0.35);
-    ctx.fillStyle = 'rgba(255,240,180,.9)';
-    ctx.fillRect(x + 6, y + 2, 8, 4);
-    ctx.fillRect(x + w - 14, y + 2, 8, 4);
+    ctx.fillStyle = '#7ed8b0';
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, 10);
+    ctx.fill();
+    ctx.fillStyle = '#a8f0cd';
+    ctx.beginPath();
+    ctx.roundRect(x + 5, y + h * 0.28, w - 10, h * 0.32, 6);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(200,240,255,.75)';
+    ctx.beginPath();
+    ctx.roundRect(x + 7, y + h * 0.3, w - 14, h * 0.12, 4);
+    ctx.fill();
+    ctx.fillStyle = '#fff8b0';
+    ctx.fillRect(x + 5, y + 3, 9, 4);
+    ctx.fillRect(x + w - 14, y + 3, 9, 4);
+    ctx.fillStyle = '#e05050';
+    ctx.fillRect(x + 5, y + h - 7, 9, 4);
+    ctx.fillRect(x + w - 14, y + h - 7, 9, 4);
+    ctx.fillStyle = '#1a1723';
+    ctx.fillRect(x - 3, y + 10, 6, h * 0.2);
+    ctx.fillRect(x + w - 3, y + 10, 6, h * 0.2);
+    ctx.fillRect(x - 3, y + h - h * 0.3, 6, h * 0.2);
+    ctx.fillRect(x + w - 3, y + h - h * 0.3, 6, h * 0.2);
   }
+
+  function drawObstacle(o) {
+    if (o.type === 'cone') {
+      ctx.fillStyle = '#ff7733';
+      ctx.beginPath();
+      ctx.moveTo(o.x + o.w / 2, o.y);
+      ctx.lineTo(o.x + o.w, o.y + o.h);
+      ctx.lineTo(o.x, o.y + o.h);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(o.x + o.w * 0.25, o.y + o.h * 0.45, o.w * 0.5, 6);
+    } else {
+      ctx.fillStyle = '#8a7aa0';
+      ctx.beginPath();
+      ctx.roundRect(o.x, o.y, o.w, o.h, 4);
+      ctx.fill();
+      for (let i = 0; i < o.h; i += 12) {
+        ctx.fillStyle = (i / 12) % 2 === 0 ? '#f0d050' : '#1a1723';
+        ctx.fillRect(o.x + 3, o.y + i, o.w - 6, 8);
+      }
+    }
+  }
+
   function updateProgress() {
     const pct = Math.min(100, (playerDistance / finishDistance) * 100);
     $('#raceProgress').style.width = pct + '%';
@@ -2417,37 +2606,47 @@ function initRace() {
       renderBest();
       isRecord = true;
     }
-    ctx.fillStyle = 'rgba(0,0,0,.72)';
+    finishCount += 1;
+    LS.set('mw_race_finish_count', finishCount);
+    $('#raceFinishCount').textContent = finishCount;
+    addQuestProgress('race', 'raceQuests', 0, 1);
+    if (finishCount >= 3) addQuestProgress('race', 'raceQuests', 1, 1);
+    if (finishCount >= 5) addQuestProgress('race', 'raceQuests', 2, 1);
+    if (!crashedThisRun) {
+      noCrashCount += 1;
+      LS.set('mw_race_no_crash', noCrashCount);
+      if (noCrashCount >= 3) addQuestProgress('race', 'raceQuests', 3, 1);
+    }
+
+    ctx.fillStyle = 'rgba(0,0,0,.75)';
     ctx.fillRect(0, 0, W, H);
     ctx.textAlign = 'center';
     ctx.fillStyle = '#7ed8b0';
     ctx.font = 'bold 34px sans-serif';
-    ctx.fillText('🏁 ФИНИШ!', W / 2, H / 2 - 50);
+    ctx.fillText('🏁 ФИНИШ!', W / 2, H / 2 - 60);
     ctx.fillStyle = '#fff';
     ctx.font = 'bold 24px sans-serif';
-    ctx.fillText(`Время: ${raceTime.toFixed(1)} с`, W / 2, H / 2 - 5);
-    ctx.fillText(`Счёт: ${finalScore}`, W / 2, H / 2 + 30);
+    ctx.fillText(`Время: ${raceTime.toFixed(1)} с`, W / 2, H / 2 - 15);
+    ctx.fillText(`Счёт: ${finalScore}`, W / 2, H / 2 + 20);
     ctx.font = '18px sans-serif';
     ctx.fillStyle = '#c8b8e8';
-    ctx.fillText('Лучшее время: ' + (best !== null ? best.toFixed(1) + ' с' : '—'), W / 2, H / 2 + 62);
+    ctx.fillText('Лучшее: ' + (best !== null ? best.toFixed(1) + ' с' : '—'), W / 2, H / 2 + 52);
     if (isRecord) {
-      ctx.fillStyle = '#7ed8b0';
-      ctx.font = 'bold 18px sans-serif';
-      ctx.fillText('🏆 Новый рекорд!', W / 2, H / 2 + 92);
+      ctx.fillStyle = '#f0b45a';
+      ctx.font = 'bold 20px sans-serif';
+      ctx.fillText('🏆 Новый рекорд!', W / 2, H / 2 + 85);
     }
     ctx.font = '16px sans-serif';
     ctx.fillStyle = '#aaa';
-    ctx.fillText('Нажми «Заново»', W / 2, H / 2 + 122);
+    ctx.fillText('Нажми «Заново»', W / 2, H / 2 + 120);
   }
   function crash() {
     running = false; finished = true;
+    crashedThisRun = true;
     drawRoad(0);
-    for (const ob of obstacles) {
-      ctx.fillStyle = '#8a7aa0';
-      ctx.beginPath(); ctx.roundRect(ob.x, ob.y, ob.w, ob.h, 6); ctx.fill();
-    }
-    drawCar(car.x, car.y, car.w, car.h, '#7ed8b0');
-    ctx.fillStyle = 'rgba(0,0,0,.72)';
+    for (const ob of obstacles) drawObstacle(ob);
+    drawCar(car.x, car.y, car.w, car.h);
+    ctx.fillStyle = 'rgba(0,0,0,.75)';
     ctx.fillRect(0, 0, W, H);
     ctx.textAlign = 'center';
     ctx.fillStyle = '#e07a8b';
@@ -2461,7 +2660,6 @@ function initRace() {
     ctx.fillStyle = '#aaa';
     ctx.fillText('Нажми «Заново»', W / 2, H / 2 + 78);
   }
-
   function loop(t) {
     if (!running) return;
     const dt = Math.min(50, t - lastTime);
@@ -2472,44 +2670,33 @@ function initRace() {
     if (keys['ArrowRight']) car.x += spd;
     if (keys['ArrowUp']) { car.y -= spd; playerDistance += spd * 0.8; }
     if (keys['ArrowDown']) car.y += spd * 0.6;
-    car.x = Math.max(0, Math.min(W - car.w, car.x));
-    car.y = Math.max(H / 2, Math.min(H - car.h - 10, car.y));
-
+    car.x = Math.max(30, Math.min(W - car.w - 30, car.x));
+    car.y = Math.max(H * 0.45, Math.min(H - car.h - 10, car.y));
     const autoForward = cfg.obstacleSpeed * 0.55 * (keys['Shift'] ? 1.5 : 1) * (dt / 16);
     playerDistance += autoForward;
-
     spawnTimer += dt;
     if (spawnTimer > cfg.spawnInterval) { spawnTimer = 0; spawnObstacle(); }
     for (const o of obstacles) o.y += cfg.obstacleSpeed * (dt / 16);
     obstacles = obstacles.filter(o => o.y < H + 80);
-
     for (const o of obstacles) {
       if (car.x < o.x + o.w && car.x + car.w > o.x && car.y < o.y + o.h && car.y + car.h > o.y) {
         crash();
         return;
       }
     }
-
     if (playerDistance >= finishDistance) { finishRace(); return; }
-
-    drawRoad((t * 0.15) % 44);
-    for (const o of obstacles) {
-      ctx.fillStyle = '#8a7aa0';
-      ctx.beginPath(); ctx.roundRect(o.x, o.y, o.w, o.h, 6); ctx.fill();
-      ctx.fillStyle = 'rgba(255,220,120,.6)';
-      ctx.fillRect(o.x + 4, o.y + 4, o.w - 8, 6);
-    }
-    drawCar(car.x, car.y, car.w, car.h, '#7ed8b0');
-
+    drawRoad((t * 0.15) % 52);
+    for (const o of obstacles) drawObstacle(o);
+    drawCar(car.x, car.y, car.w, car.h);
     score += dt / 1000 * 2;
     $('#raceScore').textContent = Math.floor(score);
-    $('#raceSpeed').textContent = diff === 'hard' ? '2.2' : diff === 'normal' ? '1.6' : '1';
     updateProgress();
     raceAnimId = requestAnimationFrame(loop);
   }
   function start() {
     running = true; finished = false; obstacles = [];
-    car = { x: W / 2 - 20, y: H - 100, w: 40, h: 70 };
+    crashedThisRun = false;
+    car = { x: W / 2 - 22, y: H - 130, w: 44, h: 76 };
     score = 0; playerDistance = 0; raceTime = 0;
     lastTime = performance.now(); spawnTimer = 0; keys = {};
     $('#raceScore').textContent = '0';
@@ -2520,7 +2707,6 @@ function initRace() {
   }
   $('#raceRestart').onclick = start;
   start();
-
   raceCleanup = () => {
     running = false;
     cancelAnimationFrame(raceAnimId);
@@ -2531,7 +2717,7 @@ function initRace() {
   activeGame.cleanup = raceCleanup;
 }
 
-/* ---------- ТЕТРИС ---------- */
+/* ===================== ТЕТРИС ===================== */
 let tetrisAnimId = null;
 
 function initTetris() {
@@ -2540,14 +2726,18 @@ function initTetris() {
   const COLS = 10, ROWS = 20, CELL = canvas.width / COLS;
   const colors = ['#c9b8e8','#b8e8d5','#b8d8e8','#e8c8d5','#f5e6a8','#d8b8e8','#a8e8c8'];
   const shapes = [
-    [[1,1,1,1]],
-    [[1,1],[1,1]],
-    [[0,1,0],[1,1,1]],
-    [[1,0,0],[1,1,1]],
-    [[0,0,1],[1,1,1]],
-    [[0,1,1],[1,1,0]],
-    [[1,1,0],[0,1,1]]
+    [[1,1,1,1]], [[1,1],[1,1]], [[0,1,0],[1,1,1]],
+    [[1,0,0],[1,1,1]], [[0,0,1],[1,1,1]],
+    [[0,1,1],[1,1,0]], [[1,1,0],[0,1,1]]
   ];
+  const TETRIS_QUESTS = [
+    { text: 'Собери 5 линий', target: 5, reward: '+10 XP' },
+    { text: 'Собери 15 линий', target: 15, reward: 'Трофей "Линейщик"' },
+    { text: 'Набери 100 очков', target: 100, reward: '+50 XP' },
+    { text: 'Набери 300 очков', target: 300, reward: 'Трофей "Мастер"' }
+  ];
+  initQuests('tetris', TETRIS_QUESTS, 'tetrisQuests');
+
   let board, current, score, lines, record, gameOver, dropInterval, lastTime, running, keyHandler;
 
   function reset() {
@@ -2609,10 +2799,15 @@ function initTetris() {
       }
     }
     if (cleared) {
-      score += cleared * 10; lines += cleared;
+      score += cleared * 10;
+      lines += cleared;
       dropInterval = Math.max(120, 500 - lines * 12);
       $('#tetrisScore').textContent = score;
       $('#tetrisLines').textContent = lines;
+      addQuestProgress('tetris', 'tetrisQuests', 0, cleared);
+      addQuestProgress('tetris', 'tetrisQuests', 1, cleared);
+      if (score >= 100) addQuestProgress('tetris', 'tetrisQuests', 2, 1);
+      if (score >= 300) addQuestProgress('tetris', 'tetrisQuests', 3, 1);
     }
     current = null; newPiece();
   }
@@ -2659,6 +2854,7 @@ function initTetris() {
     ctx.fillText('Игра окончена', canvas.width/2, canvas.height/2 - 20);
     ctx.font = '18px sans-serif';
     ctx.fillText('Счёт: ' + score, canvas.width/2, canvas.height/2 + 15);
+    ctx.fillText('Линий: ' + lines, canvas.width/2, canvas.height/2 + 45);
   }
   function loop(t) {
     if (!running || gameOver) return;
@@ -2689,7 +2885,7 @@ function initTetris() {
   };
 }
 
-/* ---------- ЗМЕЙКА ---------- */
+/* ===================== ЗМЕЙКА ===================== */
 let snakeAnimId = null;
 
 function initSnake() {
@@ -2698,12 +2894,20 @@ function initSnake() {
   const CELL = 20;
   const COLS = canvas.width / CELL;
   const ROWS = canvas.height / CELL;
+  const SNAKE_QUESTS = [
+    { text: 'Съешь 5 яблок', target: 5, reward: '+10 XP' },
+    { text: 'Съешь 15 яблок', target: 15, reward: 'Скин "Радуга"' },
+    { text: 'Съешь 30 яблок', target: 30, reward: '+50 XP' },
+    { text: 'Набери длину 20', target: 20, reward: 'Трофей "Длинный"' }
+  ];
+  initQuests('snake', SNAKE_QUESTS, 'snakeQuests');
 
   let snake = [];
   let dir = { x: 1, y: 0 };
   let nextDir = { x: 1, y: 0 };
   let food = { x: 0, y: 0 };
   let score = 0;
+  let totalApples = LS.get('mw_snake_total_apples', 0);
   let running = true;
   let gameOver = false;
   let timer = 0;
@@ -2730,7 +2934,6 @@ function initSnake() {
     cancelAnimationFrame(snakeAnimId);
     snakeAnimId = requestAnimationFrame(loop);
   }
-
   function placeFood() {
     let tries = 0;
     while (tries++ < 500) {
@@ -2740,7 +2943,6 @@ function initSnake() {
     }
     food = { x: 0, y: 0 };
   }
-
   function step() {
     if (!(nextDir.x === -dir.x && nextDir.y === -dir.y)) dir = nextDir;
     const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
@@ -2751,6 +2953,8 @@ function initSnake() {
     snake.unshift(head);
     if (willEat) {
       score += 1;
+      totalApples += 1;
+      LS.set('mw_snake_total_apples', totalApples);
       $('#snakeScore').textContent = score;
       if (score > record) {
         record = score;
@@ -2759,12 +2963,15 @@ function initSnake() {
       }
       stepInterval = Math.max(70, stepInterval - 3);
       placeFood();
+      addQuestProgress('snake', 'snakeQuests', 0, 1);
+      addQuestProgress('snake', 'snakeQuests', 1, 1);
+      addQuestProgress('snake', 'snakeQuests', 2, 1);
+      if (snake.length >= 20) addQuestProgress('snake', 'snakeQuests', 3, 1);
     } else {
       snake.pop();
     }
     $('#snakeLen').textContent = snake.length;
   }
-
   function endGame() {
     gameOver = true;
     running = false;
@@ -2788,7 +2995,6 @@ function initSnake() {
     ctx.fillText('Рекорд: ' + record, canvas.width / 2, canvas.height / 2 + 45);
     ctx.fillText('Нажми «Заново»', canvas.width / 2, canvas.height / 2 + 75);
   }
-
   function draw() {
     ctx.fillStyle = '#1a1723';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -2836,7 +3042,6 @@ function initSnake() {
       }
     }
   }
-
   function loop(t) {
     if (!running) return;
     const dt = t - lastTime;
@@ -2848,7 +3053,6 @@ function initSnake() {
     draw();
     if (!gameOver) snakeAnimId = requestAnimationFrame(loop);
   }
-
   keyHandler = e => {
     if (!running || gameOver) return;
     const k = e.key;
@@ -2863,7 +3067,6 @@ function initSnake() {
     }
   };
   document.addEventListener('keydown', keyHandler);
-
   let touchStart = null;
   canvas.addEventListener('touchstart', e => {
     if (e.touches.length) touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
@@ -2879,16 +3082,440 @@ function initSnake() {
     if (nd && !(nd.x === -dir.x && nd.y === -dir.y)) nextDir = nd;
     touchStart = null;
   }, { passive: true });
-
   $('#snakeRestart').onclick = reset;
   reset();
-
   activeGame.cleanup = () => {
     running = false;
     cancelAnimationFrame(snakeAnimId);
     document.removeEventListener('keydown', keyHandler);
     activeGame.cleanup = null;
   };
+}
+
+/* ===================== ФУТБОЛ 1×1 (исправленная логика голов) ===================== */
+let footballAnimId = null;
+let footballCleanup = null;
+
+function initFootball() {
+  if (footballCleanup) footballCleanup();
+  const canvas = $('#footballCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const FIELD_TOP = 70;
+  const FIELD_BOTTOM = H - 70;
+  const GOAL_H = 140;
+  const GOAL_DEPTH = 26;
+  const WALL = 22;
+  const GOAL_TOP_Y = (FIELD_TOP + FIELD_BOTTOM) / 2 - GOAL_H / 2;
+  const GOAL_BOT_Y = GOAL_TOP_Y + GOAL_H;
+
+  const FB_QUESTS = [
+    { text: 'Забей 1 гол', target: 1, reward: '+10 XP' },
+    { text: 'Забей 5 голов', target: 5, reward: 'Трофей "Бомбардир"' },
+    { text: 'Выиграй матч', target: 1, reward: '+50 XP' },
+    { text: 'Выиграй 3 матча', target: 3, reward: 'Трофей "Чемпион"' }
+  ];
+  initQuests('football', FB_QUESTS, 'footballQuests');
+
+  let player, bot, ball;
+  let playerScore = 0;
+  let botScore = 0;
+  let wins = LS.get('mw_fb_wins', 0);
+  let totalGoals = LS.get('mw_fb_total_goals', 0);
+  let matchOver = false;
+  let diff = 'easy';
+  let mode = 'bot';
+  let running = true;
+  let lastTime = 0;
+  let keys = {};
+  let goalCooldown = 0;
+  let celebrating = null;
+
+  $('#fbWins').textContent = wins;
+
+  const diffCfg = {
+    easy:   { botSpeed: 1.8, botReaction: 0.6, playerSpeed: 3.6, aggression: 0.5, shootPower: 5 },
+    normal: { botSpeed: 2.5, botReaction: 0.85, playerSpeed: 3.6, aggression: 0.8, shootPower: 6 },
+    hard:   { botSpeed: 3.2, botReaction: 1.0, playerSpeed: 3.4, aggression: 1.0, shootPower: 7 }
+  };
+
+  $$('#footballMode .diff-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('#footballMode .diff-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      mode = btn.dataset.fmode;
+      if (mode === 'friend') {
+        $('#footballDiff').style.display = 'none';
+        $('#footballRules').innerHTML = 'Режим «с другом»: Игрок 1 — <b>стрелочки</b>, Игрок 2 — <b>WASD</b>. Забей в ворота соперника. Матч до 5 голов.';
+      } else {
+        $('#footballDiff').style.display = '';
+        $('#footballRules').innerHTML = 'Режим «с ботом»: <b>← → ↑ ↓</b> или <b>WASD</b>. Забей в <b>правые ворота</b> (бот) — тебе гол, бот забивает в <b>левые</b> (твои).';
+      }
+      startMatch();
+    });
+  });
+
+  $$('#footballDiff .diff-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('#footballDiff .diff-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      diff = btn.dataset.fdiff;
+      startMatch();
+    });
+  });
+
+  function resetPositions() {
+    player = { x: W / 2 - 100, y: H / 2 - 20, w: 28, h: 40 };
+    bot = { x: W / 2 + 72, y: H / 2 - 20, w: 28, h: 40 };
+    ball = { x: W / 2 - 10, y: H / 2 - 10, r: 10, vx: 0, vy: 0 };
+  }
+
+  function startMatch() {
+    playerScore = 0;
+    botScore = 0;
+    matchOver = false;
+    celebrating = null;
+    goalCooldown = 0;
+    resetPositions();
+    $('#fbPlayerScore').textContent = 0;
+    $('#fbBotScore').textContent = 0;
+    running = true;
+    lastTime = performance.now();
+    cancelAnimationFrame(footballAnimId);
+    footballAnimId = requestAnimationFrame(loop);
+  }
+
+  const onKeyDown = e => {
+    const k = e.key;
+    if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(k)) e.preventDefault();
+    keys[k.toLowerCase()] = true;
+  };
+  const onKeyUp = e => { keys[e.key.toLowerCase()] = false; };
+  document.addEventListener('keydown', onKeyDown);
+  document.addEventListener('keyup', onKeyUp);
+
+  function drawField() {
+    for (let i = 0; i < 10; i++) {
+      ctx.fillStyle = i % 2 === 0 ? '#2f8a2f' : '#3a9a3a';
+      ctx.fillRect(i * W / 10, FIELD_TOP, W / 10, FIELD_BOTTOM - FIELD_TOP);
+    }
+    ctx.fillStyle = '#4a3348';
+    ctx.fillRect(0, 0, W, FIELD_TOP);
+    for (let i = 0; i < W; i += 14) {
+      const hue = (i * 13) % 360;
+      ctx.fillStyle = `hsl(${hue}, 60%, 60%)`;
+      ctx.fillRect(i + 2, 14, 10, 10);
+      ctx.fillRect(i + 2, 30, 10, 10);
+      ctx.fillRect(i + 2, 46, 10, 8);
+    }
+    ctx.fillStyle = '#4a3348';
+    ctx.fillRect(0, FIELD_BOTTOM, W, H - FIELD_BOTTOM);
+    for (let i = 0; i < W; i += 14) {
+      const hue = (i * 17) % 360;
+      ctx.fillStyle = `hsl(${hue}, 60%, 60%)`;
+      ctx.fillRect(i + 2, FIELD_BOTTOM + 10, 10, 10);
+      ctx.fillRect(i + 2, FIELD_BOTTOM + 26, 10, 10);
+      ctx.fillRect(i + 2, FIELD_BOTTOM + 42, 10, 8);
+    }
+    ctx.strokeStyle = 'rgba(255,255,255,.8)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(WALL, FIELD_TOP + 4, W - WALL * 2, FIELD_BOTTOM - FIELD_TOP - 8);
+    ctx.beginPath();
+    ctx.arc(W / 2, (FIELD_TOP + FIELD_BOTTOM) / 2, 60, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(W / 2, (FIELD_TOP + FIELD_BOTTOM) / 2, 4, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,.8)';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(W / 2, FIELD_TOP + 4);
+    ctx.lineTo(W / 2, FIELD_BOTTOM - 4);
+    ctx.stroke();
+    ctx.strokeRect(WALL, (FIELD_TOP + FIELD_BOTTOM) / 2 - 70, 80, 140);
+    ctx.strokeRect(W - WALL - 80, (FIELD_TOP + FIELD_BOTTOM) / 2 - 70, 80, 140);
+    // Ворота
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#fff';
+    ctx.strokeRect(WALL, GOAL_TOP_Y, GOAL_DEPTH, GOAL_H);
+    ctx.fillStyle = 'rgba(255,255,255,.15)';
+    ctx.fillRect(WALL, GOAL_TOP_Y, GOAL_DEPTH, GOAL_H);
+    ctx.strokeRect(W - WALL - GOAL_DEPTH, GOAL_TOP_Y, GOAL_DEPTH, GOAL_H);
+    ctx.fillStyle = 'rgba(255,255,255,.15)';
+    ctx.fillRect(W - WALL - GOAL_DEPTH, GOAL_TOP_Y, GOAL_DEPTH, GOAL_H);
+    // Непробиваемые штанги (выделены жёлтым)
+    ctx.strokeStyle = '#ffd34a';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(WALL, GOAL_TOP_Y); ctx.lineTo(WALL + GOAL_DEPTH, GOAL_TOP_Y);
+    ctx.moveTo(WALL, GOAL_BOT_Y); ctx.lineTo(WALL + GOAL_DEPTH, GOAL_BOT_Y);
+    ctx.moveTo(W - WALL - GOAL_DEPTH, GOAL_TOP_Y); ctx.lineTo(W - WALL, GOAL_TOP_Y);
+    ctx.moveTo(W - WALL - GOAL_DEPTH, GOAL_BOT_Y); ctx.lineTo(W - WALL, GOAL_BOT_Y);
+    ctx.stroke();
+    ctx.lineWidth = 2;
+  }
+
+  function drawFootballer(p, color, isPlayer) {
+    ctx.fillStyle = 'rgba(0,0,0,.35)';
+    ctx.beginPath();
+    ctx.ellipse(p.x + p.w / 2, p.y + p.h - 2, p.w / 2, 5, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#1a1723';
+    ctx.fillRect(p.x + 4, p.y + p.h * 0.78, 6, p.h * 0.22);
+    ctx.fillRect(p.x + p.w - 10, p.y + p.h * 0.78, 6, p.h * 0.22);
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.roundRect(p.x, p.y + p.h * 0.3, p.w, p.h * 0.5, 6);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.85)';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(isPlayer ? '1' : '2', p.x + p.w / 2, p.y + p.h * 0.6);
+    ctx.fillStyle = '#f5d6b8';
+    ctx.beginPath();
+    ctx.arc(p.x + p.w / 2, p.y + p.h * 0.2, p.w / 2 - 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = isPlayer ? '#5a3a2a' : '#2a2a3a';
+    ctx.beginPath();
+    ctx.arc(p.x + p.w / 2, p.y + p.h * 0.16, p.w / 2 - 3, Math.PI, 0);
+    ctx.fill();
+  }
+
+  function drawBall() {
+    ctx.fillStyle = 'rgba(0,0,0,.35)';
+    ctx.beginPath();
+    ctx.ellipse(ball.x, ball.y + ball.r + 4, ball.r, 3, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#1a1723';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.fillStyle = '#1a1723';
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+    for (const [dx, dy] of [[-6, -4], [6, -4], [-6, 5], [6, 5]]) {
+      ctx.beginPath();
+      ctx.arc(ball.x + dx, ball.y + dy, 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function scoreGoal(scoredBy) {
+    if (scoredBy === 'player') {
+      playerScore++;
+      totalGoals++;
+      LS.set('mw_fb_total_goals', totalGoals);
+      $('#fbPlayerScore').textContent = playerScore;
+      if (mode === 'bot') {
+        addQuestProgress('football', 'footballQuests', 0, 1);
+        if (totalGoals >= 5) addQuestProgress('football', 'footballQuests', 1, 1);
+      }
+      celebrating = { team: 'player', timer: 1500 };
+    } else {
+      botScore++;
+      $('#fbBotScore').textContent = botScore;
+      celebrating = { team: 'bot', timer: 1500 };
+    }
+    goalCooldown = 1500;
+    resetPositions();
+    if (playerScore >= 5 || botScore >= 5) {
+      matchOver = true;
+      if (mode === 'bot' && playerScore >= 5) {
+        wins++;
+        LS.set('mw_fb_wins', wins);
+        $('#fbWins').textContent = wins;
+        addQuestProgress('football', 'footballQuests', 2, 1);
+        if (wins >= 3) addQuestProgress('football', 'footballQuests', 3, 1);
+      }
+    }
+  }
+
+  function loop(t) {
+    if (!running) return;
+    const dt = Math.min(40, t - lastTime);
+    lastTime = t;
+    const cfg = diffCfg[diff];
+
+    if (goalCooldown > 0) goalCooldown -= dt;
+    if (celebrating) {
+      celebrating.timer -= dt;
+      if (celebrating.timer <= 0) celebrating = null;
+    }
+
+    if (!matchOver && !celebrating) {
+      // Игрок 1 — стрелки (в режиме друга) или стрелки+WASD (в режиме бота)
+      const pSpeed = cfg.playerSpeed * (dt / 16);
+      if (mode === 'friend') {
+        // Игрок 1 — стрелки
+        if (keys['arrowleft']) player.x -= pSpeed;
+        if (keys['arrowright']) player.x += pSpeed;
+        if (keys['arrowup']) player.y -= pSpeed;
+        if (keys['arrowdown']) player.y += pSpeed;
+      } else {
+        // В режиме бота — стрелки или WASD
+        if (keys['arrowleft'] || keys['a'] || keys['ф']) player.x -= pSpeed;
+        if (keys['arrowright'] || keys['d'] || keys['в']) player.x += pSpeed;
+        if (keys['arrowup'] || keys['w'] || keys['ц']) player.y -= pSpeed;
+        if (keys['arrowdown'] || keys['s'] || keys['ы']) player.y += pSpeed;
+      }
+      player.x = Math.max(WALL + 2, Math.min(W - WALL - player.w - 2, player.x));
+      player.y = Math.max(FIELD_TOP + 8, Math.min(FIELD_BOTTOM - player.h - 8, player.y));
+
+      // Игрок 2 / бот
+      if (mode === 'friend') {
+        // Игрок 2 — WASD
+        const pSpeed2 = cfg.playerSpeed * (dt / 16);
+        if (keys['a'] || keys['ф']) bot.x -= pSpeed2;
+        if (keys['d'] || keys['в']) bot.x += pSpeed2;
+        if (keys['w'] || keys['ц']) bot.y -= pSpeed2;
+        if (keys['s'] || keys['ы']) bot.y += pSpeed2;
+        bot.x = Math.max(WALL + 2, Math.min(W - WALL - bot.w - 2, bot.x));
+        bot.y = Math.max(FIELD_TOP + 8, Math.min(FIELD_BOTTOM - bot.h - 8, bot.y));
+      } else {
+        // Умный бот: атакует ЛЕВЫЕ ворота (ворота Игрока 1)
+        const bSpeed = cfg.botSpeed * (dt / 16);
+        const bx = bot.x + bot.w / 2;
+        const by = bot.y + bot.h / 2;
+        const distToBall = Math.hypot(ball.x - bx, ball.y - by);
+        let targetX, targetY;
+        const ballOnBotHalf = ball.x < W / 2;
+        if (ballOnBotHalf) {
+          targetX = ball.x + 25;
+          targetY = ball.y;
+        } else {
+          if (distToBall < 90 && Math.random() < cfg.aggression) {
+            targetX = ball.x + 20;
+            targetY = ball.y;
+          } else {
+            targetX = W * 0.45;
+            targetY = ball.y;
+          }
+        }
+        const dx = targetX - bx;
+        const dy = targetY - by;
+        const dist = Math.hypot(dx, dy);
+        if (dist > 3) {
+          bot.x += (dx / dist) * bSpeed * cfg.botReaction;
+          bot.y += (dy / dist) * bSpeed * cfg.botReaction;
+        }
+        bot.x = Math.max(WALL + 2, Math.min(W - WALL - bot.w - 2, bot.x));
+        bot.y = Math.max(FIELD_TOP + 8, Math.min(FIELD_BOTTOM - bot.h - 8, bot.y));
+      }
+
+      // Физика мяча
+      ball.x += ball.vx * (dt / 16);
+      ball.y += ball.vy * (dt / 16);
+      ball.vx *= 0.97;
+      ball.vy *= 0.97;
+      if (Math.abs(ball.vx) < 0.05) ball.vx = 0;
+      if (Math.abs(ball.vy) < 0.05) ball.vy = 0;
+
+      // Верх/низ поля
+      if (ball.y - ball.r < FIELD_TOP + 4) { ball.y = FIELD_TOP + 4 + ball.r; ball.vy = Math.abs(ball.vy) * 0.8; }
+      if (ball.y + ball.r > FIELD_BOTTOM - 4) { ball.y = FIELD_BOTTOM - 4 - ball.r; ball.vy = -Math.abs(ball.vy) * 0.8; }
+
+      // Непробиваемые боковые стенки ворот (верх/низ створа)
+      if (ball.x - ball.r < WALL + GOAL_DEPTH) {
+        const inGoalY = ball.y > GOAL_TOP_Y && ball.y < GOAL_BOT_Y;
+        if (!inGoalY) {
+          ball.x = WALL + GOAL_DEPTH + ball.r;
+          ball.vx = Math.abs(ball.vx) * 0.8;
+        }
+      }
+      if (ball.x + ball.r > W - WALL - GOAL_DEPTH) {
+        const inGoalY = ball.y > GOAL_TOP_Y && ball.y < GOAL_BOT_Y;
+        if (!inGoalY) {
+          ball.x = W - WALL - GOAL_DEPTH - ball.r;
+          ball.vx = -Math.abs(ball.vx) * 0.8;
+        }
+      }
+
+      // Столкновения с игроками
+      function collideWithPlayer(p, power) {
+        const px = p.x + p.w / 2;
+        const py = p.y + p.h / 2;
+        const dx = ball.x - px;
+        const dy = ball.y - py;
+        const dist = Math.hypot(dx, dy);
+        const minDist = ball.r + p.w / 2 + 2;
+        if (dist < minDist) {
+          const nx = dx / (dist || 1);
+          const ny = dy / (dist || 1);
+          ball.x = px + nx * minDist;
+          ball.y = py + ny * minDist;
+          ball.vx = nx * power;
+          ball.vy = ny * power;
+        }
+      }
+      collideWithPlayer(player, 6);
+      collideWithPlayer(bot, mode === 'bot' ? cfg.shootPower : 6);
+
+      // === ПРАВИЛЬНАЯ ЛОГИКА ГОЛОВ ===
+      // Левые ворота (WALL) = ворота Игрока 1. Мяч в них = гол Игроку 2 (bot).
+      if (ball.x - ball.r < WALL + GOAL_DEPTH &&
+          ball.y > GOAL_TOP_Y && ball.y < GOAL_BOT_Y) {
+        scoreGoal('bot');
+      }
+      // Правые ворота (W - WALL) = ворота Игрока 2 (бота). Мяч в них = гол Игроку 1.
+      if (ball.x + ball.r > W - WALL - GOAL_DEPTH &&
+          ball.y > GOAL_TOP_Y && ball.y < GOAL_BOT_Y) {
+        scoreGoal('player');
+      }
+
+      // Стены за воротами
+      if (ball.x + ball.r > W - WALL) { ball.x = W - WALL - ball.r; ball.vx = -Math.abs(ball.vx) * 0.8; }
+      if (ball.x - ball.r < WALL) { ball.x = WALL + ball.r; ball.vx = Math.abs(ball.vx) * 0.8; }
+    }
+
+    drawField();
+    drawFootballer(player, '#7ed8b0', true);
+    drawFootballer(bot, '#e07a8b', false);
+    drawBall();
+
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 32px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${playerScore} : ${botScore}`, W / 2, FIELD_TOP + 42);
+
+    if (celebrating) {
+      ctx.fillStyle = celebrating.team === 'player' ? '#7ed8b0' : '#e07a8b';
+      ctx.font = 'bold 52px sans-serif';
+      ctx.fillText('⚽ ГОЛ!', W / 2, H / 2);
+    }
+
+    if (matchOver) {
+      ctx.fillStyle = 'rgba(0,0,0,.75)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.textAlign = 'center';
+      const won = playerScore > botScore;
+      ctx.fillStyle = won ? '#7ed8b0' : '#e07a8b';
+      ctx.font = 'bold 44px sans-serif';
+      ctx.fillText(won ? '🏆 ПОБЕДИЛ ИГРОК 1!' : '🏆 ПОБЕДИЛ ИГРОК 2!', W / 2, H / 2 - 30);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 26px sans-serif';
+      ctx.fillText(`Счёт: ${playerScore} : ${botScore}`, W / 2, H / 2 + 20);
+      ctx.font = '16px sans-serif';
+      ctx.fillStyle = '#aaa';
+      ctx.fillText('Нажми «Начать матч заново»', W / 2, H / 2 + 60);
+    }
+
+    footballAnimId = requestAnimationFrame(loop);
+  }
+
+  $('#footballRestart').onclick = startMatch;
+  startMatch();
+
+  footballCleanup = () => {
+    running = false;
+    cancelAnimationFrame(footballAnimId);
+    document.removeEventListener('keydown', onKeyDown);
+    document.removeEventListener('keyup', onKeyUp);
+    footballCleanup = null;
+  };
+  activeGame.cleanup = footballCleanup;
 }
 </script>
 </body>
