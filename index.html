@@ -1159,12 +1159,71 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 /* Покерные фишки */
+/* Визуальная колода с торчащим козырем в Дураке */
+.durak-deck-visual {
+  position: relative; width: 115px; height: 112px;
+  display: flex; align-items: center; justify-content: flex-start;
+  flex-shrink: 0;
+}
+.durak-trump-card {
+  position: absolute; left: 38px; top: 4px;
+  transform: rotate(90deg); z-index: 1;
+}
+.durak-deck-pile {
+  position: relative; z-index: 2;
+  box-shadow: -3px 3px 0 #bdc3c7, -6px 6px 0 #95a5a6, 0 8px 18px rgba(0,0,0,.5) !important;
+}
+.durak-deck-counter {
+  position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,.78); color: var(--gold);
+  font-size: .72rem; font-weight: 800; padding: 2px 7px; border-radius: 999px;
+  border: 1px solid var(--gold); white-space: nowrap;
+}
+
+/* Детализированный покерный стол: колода сбоку и центр ставок */
+.poker-board-stage {
+  display: flex; align-items: center; justify-content: center;
+  gap: 20px; flex-wrap: wrap; width: 100%;
+}
+.poker-side-deck {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  background: rgba(0,0,0,.28); padding: 10px 14px; border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.12);
+}
+.poker-deck-stack {
+  width: 62px; height: 90px; border-radius: 9px;
+  background: repeating-linear-gradient(45deg, #2c3e50, #2c3e50 5px, #34495e 5px, #34495e 10px);
+  border: 2.5px solid #ecf0f1;
+  box-shadow: 2px 2px 0 #bdc3c7, 4px 4px 0 #7f8c8d, 0 8px 16px rgba(0,0,0,.5);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,.5); font-size: .72rem; font-weight: 800;
+}
+.poker-bet-felt {
+  min-width: 220px; min-height: 76px;
+  border: 2px dashed rgba(240,180,90,.45);
+  background: rgba(0,0,0,.22); border-radius: 999px;
+  padding: 10px 22px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 6px;
+}
+.poker-bet-chips-visual {
+  display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; min-height: 28px;
+}
+.mini-chip {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 2px dashed rgba(255,255,255,.9);
+  font-size: .58rem; font-weight: 800; color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 6px rgba(0,0,0,.45);
+  animation: fadeIn .25s ease;
+}
+
+/* Покерные фишки */
 .chips-rack {
   display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center;
 }
 .poker-chip {
-  width: 52px; height: 52px; border-radius: 50%;
-  border: 4px dashed rgba(255,255,255,.85);
+  width: 54px; height: 54px; border-radius: 50%;
+  border: 4px dashed rgba(255,255,255,.88);
   display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
   font-weight: 800; font-size: .78rem; color: #fff;
   box-shadow: 0 5px 12px rgba(0,0,0,.45), inset 0 0 0 3px rgba(0,0,0,.25);
@@ -1172,20 +1231,19 @@ input[type="range"]::-webkit-slider-thumb {
   user-select: none; position: relative;
 }
 .poker-chip:hover { transform: translateY(-4px) scale(1.07); }
-.poker-chip.c-10  { background: #2980b9; }
-.poker-chip.c-25  { background: #27ae60; }
-.poker-chip.c-50  { background: #d35400; }
-.poker-chip.c-100 { background: #c0392b; }
-.poker-chip.c-500 { background: #8e44ad; border-color: #f1c40f; }
+.poker-chip.c-10, .mini-chip.c-10   { background: #2980b9; }
+.poker-chip.c-25, .mini-chip.c-25   { background: #27ae60; }
+.poker-chip.c-50, .mini-chip.c-50   { background: #d35400; }
+.poker-chip.c-100, .mini-chip.c-100 { background: #c0392b; }
+.poker-chip.c-500, .mini-chip.c-500 { background: #8e44ad; border-color: #f1c40f; }
 .poker-pot-pill {
-  background: rgba(0,0,0,.5); border: 2px solid var(--gold);
+  background: rgba(0,0,0,.55); border: 2px solid var(--gold);
   color: var(--gold); padding: 8px 20px; border-radius: 999px;
-  font-weight: 800; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 8px;
+  font-weight: 800; font-size: 1.02rem; display: inline-flex; align-items: center; gap: 8px;
 }
 .cg-controls {
   display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 8px;
 }
-
 @media (max-width: 600px) {
   .playing-card { width: 58px; height: 86px; padding: 4px 5px; border-radius: 8px; }
   .playing-card .pc-corner { font-size: .76rem; }
@@ -2043,6 +2101,12 @@ input[type="range"]::-webkit-slider-thumb {
         <p>С ботом или с другом. Матч до 5 голов.</p>
         <div class="game-play">Играть →</div>
       </div>
+      <div class="game-card" data-game="cards">
+        <div class="game-icon">🃏</div>
+        <h3>Карточные игры</h3>
+        <p>Дурак (Подкидной и Переводной) и Покер с фишками и ботами.</p>
+        <div class="game-play">Играть →</div>
+      </div>
     </div>
 
     <!-- ШАХМАТЫ -->
@@ -2189,37 +2253,40 @@ input[type="range"]::-webkit-slider-thumb {
         <button class="btn small" id="footballRestart">🔄 Начать матч заново</button>
       </div>
     </div>
-    <!-- ===================== ОТДЕЛЬНЫЙ БЛОК: КАРТОЧНЫЕ ИГРЫ (ДУРАК И ПОКЕР) ===================== -->
-    <div class="card-games-section">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
-        <div>
-          <h2 class="section-title" style="margin-bottom:4px;">🃏 Карточные игры: Дурак и Покер</h2>
-          <p class="section-sub" style="margin-bottom:0;">Детализированные карты, фишки казино, полные правила и 3 уровня интеллекта бота — переключайся между Дураком и Покером в 1 клик!</p>
-        </div>
-        <div class="difficulty-row" id="cardGameSwitch" style="margin-bottom:0;">
-          <button class="btn small" data-cgame="durak">🃏 Дурак (Подкидной)</button>
-          <button class="btn small secondary" data-cgame="poker">🎰 Покер (Техасский Холдем)</button>
+    <!-- ===================== КАРТОЧНЫЕ ИГРЫ (ОТКРЫВАЕТСЯ ПО КЛИКУ НА КВАДРАТ) ===================== -->
+    <div class="game-window hidden" id="game-cards">
+      <div class="game-head">
+        <h3>🃏 Карточный клуб: Дурак и Покер</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <div class="difficulty-row" id="cardGameSwitch" style="margin-bottom:0;">
+            <button class="btn small" data-cgame="durak">🃏 Дурак</button>
+            <button class="btn small secondary" data-cgame="poker">🎰 Покер</button>
+          </div>
+          <button class="game-close" data-close="cards">✕ Закрыть</button>
         </div>
       </div>
 
-      <!-- ==================== ИГРА 1: ПОДКИДНОЙ ДУРАК ==================== -->
-      <div class="card" id="cardGame-durak">
-        <div class="game-head">
-          <h3>🃏 Подкидной Дурак (Колода 36 карт)</h3>
+      <!-- ==================== ИГРА 1: ДУРАК (ПОДКИДНОЙ И ПЕРЕВОДНОЙ) ==================== -->
+      <div id="cardGame-durak">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+          <div class="difficulty-row" id="durakModeRow" style="margin-bottom:0;">
+            <button class="diff-btn active" data-dmode="podkidnoy">📋 Подкидной</button>
+            <button class="diff-btn" data-dmode="perevodnoy">🔁 Переводной</button>
+          </div>
           <div class="difficulty-row" id="durakDiffRow" style="margin-bottom:0;">
-            <button class="diff-btn active" data-ddiff="easy">🟢 Бот: Новичок</button>
-            <button class="diff-btn" data-ddiff="normal">🟡 Бот: Опытный</button>
-            <button class="diff-btn" data-ddiff="hard">🔴 Бот: Мастер</button>
+            <button class="diff-btn active" data-ddiff="easy">🟢 Новичок</button>
+            <button class="diff-btn" data-ddiff="normal">🟡 Опытный</button>
+            <button class="diff-btn" data-ddiff="hard">🔴 Мастер</button>
           </div>
         </div>
 
         <details class="rules" style="cursor:pointer;">
-          <summary><b>📖 Правила игры в Подкидного Дурака (нажми, чтобы развернуть)</b></summary>
+          <summary><b>📖 Правила Дурака (Подкидной и Переводной) — нажми, чтобы развернуть</b></summary>
           <div style="margin-top:10px;line-height:1.6;">
-            1. <b>Цель игры:</b> первым избавиться от всех своих карт. Тот, у кого в конце остаются карты, остаётся в «дураках».<br>
-            2. <b>Колода и козырь:</b> играет 36 карт (от 6 до Туза). В начале каждому раздаётся по 6 карт, а следующая карта открывается и определяет <b>козырную масть</b> (отмечена значком ★). Козырная карта бьёт любую некозырную карту.<br>
-            3. <b>Ход и Подкидывание:</b> атакующий ходит любой картой. Когда первая карта выложена на стол, можно <b>подкидывать</b> карты того же достоинства (номинала), которые уже лежат на столе (как среди атакующих, так и среди отбитых карт).<br>
-            4. <b>Защита:</b> защищающийся должен побить каждую карту старшей картой той же масти либо любым козырем (козырь бьётся только старшим козырем). Если побить нечем (или не выгодно) — нажми <b>«Взять карты»</b>.
+            1. <b>Цель:</b> первым сбросить все карты. Последний с картами — «дурак».<br>
+            2. <b>Колода и козырь:</b> 36 карт (от 6 до Туза). Слева на столе лежит колода, а из-под неё видна открытая <b>козырная карта</b> (★). Козырь бьёт любую некозырную карту.<br>
+            3. <b>Подкидной режим:</b> атакующий ходит любой картой и может подкидывать карты того же номинала, что уже лежат на столе (максимум 6 пар за кон).<br>
+            4. <b>Переводной режим:</b> если на тебя зашли картой, а у тебя есть карта <b>того же достоинства</b> (например, на тебя пошли семёркой и у тебя есть семёрка), ты можешь <b>перевести</b> атаку обратно на соперника, нажав кнопку <b>«🔁 Перевести»</b> (если ещё ни одна карта в этом кону не была отбита).
           </div>
         </details>
 
@@ -2227,19 +2294,24 @@ input[type="range"]::-webkit-slider-thumb {
           <!-- Зона бота -->
           <div class="cg-zone">
             <div class="cg-zone-label">
-              🤖 Карты соперника (<span id="durakBotCount">6</span> шт.) · Сложность: <b id="durakDiffLabel">Новичок</b>
+              🤖 Соперник (<span id="durakBotCount">6</span> карт) · Режим: <b id="durakModeLabel">Подкидной</b> · ИИ: <b id="durakDiffLabel">Новичок</b>
             </div>
             <div class="cg-hand" id="durakBotHand"></div>
           </div>
 
-          <!-- Центр стола: колода, козырь и поле боя -->
-          <div class="cg-zone">
-            <div class="durak-deck-info">
+          <!-- Центр стола: Визуальная колода с козырем + Поле боя -->
+          <div class="cg-zone" style="width:100%;">
+            <div class="durak-deck-info" style="margin-bottom:8px;">
               <span>Козырь: <b id="durakTrumpBadge" style="font-size:1.25rem;color:var(--gold);">♠</b></span>
-              <span>В колоде: <b id="durakDeckCount">24</b></span>
               <span>Статус: <b id="durakStatusText" style="color:#a8f0cd;">Твой ход — выбери карту для атаки!</b></span>
             </div>
-            <div class="durak-battle-row" id="durakBattlefield"></div>
+
+            <div style="display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;width:100%;">
+              <!-- Стопка колоды с торчащим козырем -->
+              <div class="durak-deck-visual" id="durakDeckVisual" title="Колода и козырная карта"></div>
+              <!-- Карты на столе -->
+              <div class="durak-battle-row" id="durakBattlefield" style="flex:1;min-width:220px;"></div>
+            </div>
           </div>
 
           <!-- Зона игрока -->
@@ -2248,6 +2320,7 @@ input[type="range"]::-webkit-slider-thumb {
             <div class="cg-hand" id="durakPlayerHand"></div>
             <div class="cg-controls">
               <button class="btn small" id="durakActionBtn">✅ Бито / Завершить ход</button>
+              <button class="btn small" id="durakTransferBtn" style="display:none;background:linear-gradient(135deg,#f0b45a,#d35400);">🔁 Перевести ход</button>
               <button class="btn small secondary" id="durakNewGameBtn">🔄 Новая партия</button>
             </div>
           </div>
@@ -2255,52 +2328,67 @@ input[type="range"]::-webkit-slider-thumb {
       </div>
 
       <!-- ==================== ИГРА 2: ПОКЕР (ТЕХАССКИЙ ХОЛДЕМ) ==================== -->
-      <div class="card" id="cardGame-poker" style="display:none;">
-        <div class="game-head">
-          <h3>🎰 Покер: Техасский Холдем (1×1 с дилером/ботом)</h3>
+      <div id="cardGame-poker" style="display:none;">
+        <div class="game-head" style="margin-bottom:10px;">
+          <span style="font-weight:700;color:var(--text-soft);">Техасский Холдем 1×1 · Блайнды 10 / 20</span>
           <div class="difficulty-row" id="pokerDiffRow" style="margin-bottom:0;">
-            <button class="diff-btn active" data-pdiff="easy">🟢 Бот: Осторожный</button>
-            <button class="diff-btn" data-pdiff="normal">🟡 Бот: Тактик</button>
-            <button class="diff-btn" data-pdiff="hard">🔴 Бот: Акула (Агрессор)</button>
+            <button class="diff-btn active" data-pdiff="easy">🟢 Осторожный</button>
+            <button class="diff-btn" data-pdiff="normal">🟡 Тактик</button>
+            <button class="diff-btn" data-pdiff="hard">🔴 Акула (Агрессор)</button>
           </div>
         </div>
 
         <details class="rules" style="cursor:pointer;">
-          <summary><b>📖 Правила Техасского Холдема и старшинство комбинаций (нажми, чтобы развернуть)</b></summary>
+          <summary><b>📖 Правила Покера и комбинации (нажми, чтобы развернуть)</b></summary>
           <div style="margin-top:10px;line-height:1.6;">
-            1. <b>Ход раздачи:</b> каждому игроку сдаётся по <b>2 карманные карты</b> в закрытую. На стол по очереди выкладываются <b>5 общих карт</b>: <i>Флоп</i> (первые 3 карты), <i>Тёрн</i> (4-я карта) и <i>Ривер</i> (5-я карта). На каждом этапе идут торги фишками.<br>
-            2. <b>Комбинации по возрастанию силы (из любых 5 карт из 7 доступных):</b>
-            <br>• <b>Старшая карта</b> → <b>Пара</b> (2 одного ранга) → <b>Две пары</b> → <b>Сет / Тройка</b> (3 одного ранга) → <b>Стрит</b> (5 карт по порядку) → <b>Флеш</b> (5 карт одной масти) → <b>Фулл-хаус</b> (Тройка + Пара) → <b>Каре</b> (4 одного ранга) → <b>Стрит-флеш / Роял-флеш</b>.<br>
-            3. <b>Как ставить фишки:</b> нажимай на разноцветные фишки номиналом <b>10, 25, 50, 100, 500</b>, чтобы добавить их к ставке раунда, либо используй кнопки <b>Чек / Колл</b>, <b>Рейз</b> и <b>Фолд (Сброс)</b>.
+            1. <b>Раздача:</b> у каждого по 2 закрытые карты. На центр стола выкладываются 5 общих карт: <i>Флоп</i> (3), <i>Тёрн</i> (4-я), <i>Ривер</i> (5-я).<br>
+            2. <b>Комбинации:</b> Старшая карта → Пара → Две пары → Сет (Тройка) → Стрит → Флеш → Фулл-хаус → Каре → Стрит-флеш → Роял-флеш.<br>
+            3. <b>Ставки:</b> кликай по фишкам (10, 25, 50, 100, 500) — они вылетают в центр стола в зону ставок. Нажми <b>«Чек / Колл»</b>, чтобы открыть следующую карту.
           </div>
         </details>
 
         <div class="cg-table">
-          <!-- Зона бота в покере -->
+          <!-- Зона бота -->
           <div class="cg-zone">
             <div class="cg-zone-label">
-              🤖 Банк бота: <b id="pokerBotBank" style="color:var(--gold);">1000</b> фишек · Ставка: <b id="pokerBotBet">0</b> · <span id="pokerBotCombo">Скрыто</span>
+              🤖 Стек бота: <b id="pokerBotBank" style="color:var(--gold);">1000</b> · Ставка: <b id="pokerBotBet">0</b> · <span id="pokerBotCombo">Карты скрыты</span>
             </div>
             <div class="cg-hand" id="pokerBotHand"></div>
           </div>
 
-          <!-- Общие карты (Борд) и Банк -->
-          <div class="cg-zone">
+          <!-- Центр стола: Колода дилера сбоку + Общие карты + Зона фишек -->
+          <div class="cg-zone" style="width:100%;">
             <div class="poker-pot-pill">
-              🪙 Общий банк (Pot): <span id="pokerPotVal">0</span> фишек · Этап: <span id="pokerStageLabel">Префлоп</span>
+              🪙 Общий банк (Pot): <span id="pokerPotVal">0</span> · Этап: <span id="pokerStageLabel">Префлоп</span>
             </div>
-            <div class="cg-hand" id="pokerCommunityCards"></div>
-            <div id="pokerStatusMsg" style="font-weight:700;color:#a8f0cd;text-align:center;">Выбери фишки для ставки или нажми Чек/Колл</div>
+
+            <div class="poker-board-stage">
+              <!-- Колода дилера сбоку -->
+              <div class="poker-side-deck">
+                <div class="poker-deck-stack">КОЛОДА</div>
+                <span style="font-size:.72rem;color:#d8f3e5;font-weight:700;">Остаток: <b id="pokerDeckCount">48</b></span>
+              </div>
+
+              <!-- 5 общих карт -->
+              <div class="cg-hand" id="pokerCommunityCards"></div>
+
+              <!-- Зона ставок на сукне, куда ложатся фишки -->
+              <div class="poker-bet-felt">
+                <span style="font-size:.74rem;color:var(--gold);font-weight:700;">СТАВКИ НА СТОЛЕ</span>
+                <div class="poker-bet-chips-visual" id="pokerTableChipsVisual"></div>
+              </div>
+            </div>
+
+            <div id="pokerStatusMsg" style="font-weight:700;color:#a8f0cd;text-align:center;">Кликай по фишкам для ставки или нажми «Чек / Колл»</div>
           </div>
 
-          <!-- Зона игрока и фишки -->
+          <!-- Зона игрока и лоток фишек -->
           <div class="cg-zone">
             <div class="cg-zone-label">
-              👤 Твой стек: <b id="pokerPlayerBank" style="color:var(--gold);">1000</b> фишек · Твоя ставка: <b id="pokerPlayerBet">0</b> · Комбинация: <b id="pokerPlayerCombo" style="color:#a8f0cd;">—</b>
+              👤 Твой стек: <b id="pokerPlayerBank" style="color:var(--gold);">1000</b> · Твоя ставка: <b id="pokerPlayerBet">0</b> · Комбинация: <b id="pokerPlayerCombo" style="color:#a8f0cd;">—</b>
             </div>
             <div class="cg-hand" id="pokerPlayerHand"></div>
 
-            <!-- Лоток детализированных фишек казино -->
             <div class="chips-rack" id="pokerChipsRack">
               <div class="poker-chip c-10" data-chip="10"><span>10</span></div>
               <div class="poker-chip c-25" data-chip="25"><span>25</span></div>
@@ -3148,15 +3236,17 @@ $$('#cardGameSwitch button').forEach(btn => {
   });
 });
 
-/* -------------------- 1. ПОДКИДНОЙ ДУРАК -------------------- */
+/* -------------------- 1. ДУРАК (ПОДКИДНОЙ И ПЕРЕВОДНОЙ + УМНЫЙ БОТ) -------------------- */
 (function initDurakGame() {
   const RANKS_36 = [
     { r: 6, l: '6' }, { r: 7, l: '7' }, { r: 8, l: '8' }, { r: 9, l: '9' },
     { r: 10, l: '10' }, { r: 11, l: 'В' }, { r: 12, l: 'Д' }, { r: 13, l: 'К' }, { r: 14, l: 'Т' }
   ];
   let deck = [], playerHand = [], botHand = [], tablePairs = [];
+  let trumpCard = null;
   let trumpSuit = '♠';
-  let attacker = 'player'; // 'player' | 'bot'
+  let attacker = 'player';
+  let gameMode = 'podkidnoy'; // 'podkidnoy' | 'perevodnoy'
   let diff = 'easy';
   let gameOver = false;
 
@@ -3192,9 +3282,21 @@ $$('#cardGameSwitch button').forEach(btn => {
     return ranksOnTable.has(card.rank);
   }
 
+  // Проверка возможности перевода в Переводном дураке
+  function canTransfer(hand, targetHandCount) {
+    if (gameMode !== 'perevodnoy') return false;
+    if (tablePairs.length === 0) return false;
+    if (tablePairs.some(p => p.def !== null)) return false; // Переводить можно только пока ни одна карта не побита
+    if (targetHandCount < tablePairs.length + 1) return false; // У соперника должно хватать карт
+    const atkRank = tablePairs[0].atk.rank;
+    return hand.some(c => c.rank === atkRank);
+  }
+
   function refillHands() {
-    while (playerHand.length < 6 && deck.length > 0) playerHand.push(deck.pop());
-    while (botHand.length < 6 && deck.length > 0) botHand.push(deck.pop());
+    const first = attacker === 'player' ? playerHand : botHand;
+    const second = attacker === 'player' ? botHand : playerHand;
+    while (first.length < 6 && deck.length > 0) first.push(deck.pop());
+    while (second.length < 6 && deck.length > 0) second.push(deck.pop());
     playerHand.sort((a, b) => (a.suit === trumpSuit ? 100 : 0) + a.rank - ((b.suit === trumpSuit ? 100 : 0) + b.rank));
   }
 
@@ -3216,10 +3318,35 @@ $$('#cardGameSwitch button').forEach(btn => {
     return false;
   }
 
+  function renderDeckVisual() {
+    const el = $('#durakDeckVisual');
+    if (!el) return;
+    if (deck.length > 1) {
+      el.innerHTML = `
+        ${createCardHtml(trumpCard, trumpSuit, 'durak-trump-card')}
+        <div class="playing-card back durak-deck-pile">
+          <span class="durak-deck-counter">${deck.length} карт</span>
+        </div>
+      `;
+    } else if (deck.length === 1) {
+      el.innerHTML = `
+        ${createCardHtml(trumpCard, trumpSuit)}
+        <span class="durak-deck-counter">Последняя!</span>
+      `;
+    } else {
+      el.innerHTML = `
+        <div style="width:74px;height:108px;border:2px dashed rgba(255,255,255,.35);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--gold);font-weight:800;">
+          <span style="font-size:1.8rem;">${trumpSuit}</span>
+          <span style="font-size:.65rem;">Козырь</span>
+        </div>
+      `;
+    }
+  }
+
   function renderDurak() {
-    $('#durakTrumpBadge').textContent = trumpSuit;
-    $('#durakDeckCount').textContent = deck.length;
+    $('#durakTrumpBadge').textContent = `${trumpSuit} (${trumpCard ? trumpCard.label : ''})`;
     $('#durakBotCount').textContent = botHand.length;
+    renderDeckVisual();
 
     $('#durakBotHand').innerHTML = botHand.map(() => createCardHtml({ hidden: true })).join('');
     $('#durakPlayerHand').innerHTML = playerHand.map(c => createCardHtml(c, trumpSuit)).join('');
@@ -3232,13 +3359,22 @@ $$('#cardGameSwitch button').forEach(btn => {
     `).join('');
 
     const actBtn = $('#durakActionBtn');
+    const trBtn = $('#durakTransferBtn');
+
     if (attacker === 'player') {
       actBtn.textContent = '✅ Бито (Завершить атаку)';
-      actBtn.disabled = tablePairs.length === 0;
+      actBtn.disabled = tablePairs.length === 0 || tablePairs.some(p => !p.def);
+      trBtn.style.display = 'none';
     } else {
       const hasUnbeaten = tablePairs.some(p => !p.def);
       actBtn.textContent = hasUnbeaten ? '📥 Взять карты со стола' : '⏳ Ждём хода бота...';
       actBtn.disabled = !hasUnbeaten;
+
+      if (hasUnbeaten && canTransfer(playerHand, botHand.length)) {
+        trBtn.style.display = 'inline-flex';
+      } else {
+        trBtn.style.display = 'none';
+      }
     }
 
     $$('#durakPlayerHand .playing-card').forEach(el => {
@@ -3247,8 +3383,8 @@ $$('#cardGameSwitch button').forEach(btn => {
   }
 
   function cardValue(c) {
-    let val = c.rank + (c.suit === trumpSuit ? 20 : 0);
-    if (diff === 'hard' && c.suit === trumpSuit) val += 10; // Мастер бережёт козыри до последнего
+    let val = c.rank + (c.suit === trumpSuit ? 22 : 0);
+    if (diff === 'hard' && c.suit === trumpSuit) val += 14;
     return val;
   }
 
@@ -3261,17 +3397,23 @@ $$('#cardGameSwitch button').forEach(btn => {
     if (attacker === 'player') {
       if (botHand.length === 0) return;
       if (!canThrowIn(card)) {
-        toast('Можно подкидывать только карты того же номинала, что уже есть на столе!');
+        toast('Можно подкидывать только карты того же номинала, что уже лежат на столе!');
         return;
       }
       playerHand.splice(idx, 1);
       tablePairs.push({ atk: card, def: null });
       renderDurak();
-      setTimeout(botDefend, 350);
+      setTimeout(botDefendOrTransfer, 380);
     } else {
       const unbeatenPair = tablePairs.find(p => !p.def);
       if (!unbeatenPair) return;
+
+      // Если в переводном дураке игрок нажал на карту того же номинала, но не нажал кнопку «Перевести» — подсказываем или переводим, если бить нельзя
       if (!canBeat(unbeatenPair.atk, card)) {
+        if (canTransfer(playerHand, botHand.length) && card.rank === unbeatenPair.atk.rank) {
+          doPlayerTransfer(idx);
+          return;
+        }
         toast('Этой картой нельзя побить! Нужна старшая карта той же масти или козырь.');
         return;
       }
@@ -3283,44 +3425,80 @@ $$('#cardGameSwitch button').forEach(btn => {
     }
   }
 
-  function botDefend() {
+  function doPlayerTransfer(specificIdx = -1) {
+    if (!canTransfer(playerHand, botHand.length)) return;
+    const atkRank = tablePairs[0].atk.rank;
+    const idx = specificIdx !== -1 ? specificIdx : playerHand.findIndex(c => c.rank === atkRank);
+    if (idx === -1) return;
+    const trCard = playerHand.splice(idx, 1)[0];
+    tablePairs.push({ atk: trCard, def: null });
+    attacker = 'player';
+    $('#durakStatusText').textContent = `🔁 Ты перевёл атаку картой ${trCard.label}${trCard.suit}! Теперь отбивается бот.`;
+    renderDurak();
+    setTimeout(botDefendOrTransfer, 450);
+  }
+
+  $('#durakTransferBtn').addEventListener('click', () => doPlayerTransfer(-1));
+
+  function botDefendOrTransfer() {
     if (gameOver) return;
-    const unbeatenPair = tablePairs.find(p => !p.def);
-    if (!unbeatenPair) return;
+    const unbeatenPairs = tablePairs.filter(p => !p.def);
+    if (!unbeatenPairs.length) return;
 
-    const valid = botHand.filter(c => canBeat(unbeatenPair.atk, c));
-    let chosen = null;
-
-    if (valid.length > 0) {
-      if (diff === 'easy') {
-        chosen = valid[Math.floor(Math.random() * valid.length)];
-      } else {
-        valid.sort((a, b) => cardValue(a) - cardValue(b));
-        // Мастер не тратит крупный козырь в начале игры, если колода ещё полная
-        if (diff === 'hard' && deck.length > 8 && valid[0].suit === trumpSuit && valid[0].rank >= 12 && tablePairs.length <= 2) {
-          chosen = null;
-        } else {
-          chosen = valid[0];
-        }
+    // Умный бот проверяет: может ли он ПЕРЕВЕСТИ атаку обратно на игрока?
+    if (diff !== 'easy' && canTransfer(botHand, playerHand.length)) {
+      const atkRank = tablePairs[0].atk.rank;
+      const trCandidates = botHand.filter(c => c.rank === atkRank);
+      trCandidates.sort((a, b) => cardValue(a) - cardValue(b));
+      // Опытный и Мастер переводят некозырными картами всегда, а козырем — только в эндшпиле
+      if (trCandidates[0].suit !== trumpSuit || deck.length === 0) {
+        const chosenTr = trCandidates[0];
+        botHand = botHand.filter(c => c.id !== chosenTr.id);
+        tablePairs.push({ atk: chosenTr, def: null });
+        attacker = 'bot';
+        $('#durakStatusText').textContent = `🔁 Бот ПЕРЕВЁЛ атаку картой ${chosenTr.label}${chosenTr.suit}! Теперь отбиваешься ты (или переводи обратно)!`;
+        renderDurak();
+        return;
       }
     }
 
-    if (chosen) {
-      botHand = botHand.filter(c => c.id !== chosen.id);
-      unbeatenPair.def = chosen;
-      $('#durakStatusText').textContent = 'Бот отбился! Можешь подкинуть ещё карту или нажать «Бито».';
-      renderDurak();
-      checkWinner();
-    } else {
-      // Бот забирает карты
-      tablePairs.forEach(p => { botHand.push(p.atk); if (p.def) botHand.push(p.def); });
-      tablePairs = [];
-      refillHands();
-      $('#durakStatusText').textContent = '🤖 Бот забрал карты! Твой ход снова — атакуй!';
-      attacker = 'player';
-      renderDurak();
-      checkWinner();
+    // Отбиваем все непокрытые карты на столе
+    for (const pair of unbeatenPairs) {
+      const valid = botHand.filter(c => canBeat(pair.atk, c));
+      let chosen = null;
+
+      if (valid.length > 0) {
+        if (diff === 'easy') {
+          chosen = valid[Math.floor(Math.random() * valid.length)];
+        } else {
+          valid.sort((a, b) => cardValue(a) - cardValue(b));
+          if (diff === 'hard' && deck.length > 6 && valid[0].suit === trumpSuit && valid[0].rank >= 12 && tablePairs.length <= 2) {
+            chosen = null;
+          } else {
+            chosen = valid[0];
+          }
+        }
+      }
+
+      if (chosen) {
+        botHand = botHand.filter(c => c.id !== chosen.id);
+        pair.def = chosen;
+      } else {
+        // Бот не смог отбить одну из карт — забирает все
+        tablePairs.forEach(p => { botHand.push(p.atk); if (p.def) botHand.push(p.def); });
+        tablePairs = [];
+        refillHands();
+        $('#durakStatusText').textContent = '🤖 Бот забрал карты! Твой ход снова — атакуй!';
+        attacker = 'player';
+        renderDurak();
+        checkWinner();
+        return;
+      }
     }
+
+    $('#durakStatusText').textContent = 'Бот отбился! Можешь подкинуть ещё или нажать «Бито».';
+    renderDurak();
+    checkWinner();
   }
 
   function botAttackStart() {
@@ -3328,10 +3506,21 @@ $$('#cardGameSwitch button').forEach(btn => {
     if (botHand.length === 0) return;
 
     botHand.sort((a, b) => cardValue(a) - cardValue(b));
-    const atkCard = diff === 'easy' ? botHand[Math.floor(Math.random() * botHand.length)] : botHand[0];
+    let atkCard = botHand[0];
+
+    // Уровень «Мастер»: ищет парные карты (одного номинала), чтобы зайти с дубля
+    if (diff === 'hard') {
+      const rankCounts = {};
+      botHand.forEach(c => { rankCounts[c.rank] = (rankCounts[c.rank] || 0) + 1; });
+      const pairedNonTrump = botHand.find(c => rankCounts[c.rank] >= 2 && c.suit !== trumpSuit);
+      if (pairedNonTrump) atkCard = pairedNonTrump;
+    } else if (diff === 'easy') {
+      atkCard = botHand[Math.floor(Math.random() * botHand.length)];
+    }
+
     botHand = botHand.filter(c => c.id !== atkCard.id);
     tablePairs.push({ atk: atkCard, def: null });
-    $('#durakStatusText').textContent = '⚔️ Бот атакует! Выбери карту для защиты или нажми «Взять карты».';
+    $('#durakStatusText').textContent = '⚔️ Бот атакует! Отбивайся, переводи (в Переводном) или бери карты.';
     renderDurak();
   }
 
@@ -3372,7 +3561,6 @@ $$('#cardGameSwitch button').forEach(btn => {
     if (attacker === 'player') {
       endBoutBeaten();
     } else {
-      // Игрок забирает все карты со стола
       tablePairs.forEach(p => { playerHand.push(p.atk); if (p.def) playerHand.push(p.def); });
       tablePairs = [];
       refillHands();
@@ -3385,7 +3573,8 @@ $$('#cardGameSwitch button').forEach(btn => {
 
   function startNewDurak() {
     deck = buildDeck();
-    trumpSuit = deck[0].suit;
+    trumpCard = deck[0]; // Нижняя карта колоды — козырь
+    trumpSuit = trumpCard.suit;
     playerHand = []; botHand = []; tablePairs = [];
     gameOver = false; attacker = 'player';
     refillHands();
@@ -3393,12 +3582,22 @@ $$('#cardGameSwitch button').forEach(btn => {
     renderDurak();
   }
 
+  $$('#durakModeRow .diff-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('#durakModeRow .diff-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      gameMode = btn.dataset.dmode;
+      $('#durakModeLabel').textContent = gameMode === 'perevodnoy' ? 'Переводной' : 'Подкидной';
+      startNewDurak();
+    });
+  });
+
   $$('#durakDiffRow .diff-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       $$('#durakDiffRow .diff-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       diff = btn.dataset.ddiff;
-      $('#durakDiffLabel').textContent = btn.textContent.replace(/^[^\s]+\sБот:\s/, '');
+      $('#durakDiffLabel').textContent = btn.textContent.replace(/^[^\s]+\s/, '');
       startNewDurak();
     });
   });
@@ -3407,16 +3606,16 @@ $$('#cardGameSwitch button').forEach(btn => {
   startNewDurak();
 })();
 
-/* -------------------- 2. ПОКЕР: ТЕХАССКИЙ ХОЛДЕМ -------------------- */
+/* -------------------- 2. ПОКЕР: ТЕХАССКИЙ ХОЛДЕМ (ДЕТАЛИЗИРОВАННЫЙ СТОЛ И ФИШКИ) -------------------- */
 (function initPokerGame() {
   const RANKS_52 = [
     { r: 2, l: '2' }, { r: 3, l: '3' }, { r: 4, l: '4' }, { r: 5, l: '5' },
     { r: 6, l: '6' }, { r: 7, l: '7' }, { r: 8, l: '8' }, { r: 9, l: '9' },
     { r: 10, l: '10' }, { r: 11, l: 'J' }, { r: 12, l: 'Q' }, { r: 13, l: 'K' }, { r: 14, l: 'A' }
   ];
-  let deck = [], playerHand = [], botHand = [], community = [];
+  let deck = [], playerHand = [], botHand = [], community = [], tableChips = [];
   let playerBank = 1000, botBank = 1000, pot = 0, playerBet = 0, botBet = 0;
-  let stage = 0; // 0: Префлоп, 1: Флоп (3), 2: Тёрн (4), 3: Ривер (5), 4: Вскрытие (Showdown)
+  let stage = 0;
   let pDiff = 'easy';
   let roundOver = false;
 
@@ -3435,7 +3634,6 @@ $$('#cardGameSwitch button').forEach(btn => {
     return d;
   }
 
-  // Оценка силы комбинации из доступных карт (возвращает числовой рейтинг и название)
   function evaluatePokerHand(cards) {
     if (cards.length < 2) return { score: 0, name: '—' };
     const counts = {};
@@ -3450,7 +3648,7 @@ $$('#cardGameSwitch button').forEach(btn => {
 
     const flushSuit = Object.keys(suitCounts).find(s => suitCounts[s] >= 5);
     const uniqueRanks = [...new Set(cards.map(c => c.rank))].sort((a, b) => b - a);
-    if (uniqueRanks.includes(14)) uniqueRanks.push(1); // Туз для младшего стрита A-2-3-4-5
+    if (uniqueRanks.includes(14)) uniqueRanks.push(1);
 
     let straightHigh = 0;
     for (let i = 0; i <= uniqueRanks.length - 5; i++) {
@@ -3475,6 +3673,7 @@ $$('#cardGameSwitch button').forEach(btn => {
     $('#pokerPlayerBet').textContent = playerBet;
     $('#pokerBotBet').textContent = botBet;
     $('#pokerStageLabel').textContent = STAGE_NAMES[stage];
+    if ($('#pokerDeckCount')) $('#pokerDeckCount').textContent = deck.length;
 
     $('#pokerPlayerHand').innerHTML = playerHand.map(c => createCardHtml(c)).join('');
     $('#pokerBotHand').innerHTML = botHand.map(c => createCardHtml(stage === 4 ? c : { hidden: true })).join('');
@@ -3485,6 +3684,14 @@ $$('#cardGameSwitch button').forEach(btn => {
       else commCards.push(createCardHtml({ hidden: true }));
     }
     $('#pokerCommunityCards').innerHTML = commCards.join('');
+
+    // Отрисовка фишек, выложенных на сукно в зону ставок
+    const chipsBox = $('#pokerTableChipsVisual');
+    if (chipsBox) {
+      chipsBox.innerHTML = tableChips.slice(-14).map(val =>
+        `<span class="mini-chip c-${val}">${val}</span>`
+      ).join('');
+    }
 
     const pEval = evaluatePokerHand([...playerHand, ...community]);
     $('#pokerPlayerCombo').textContent = pEval.name;
@@ -3502,34 +3709,36 @@ $$('#cardGameSwitch button').forEach(btn => {
     const actual = Math.min(amount, playerBank, botBank);
     if (actual <= 0) { toast('Недостаточно фишек в стеке!'); return; }
     playerBank -= actual;
-    botBank -= actual; // Бот поддерживает ставку или отвечает
+    botBank -= actual;
     playerBet += actual;
     botBet += actual;
     pot += actual * 2;
-    $('#pokerStatusMsg').textContent = `Ты поставил фишку +${actual}. Бот уравнял ставку! Нажми «Чек / Колл» для следующей карты.`;
+    tableChips.push(amount, amount);
+    $('#pokerStatusMsg').textContent = `Ты бросил на стол фишку +${actual}. Бот уравнял! Жми «Чек / Колл» для следующей карты.`;
     renderPoker();
   }
 
   function nextPokerStage() {
     if (roundOver) return;
     stage++;
-    if (stage === 1) community.push(deck.pop(), deck.pop(), deck.pop());
-    else if (stage === 2 || stage === 3) community.push(deck.pop());
+    if (stage === 1) { deck.pop(); community.push(deck.pop(), deck.pop(), deck.pop()); } // burn card + flop
+    else if (stage === 2 || stage === 3) { deck.pop(); community.push(deck.pop()); }
     else if (stage === 4) {
       showdownPoker();
       return;
     }
 
-    // Поведение бота на новом круге торговли в зависимости от сложности
     const bEval = evaluatePokerHand([...botHand, ...community]);
     if (pDiff === 'hard' && (bEval.score >= 100 || Math.random() < 0.35) && playerBank >= 25 && botBank >= 25) {
       playerBank -= 25; botBank -= 25; pot += 50; playerBet += 25; botBet += 25;
-      $('#pokerStatusMsg').textContent = `🔥 Бот-Акула взвинтил ставку на +25 фишек (уравнено)! Оцени борд и делай ход.`;
+      tableChips.push(25, 25);
+      $('#pokerStatusMsg').textContent = `🔥 Бот-Акула поднял ставку на +25 фишек!`;
     } else if (pDiff === 'normal' && bEval.score >= 200 && playerBank >= 25 && botBank >= 25) {
       playerBank -= 25; botBank -= 25; pot += 50; playerBet += 25; botBet += 25;
-      $('#pokerStatusMsg').textContent = `🤖 Бот уверен в картах и добавил +25 в банк.`;
+      tableChips.push(25, 25);
+      $('#pokerStatusMsg').textContent = `🤖 Бот уверен в руке и добавил +25 на стол.`;
     } else {
-      $('#pokerStatusMsg').textContent = `Открыт этап: ${STAGE_NAMES[stage]}. Добавь фишек или жми «Чек / Колл».`;
+      $('#pokerStatusMsg').textContent = `Открыт этап: ${STAGE_NAMES[stage]}. Делай ставку фишками или жми «Чек / Колл».`;
     }
     renderPoker();
   }
@@ -3542,17 +3751,18 @@ $$('#cardGameSwitch button').forEach(btn => {
 
     if (pEval.score > bEval.score) {
       playerBank += pot;
-      $('#pokerStatusMsg').textContent = `🏆 ТЫ ВЫИГРАЛ БАНК (${pot} фишек)! Твоя комбинация: ${pEval.name} сильнее бота (${bEval.name}).`;
-      toast(`🏆 Победа в раздаче! +${pot} фишек`);
+      $('#pokerStatusMsg').textContent = `🏆 ТЫ ВЫИГРАЛ БАНК (${pot} фишек)! Твоя комбинация: ${pEval.name} против ${bEval.name}.`;
+      toast(`🏆 Победа! +${pot} фишек`);
     } else if (bEval.score > pEval.score) {
       botBank += pot;
       $('#pokerStatusMsg').textContent = `🤖 Бот забирает банк (${pot} фишек) с комбинацией ${bEval.name} против твоей (${pEval.name}).`;
     } else {
       playerBank += Math.floor(pot / 2);
       botBank += Math.ceil(pot / 2);
-      $('#pokerStatusMsg').textContent = `🤝 Равные комбинации (${pEval.name})! Банк поделён пополам.`;
+      $('#pokerStatusMsg').textContent = `🤝 Ничья (${pEval.name})! Банк поделён пополам.`;
     }
     pot = 0;
+    tableChips = [];
     renderPoker();
   }
 
@@ -3564,15 +3774,15 @@ $$('#cardGameSwitch button').forEach(btn => {
     botHand = [deck.pop(), deck.pop()];
     community = [];
     stage = 0; roundOver = false;
-    // Обязательный блайнд 20 фишек
     playerBank -= 20; botBank -= 20;
     playerBet = 20; botBet = 20; pot = 40;
-    $('#pokerStatusMsg').textContent = 'Новая раздача! Сделан начальный взнос (блайнд) по 20 фишек. Кликай по фишкам или жми Чек/Колл.';
+    tableChips = [10, 10, 10, 10];
+    $('#pokerStatusMsg').textContent = 'Новая раздача! Обязательные блайнды по 20 фишек уже на сукне.';
     renderPoker();
   }
 
   $$('#pokerChipsRack .poker-chip').forEach(chip => {
-    chip.addEventListener('click', () => addChipBet( parseInt(chip.dataset.chip, 10) ));
+    chip.addEventListener('click', () => addChipBet(parseInt(chip.dataset.chip, 10)));
   });
 
   $('#pokerCheckCallBtn').addEventListener('click', nextPokerStage);
@@ -3581,8 +3791,8 @@ $$('#cardGameSwitch button').forEach(btn => {
     if (roundOver) return;
     roundOver = true;
     botBank += pot;
-    $('#pokerStatusMsg').textContent = `🏳 Ты сбросил карты (Фолд). Бот забирает банк ${pot} фишек.`;
-    pot = 0;
+    $('#pokerStatusMsg').textContent = `🏳 Ты сбросил карты (Фолд). Бот забирает ${pot} фишек.`;
+    pot = 0; tableChips = [];
     renderPoker();
   });
   $('#pokerNewDealBtn').addEventListener('click', startNewDeal);
