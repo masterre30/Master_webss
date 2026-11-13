@@ -1010,6 +1010,7 @@ input[type="range"]::-webkit-slider-thumb {
   <nav class="sidebar-nav" id="sidebarNav">
     <a href="#" data-page="home" class="active"><span class="nav-icon">🏠</span> Главная</a>
     <a href="#" data-page="scripts"><span class="nav-icon">📜</span> Скрипты для буксов <span class="nav-badge">ТОП</span></a>
+    <a href="#" data-page="guides"><span class="nav-icon">📚</span> Полезные инструкции</a>
     <a href="#" data-page="freelance"><span class="nav-icon">💼</span> Фриланс-биржи</a>
     <a href="#" data-page="password"><span class="nav-icon">🔐</span> Генератор паролей</a>
     <a href="#" data-page="calculator"><span class="nav-icon">🧮</span> Калькулятор</a>
@@ -1051,6 +1052,10 @@ input[type="range"]::-webkit-slider-thumb {
         <div class="pc-icon">📜</div><h3>Скрипты для буксов</h3>
         <p>Расширение UnuHelper, скрипт UnuPROZamena, автоочистка, поиск артикулов WB/Ozon и защита от банов.</p>
       </div>
+      <div class="preview-card" onclick="showPage('guides')">
+        <div class="pc-icon">📚</div><h3>Полезные инструкции</h3>
+        <p>Гайды по Dolphin Anty, скачиванию с GitHub и настройке VPN (v2rayNG).</p>
+      </div>
       <div class="preview-card" onclick="showPage('freelance')">
         <div class="pc-icon">💼</div><h3>Фриланс-биржи</h3>
         <p>Популярные биржи с ценами на задания.</p>
@@ -1084,6 +1089,140 @@ input[type="range"]::-webkit-slider-thumb {
 
   <!-- СКРИПТЫ ДЛЯ БУКСОВ -->
   <section class="page" id="page-scripts">
+    <!-- ПОЛЕЗНЫЕ ИНСТРУКЦИИ (DOLPHIN ANTY, GITHUB, VPN) -->
+  <section class="page" id="page-guides">
+    <h2 class="section-title">📚 Полезные инструкции</h2>
+    <p class="section-sub">Пошаговые руководства по настройке антидетект-браузера Dolphin Anty, работе с репозиториями GitHub и подключению VPN (v2rayNG) на основе официальных положений.</p>
+
+    <!-- ГАЙД 1: DOLPHIN ANTY -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="sc-top" style="margin-bottom:12px;">
+        <div class="sc-badges">
+          <span class="sc-badge ext">🐬 Антидетект-браузер</span>
+          <span class="sc-badge">До 10 профилей бесплатно</span>
+        </div>
+        <span class="sc-ver">Официальный стандарт</span>
+      </div>
+      <h3 style="font-size:1.35rem;margin-bottom:8px;">🐬 Полный гайд по Dolphin Anty (установка, профили и прокси)</h3>
+      <p style="font-size:.92rem;color:var(--text-soft);margin-bottom:16px;">
+        <b>Dolphin {anty}</b> создаёт изолированные браузерные профили с уникальным цифровым отпечатком (Canvas, WebGL, User-Agent, WebRTC). Сайты и буксы видят каждый профиль как отдельный реальный компьютер.
+      </p>
+
+      <div class="install-guide-grid" style="margin-bottom:16px;">
+        <div class="ban-sit-box">
+          <h4>1️⃣ Скачивание и регистрация (с официального сайта)</h4>
+          <ol>
+            <li>Перейди на официальный сайт <a href="https://dolphin-anty.com" target="_blank" rel="noopener">dolphin-anty.com</a>.</li>
+            <li>Нажми <b>«Зарегистрироваться»</b> и создай аккаунт (выбирай тариф <b>Free</b> — он даёт до 10 уникальных профилей бесплатно и бессрочно).</li>
+            <li>Скачай установщик под свою систему (Windows / macOS / Linux), установи программу и авторизуйся под своими данными.</li>
+          </ol>
+        </div>
+
+        <div class="ban-sit-box">
+          <h4>2️⃣ Создание чистого профиля и привязка прокси</h4>
+          <ol>
+            <li>В верхнем меню программы нажми кнопку <b>«➕ Создать профиль»</b>.</li>
+            <li>Задай понятное имя (например, <code>UNU Акк 2</code>) и выбери операционную систему (рекомендуется выбирать ту же ОС, которая стоит на твоём ПК).</li>
+            <li>В блоке <b>«Прокси»</b> выбери <b>«Новый прокси»</b>, укажи протокол (<code>HTTP</code> или <code>SOCKS5</code>) и вставь данные прокси в формате <code>ip:port:login:password</code>.</li>
+            <li>Нажми на значок проверки соединения (🔄) справа от поля прокси — должен загореться зелёный статус с городом/страной.</li>
+            <li>Остальные параметры отпечатка (WebRTC, Canvas, WebGL, Память) оставь в положении по умолчанию (<b>Real / Altered</b>) — Dolphin генерирует их из реальных браузеров автоматически.</li>
+            <li>Нажми <b>«Создать»</b> в правом верхнем углу и запускай профиль кнопкой <b>«Запуск»</b>.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="info-note" style="margin-top:0;">
+        💡 <b>Официальные рекомендации безопасности Dolphin Anty:</b> никогда не используй один и тот же прокси на разных профилях, всегда дожидайся корректного закрытия окна браузера (кнопка «Стоп»), чтобы Cookie и сессии успели синхронизироваться в облаке.
+      </div>
+    </div>
+
+    <!-- ГАЙД 2: GITHUB -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="sc-top" style="margin-bottom:12px;">
+        <div class="sc-badges">
+          <span class="sc-badge">🐙 GitHub</span>
+          <span class="sc-badge market">Релизы, ZIP и APK</span>
+        </div>
+        <span class="sc-ver">Официальная документация</span>
+      </div>
+      <h3 style="font-size:1.35rem;margin-bottom:8px;">🐙 Как правильно пользоваться GitHub (скачивание расширений, APK и скриптов)</h3>
+      <p style="font-size:.92rem;color:var(--text-soft);margin-bottom:16px;">
+        На <b>GitHub</b> разработчики публикуют исходный код и готовые установочные сборки (Violentmonkey, Kiwi Browser, клиенты VPN). Главное правило — не путать исходный код с готовым релизом.
+      </p>
+
+      <div class="ban-situations-grid" style="margin-bottom:12px;">
+        <div class="ban-sit-box">
+          <h4>📦 Способ 1: Скачивание готовой программы / расширения (Releases)</h4>
+          <ol>
+            <li>Открой страницу нужного проекта на <a href="https://github.com" target="_blank" rel="noopener">github.com</a>.</li>
+            <li>В правой колонке страницы (или внизу на телефоне) найди раздел <b>«Releases»</b> и кликни на последнюю версию с зелёной плашкой <b>Latest</b>.</li>
+            <li>Прокрути описание изменений вниз до выпадающего списка <b>«Assets»</b>.</li>
+            <li>Скачай готовый файл: <code>.apk</code> (для Android), <code>.exe</code> (для ПК) или собранный <code>.zip</code> архив расширения (не нажимай на <i>Source code</i>, если тебе нужна готовая сборка).</li>
+          </ol>
+        </div>
+
+        <div class="ban-sit-box">
+          <h4>📁 Способ 2: Скачивание всего репозитория архивом (Code → ZIP)</h4>
+          <ol>
+            <li>Если автор выложил скрипты или распакованное расширение прямо в главной папке репозитория, найди яркую зелёную кнопку <b>«&lt;&gt; Code»</b> вверху страницы.</li>
+            <li>Нажми на неё и в выпадающем меню выбери <b>«Download ZIP»</b>.</li>
+            <li>Распакуй скачанный архив в отдельную папку на ПК или телефоне.</li>
+          </ol>
+        </div>
+
+        <div class="ban-sit-box">
+          <h4>📜 Способ 3: Установка одиночного скрипта (Кнопка Raw)</h4>
+          <ol>
+            <li>Открой в репозитории файл со скриптом (обычно заканчивается на <code>.user.js</code>).</li>
+            <li>В правом верхнем углу окна просмотра кода нажми кнопку <b>«Raw»</b>.</li>
+            <li>Откроется чистый код файла, а установленный <b>Violentmonkey</b> автоматически перехватит ссылку и предложит установить скрипт в 1 клик.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- ГАЙД 3: VPN V2RAYNG -->
+    <div class="card">
+      <div class="sc-top" style="margin-bottom:12px;">
+        <div class="sc-badges">
+          <span class="sc-badge ext">🛡 VPN / v2rayNG</span>
+          <span class="sc-badge">Для GitHub и Dolphin Anty</span>
+        </div>
+        <span class="sc-ver">VLESS / Reality / Xray</span>
+      </div>
+      <h3 style="font-size:1.35rem;margin-bottom:8px;">🛡 Установка и настройка VPN (v2rayNG) для работы с GitHub и Dolphin</h3>
+      <p style="font-size:.92rem;color:var(--text-soft);margin-bottom:16px;">
+        Если провайдер ограничивает доступ к загрузке релизов с GitHub или серверам синхронизации Dolphin Anty, используй клиент <b>v2rayNG</b>. Ниже — пошаговая инструкция по подключению и прямая ссылка на полную памятку.
+      </p>
+
+      <div class="install-guide-grid" style="margin-bottom:16px;">
+        <div class="ban-sit-box">
+          <h4>📲 Пошаговая настройка v2rayNG</h4>
+          <ol>
+            <li><b>Установи приложение v2rayNG:</b> скачай его из Google Play или возьми официальный универсальный <code>.apk</code> из раздела <b>Releases</b> на GitHub-странице проекта (<code>2dust/v2rayNG</code>).</li>
+            <li><b>Скопируй ключ-ссылку (конфигурацию)</b> или ссылку на подписку в буфер обмена (начинается с <code>vless://</code>, <code>vmess://</code>, <code>ss://</code> или <code>https://</code>).</li>
+            <li>Открой <b>v2rayNG</b>, нажми на иконку <b>«➕» (Плюс)</b> в правом верхнем углу и выбери <b>«Импорт конфигурации из буфера обмена»</b> (<i>Import config from clipboard</i>).</li>
+            <li>Если добавляешь подписку: открой боковое меню (☰) → <b>«Настройки подписки»</b> → <b>«➕»</b>, вставь ссылку, сохрани и на главном экране нажми на три точки (⋮) → <b>«Обновить подписку»</b>.</li>
+            <li>Выбери появившийся сервер в списке (нажми на него, чтобы полоска слева стала активной) и нажми круглую кнопку <b>«V»</b> внизу экрана для запуска VPN (при первом запуске разреши создание VPN-соединения).</li>
+          </ol>
+        </div>
+
+        <div class="ban-sit-box" style="display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <h4>⚙️ Полезные фишки и проверка работы</h4>
+            <ul>
+              <li><b>Проверка пинга:</b> после подключения нажми на плашку с задержкой внизу экрана (<i>Тест задержки текущего профиля</i>) — если показало миллисекунды (например, <code>65 ms</code>), интернет через туннель работает отлично.</li>
+              <li><b>Раздельное туннелирование (Per-App Proxy):</b> в настройках v2rayNG можно включить режим выбора приложений, чтобы пустить трафик через VPN только для браузера и GitHub, не затрагивая остальные приложения.</li>
+            </ul>
+          </div>
+          <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+            <p style="font-size:.85rem;color:var(--text-soft);margin-bottom:10px;">📖 Подробная иллюстрированная инструкция по настройке v2rayNG в Notion:</p>
+            <a class="btn small" style="width:100%;" href="https://tulip-taker-347.notion.site/v2rayNG-b79aa4871ab74b05b80b433a3b774ac2" target="_blank" rel="noopener">🔗 Открыть полный гайд по v2rayNG (Notion) →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
     <h2 class="section-title">📜 Скрипты и расширения для буксов</h2>
     <p class="section-sub">Все авторские разработки, расширения и инструкции из канала <a href="https://t.me/pytayus_zarabotat" target="_blank" rel="noopener">@pytayus_zarabotat</a> для быстрой и комфортной работы на буксах.</p>
 
@@ -2752,6 +2891,9 @@ function initChess() {
   let elo = 800;
   let gameOver = false;
 
+  // Права на рокировку: wK/wQ — белые (короткая/длинная), bK/bQ — чёрные
+  let castling = { wK: true, wQ: true, bK: true, bQ: true };
+
   boardEl.innerHTML = '';
   const cellEls = [];
   for (let i = 0; i < 64; i++) {
@@ -2763,14 +2905,20 @@ function initChess() {
     cellEls.push(cell);
   }
 
+  // Определяем, нужно ли перевернуть доску чёрными вниз
+  function isFlipped() {
+    if (mode === 'friend') return turn === 'black';
+    return playerColor === 'black';
+  }
+
   function visualToBoard(vis) {
-    if (mode === 'friend') return vis;
-    if (playerColor === 'black') {
+    if (isFlipped()) {
       const vr = Math.floor(vis / 8), vc = vis % 8;
       return (7 - vr) * 8 + (7 - vc);
     }
     return vis;
   }
+
   function render() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     for (let v = 0; v < 64; v++) {
@@ -2806,10 +2954,11 @@ function initChess() {
     }
     const filesRow = $('#chessFiles');
     if (filesRow) {
-      const files = (mode === 'bot' && playerColor === 'black') ? ['h','g','f','e','d','c','b','a'] : ['a','b','c','d','e','f','g','h'];
+      const files = isFlipped() ? ['h','g','f','e','d','c','b','a'] : ['a','b','c','d','e','f','g','h'];
       filesRow.innerHTML = files.map(f => `<span>${f}</span>`).join('');
     }
   }
+
   const themeObserver = new MutationObserver(() => render());
   themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
@@ -2818,6 +2967,7 @@ function initChess() {
   function colorOf(p) { return isWhite(p) ? 'white' : isBlack(p) ? 'black' : null; }
   function opposite(color) { return color === 'white' ? 'black' : 'white'; }
 
+  // Базовые псевдо-ходы (без рокировки, чтобы избежать рекурсии при проверке атак)
   function pseudoMoves(from, b = board) {
     const p = b[from];
     if (!p) return [];
@@ -2872,7 +3022,9 @@ function initChess() {
     }
     return moves;
   }
+
   function findKing(color, b = board) { return b.indexOf(color === 'white' ? 'K' : 'k'); }
+
   function isAttacked(idx, byColor, b = board) {
     for (let i = 0; i < 64; i++) {
       if (!b[i]) continue;
@@ -2881,41 +3033,109 @@ function initChess() {
     }
     return false;
   }
+
   function inCheck(color, b = board) {
     const k = findKing(color, b);
     if (k === -1) return false;
     return isAttacked(k, opposite(color), b);
   }
-  function makeMove(from, to, b = board) {
+
+  // Выполнение хода с поддержкой превращения пешки в ферзя и рокировки
+  function makeMove(from, to, b = board, cr = castling) {
+    const movedPiece = b[from];
     const cap = b[to];
-    b[to] = b[from];
+    const prevCastling = { ...cr };
+    let rookMove = null;
+
+    // Проверка рокировки (король шагает на 2 клетки по горизонтали)
+    if (movedPiece && movedPiece.toLowerCase() === 'k' && Math.abs((to % 8) - (from % 8)) === 2) {
+      if (to === 62) { // Белые O-O
+        rookMove = { rFrom: 63, rTo: 61, rPiece: b[63] };
+        b[61] = b[63]; b[63] = '';
+      } else if (to === 58) { // Белые O-O-O
+        rookMove = { rFrom: 56, rTo: 59, rPiece: b[56] };
+        b[59] = b[56]; b[56] = '';
+      } else if (to === 6) { // Чёрные O-O
+        rookMove = { rFrom: 7, rTo: 5, rPiece: b[7] };
+        b[5] = b[7]; b[7] = '';
+      } else if (to === 2) { // Чёрные O-O-O
+        rookMove = { rFrom: 0, rTo: 3, rPiece: b[0] };
+        b[3] = b[0]; b[0] = '';
+      }
+    }
+
+    b[to] = movedPiece;
     b[from] = '';
-    return cap;
+
+    // Превращение пешки в ферзя на крайней горизонтали
+    const toRow = Math.floor(to / 8);
+    if (movedPiece === 'P' && toRow === 0) b[to] = 'Q';
+    else if (movedPiece === 'p' && toRow === 7) b[to] = 'q';
+
+    // Обновление прав на рокировку
+    if (movedPiece === 'K') { cr.wK = false; cr.wQ = false; }
+    if (movedPiece === 'k') { cr.bK = false; cr.bQ = false; }
+    if (from === 63 || to === 63) cr.wK = false;
+    if (from === 56 || to === 56) cr.wQ = false;
+    if (from === 7  || to === 7)  cr.bK = false;
+    if (from === 0  || to === 0)  cr.bQ = false;
+
+    return { cap, movedPiece, prevCastling, rookMove };
   }
-  function undoMove(from, to, cap, b = board) {
-    b[from] = b[to];
-    b[to] = cap || '';
+
+  function undoMove(from, to, state, b = board, cr = castling) {
+    b[from] = state.movedPiece;
+    b[to] = state.cap || '';
+    if (state.rookMove) {
+      b[state.rookMove.rFrom] = state.rookMove.rPiece;
+      b[state.rookMove.rTo] = '';
+    }
+    Object.assign(cr, state.prevCastling);
   }
-  function legalMoves(from, b = board) {
+
+  function legalMoves(from, b = board, cr = castling) {
     const p = b[from];
     if (!p) return [];
+    const col = colorOf(p);
+    const opp = opposite(col);
+    const candidates = pseudoMoves(from, b);
+
+    // Добавляем ходы рокировки для короля
+    if (p === 'K' && from === 60 && !inCheck('white', b)) {
+      if (cr.wK && b[63] === 'R' && !b[61] && !b[62] && !isAttacked(61, opp, b) && !isAttacked(62, opp, b)) {
+        candidates.push(62);
+      }
+      if (cr.wQ && b[56] === 'R' && !b[59] && !b[58] && !b[57] && !isAttacked(59, opp, b) && !isAttacked(58, opp, b)) {
+        candidates.push(58);
+      }
+    } else if (p === 'k' && from === 4 && !inCheck('black', b)) {
+      if (cr.bK && b[7] === 'r' && !b[5] && !b[6] && !isAttacked(5, opp, b) && !isAttacked(6, opp, b)) {
+        candidates.push(6);
+      }
+      if (cr.bQ && b[0] === 'r' && !b[3] && !b[2] && !b[1] && !isAttacked(3, opp, b) && !isAttacked(2, opp, b)) {
+        candidates.push(2);
+      }
+    }
+
     const result = [];
-    for (const to of pseudoMoves(from, b)) {
-      const cap = makeMove(from, to, b);
-      const ok = !inCheck(colorOf(p), b);
-      undoMove(from, to, cap, b);
+    for (const to of candidates) {
+      const st = makeMove(from, to, b, cr);
+      const ok = !inCheck(col, b);
+      undoMove(from, to, st, b, cr);
       if (ok) result.push(to);
     }
     return result;
   }
-  function allLegalMoves(color, b = board) {
+
+  function allLegalMoves(color, b = board, cr = castling) {
     const res = [];
     for (let i = 0; i < 64; i++) {
       if (!b[i] || colorOf(b[i]) !== color) continue;
-      for (const to of legalMoves(i, b)) res.push({ from: i, to });
+      for (const to of legalMoves(i, b, cr)) res.push({ from: i, to });
     }
     return res;
   }
+
   function checkGameEnd() {
     const hasMoves = allLegalMoves(turn).length > 0;
     if (!hasMoves) {
@@ -2934,6 +3154,7 @@ function initChess() {
     }
     return false;
   }
+
   function evaluateBoard(b) {
     const vals = { p: 100, n: 320, b: 330, r: 500, q: 900, k: 20000 };
     let s = 0;
@@ -2944,19 +3165,21 @@ function initChess() {
     }
     return s;
   }
-  function minimax(b, depth, alpha, beta, maximizing, botColor) {
+
+  function minimax(b, depth, alpha, beta, maximizing, botColor, cr) {
     if (depth === 0) {
       const s = evaluateBoard(b);
       return botColor === 'white' ? s : -s;
     }
-    const moves = allLegalMoves(maximizing ? botColor : opposite(botColor), b);
-    if (!moves.length) return inCheck(maximizing ? botColor : opposite(botColor), b) ? -100000 + depth : 0;
+    const curCol = maximizing ? botColor : opposite(botColor);
+    const moves = allLegalMoves(curCol, b, cr);
+    if (!moves.length) return inCheck(curCol, b) ? -100000 + depth : 0;
     if (maximizing) {
       let maxEval = -Infinity;
       for (const mv of moves) {
-        const cap = makeMove(mv.from, mv.to, b);
-        const ev = minimax(b, depth - 1, alpha, beta, false, botColor);
-        undoMove(mv.from, mv.to, cap, b);
+        const st = makeMove(mv.from, mv.to, b, cr);
+        const ev = minimax(b, depth - 1, alpha, beta, false, botColor, cr);
+        undoMove(mv.from, mv.to, st, b, cr);
         maxEval = Math.max(maxEval, ev);
         alpha = Math.max(alpha, ev);
         if (beta <= alpha) break;
@@ -2965,9 +3188,9 @@ function initChess() {
     } else {
       let minEval = Infinity;
       for (const mv of moves) {
-        const cap = makeMove(mv.from, mv.to, b);
-        const ev = minimax(b, depth - 1, alpha, beta, true, botColor);
-        undoMove(mv.from, mv.to, cap, b);
+        const st = makeMove(mv.from, mv.to, b, cr);
+        const ev = minimax(b, depth - 1, alpha, beta, true, botColor, cr);
+        undoMove(mv.from, mv.to, st, b, cr);
         minEval = Math.min(minEval, ev);
         beta = Math.min(beta, ev);
         if (beta <= alpha) break;
@@ -2975,18 +3198,23 @@ function initChess() {
       return minEval;
     }
   }
+
   function onCellClick(visIdx) {
     if (gameOver) return;
     const idx = visualToBoard(visIdx);
     if (mode === 'friend') {
       if (selected !== null && currentHints.includes(idx)) {
+        const wasPawn = board[selected] && board[selected].toLowerCase() === 'p';
         makeMove(selected, idx);
+        if (wasPawn && (Math.floor(idx / 8) === 0 || Math.floor(idx / 8) === 7)) {
+          toast('👑 Пешка превратилась в Ферзя!');
+        }
         selected = null;
         currentHints = [];
         turn = opposite(turn);
         render();
         if (checkGameEnd()) return;
-        $('#chessStatus').textContent = `Ход ${turn === 'white' ? 'белых' : 'чёрных'}`;
+        $('#chessStatus').textContent = `Ход ${turn === 'white' ? 'белых (♔)' : 'чёрных (♚)'}`;
         return;
       }
       const p = board[idx];
@@ -2999,7 +3227,11 @@ function initChess() {
     }
     if (turn !== playerColor) return;
     if (selected !== null && currentHints.includes(idx)) {
+      const wasPawn = board[selected] && board[selected].toLowerCase() === 'p';
       makeMove(selected, idx);
+      if (wasPawn && (Math.floor(idx / 8) === 0 || Math.floor(idx / 8) === 7)) {
+        toast('👑 Пешка превратилась в Ферзя!');
+      }
       selected = null;
       currentHints = [];
       turn = opposite(turn);
@@ -3016,6 +3248,7 @@ function initChess() {
     } else { selected = null; currentHints = []; }
     render();
   }
+
   function botMove() {
     if (gameOver || mode !== 'bot') return;
     const botColor = opposite(playerColor);
@@ -3037,10 +3270,10 @@ function initChess() {
     } else if (elo <= 1800) {
       let best = -Infinity;
       for (const mv of allMoves) {
-        const cap = makeMove(mv.from, mv.to);
+        const st = makeMove(mv.from, mv.to);
         let s = evaluateBoard(board);
         if (botColor === 'white') s = -s;
-        undoMove(mv.from, mv.to, cap);
+        undoMove(mv.from, mv.to, st);
         s += (2000 - elo) / 1000 * Math.random() * 60;
         if (s > best) { best = s; bestMove = mv; }
       }
@@ -3049,9 +3282,9 @@ function initChess() {
       let best = -Infinity;
       const shuffled = allMoves.slice().sort(() => Math.random() - 0.5);
       for (const mv of shuffled) {
-        const cap = makeMove(mv.from, mv.to);
-        const score = minimax(board, depth - 1, -Infinity, Infinity, false, botColor);
-        undoMove(mv.from, mv.to, cap);
+        const st = makeMove(mv.from, mv.to);
+        const score = minimax(board, depth - 1, -Infinity, Infinity, false, botColor, castling);
+        undoMove(mv.from, mv.to, st);
         if (score > best) { best = score; bestMove = mv; }
       }
     }
@@ -3064,23 +3297,25 @@ function initChess() {
     if (checkGameEnd()) return;
     $('#chessStatus').textContent = 'Твой ход';
   }
+
   $$('#chessMode .diff-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       $$('#chessMode .diff-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       mode = btn.dataset.mode;
       if (mode === 'friend') {
-        $('#chessRules').textContent = 'Режим «с другом»: ходите по очереди. Белые ходят первыми.';
+        $('#chessRules').textContent = 'Режим «с другом»: доска автоматически переворачивается после каждого хода. Доступны рокировка и превращение пешки в ферзя.';
         $('#chessDiff').style.display = 'none';
         $('#chessColor').style.display = 'none';
       } else {
-        $('#chessRules').textContent = 'Режим «с ботом»: выбери цвет и уровень. Кликни по фигуре, затем по подсвеченной клетке.';
+        $('#chessRules').textContent = 'Режим «с ботом»: выбери цвет и уровень. Доступны рокировка и превращение пешки в ферзя.';
         $('#chessDiff').style.display = '';
         $('#chessColor').style.display = '';
       }
       resetGame();
     });
   });
+
   $$('#chessColor .diff-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       $$('#chessColor .diff-btn').forEach(b => b.classList.remove('active'));
@@ -3091,6 +3326,7 @@ function initChess() {
       resetGame();
     });
   });
+
   $$('#chessDiff .diff-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       $$('#chessDiff .diff-btn').forEach(b => b.classList.remove('active'));
@@ -3099,8 +3335,10 @@ function initChess() {
       toast('Сложность: ' + btn.textContent);
     });
   });
+
   function resetGame() {
     board = initial.slice();
+    castling = { wK: true, wQ: true, bK: true, bQ: true };
     selected = null;
     currentHints = [];
     turn = 'white';
@@ -3110,11 +3348,12 @@ function initChess() {
       $('#chessStatus').textContent = 'Ход бота (белые)...';
       setTimeout(botMove, 500);
     } else if (mode === 'friend') {
-      $('#chessStatus').textContent = 'Ход белых';
+      $('#chessStatus').textContent = 'Ход белых (♔)';
     } else {
       $('#chessStatus').textContent = 'Твой ход (белые)';
     }
   }
+
   resetGame();
   activeGame.cleanup = () => { gameOver = true; themeObserver.disconnect(); };
 }
