@@ -982,6 +982,217 @@ input[type="range"]::-webkit-slider-thumb {
   .section-title { font-size: 1.5rem; }
   .scripts-grid { grid-template-columns: 1fr; }
 }
+  /* ===================== PHOTOMATH КАЛЬКУЛЯТОР ===================== */
+.pm-mode-tabs {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px;
+}
+.pm-tab {
+  flex: 1; min-width: 110px; padding: 10px 14px; border-radius: 12px;
+  border: 1px solid var(--border); background: var(--surface-2);
+  color: var(--text); font-weight: 700; font-size: .86rem;
+  cursor: pointer; transition: all .2s; text-align: center; font-family: inherit;
+}
+.pm-tab:hover { border-color: var(--accent); }
+.pm-tab.active {
+  background: linear-gradient(135deg, var(--accent), #7fae9f);
+  color: #fff; border-color: transparent; box-shadow: 0 4px 14px var(--shadow);
+}
+.pm-screen {
+  background: var(--bg-soft); border: 2px solid var(--border);
+  border-radius: 18px; padding: 14px 16px; margin-bottom: 12px;
+  transition: border-color .2s;
+}
+.pm-screen:focus-within { border-color: var(--accent); }
+.pm-pretty-preview {
+  min-height: 28px; font-size: .95rem; color: var(--text-soft);
+  margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+  flex-wrap: wrap; font-family: 'Georgia', serif;
+}
+.pm-pretty-preview .frac {
+  display: inline-flex; flex-direction: column; align-items: center;
+  vertical-align: middle; font-size: .85em; margin: 0 3px;
+}
+.pm-pretty-preview .frac-num { border-bottom: 1.5px solid var(--text-soft); padding: 0 4px; line-height: 1.1; }
+.pm-pretty-preview .frac-den { padding: 0 4px; line-height: 1.1; }
+.pm-input-row {
+  display: flex; align-items: center; gap: 8px;
+}
+.pm-input {
+  flex: 1; font-family: 'Courier New', monospace; font-size: 1.25rem !important;
+  font-weight: 700; background: transparent !important; border: none !important;
+  padding: 4px 0 !important; color: var(--text); box-shadow: none !important;
+}
+.pm-live-res {
+  text-align: right; font-size: 1.55rem; font-weight: 800;
+  color: var(--accent); min-height: 34px; word-break: break-all;
+}
+.pm-templates {
+  display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 10px;
+}
+.pm-tpl-btn {
+  flex-shrink: 0; padding: 6px 11px; border-radius: 999px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  color: var(--text-soft); font-size: .78rem; font-weight: 600;
+  cursor: pointer; transition: all .2s; font-family: inherit;
+}
+.pm-tpl-btn:hover { border-color: var(--accent); color: var(--accent); }
+.calc-keys.pm-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px;
+}
+.calc-keys.pm-grid button {
+  padding: 13px 2px; border-radius: 13px; font-size: .96rem;
+  user-select: none; touch-action: manipulation;
+}
+.calc-keys.pm-grid button.var-btn {
+  background: color-mix(in srgb, var(--accent) 16%, var(--surface-2));
+  color: var(--accent); font-weight: 800; font-style: italic;
+}
+.pm-steps-box {
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 16px; margin-bottom: 16px;
+}
+.pm-step-item {
+  padding: 10px 12px; border-left: 3px solid var(--accent);
+  background: var(--surface); border-radius: 0 10px 10px 0;
+  margin-bottom: 8px; font-size: .88rem;
+}
+.pm-step-item:last-child { margin-bottom: 0; }
+.pm-step-title { font-weight: 700; color: var(--accent); margin-bottom: 3px; font-size: .82rem; }
+.pm-step-math { font-family: 'Courier New', monospace; font-weight: 700; color: var(--text); font-size: .95rem; }
+#pmGraphCanvas {
+  width: 100%; height: 220px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 12px; margin-top: 10px; display: none;
+}
+
+/* ===================== КАРТОЧНЫЕ ИГРЫ (ДУРАК И ПОКЕР) ===================== */
+.card-games-section {
+  margin-top: 38px; padding-top: 28px; border-top: 2px dashed var(--border);
+}
+.cg-table {
+  background: radial-gradient(circle at center, #1f5c3a 0%, #123b24 75%, #0c2918 100%);
+  border: 6px solid #4a3222; border-radius: 26px; padding: 22px 18px;
+  color: #f4f7f5; box-shadow: inset 0 0 50px rgba(0,0,0,.55), 0 14px 36px var(--shadow-lg);
+  position: relative; min-height: 490px; display: flex; flex-direction: column;
+  justify-content: space-between; gap: 16px; overflow: hidden;
+}
+.cg-zone {
+  display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 2;
+}
+.cg-zone-label {
+  font-size: .82rem; font-weight: 700; letter-spacing: .4px;
+  background: rgba(0,0,0,.38); padding: 4px 12px; border-radius: 999px;
+  color: #d8f3e5; display: inline-flex; align-items: center; gap: 8px;
+}
+.cg-hand {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+  min-height: 112px; align-items: center; padding: 6px;
+}
+.playing-card {
+  width: 74px; height: 108px; border-radius: 10px;
+  background: linear-gradient(160deg, #ffffff 0%, #f3f1f8 100%);
+  border: 1.5px solid #d0cadb;
+  box-shadow: 0 5px 14px rgba(0,0,0,.35);
+  position: relative; user-select: none; cursor: pointer;
+  transition: transform .2s, box-shadow .2s, border-color .2s;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 6px 7px; flex-shrink: 0;
+}
+.playing-card:hover {
+  transform: translateY(-10px) scale(1.04);
+  box-shadow: 0 12px 24px rgba(0,0,0,.45);
+  border-color: var(--gold); z-index: 5;
+}
+.playing-card.selected {
+  transform: translateY(-14px);
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 0 3px rgba(240,180,90,.45), 0 12px 24px rgba(0,0,0,.5);
+}
+.playing-card.red { color: #d63031; }
+.playing-card.black { color: #1e272e; }
+.playing-card .pc-corner {
+  display: flex; flex-direction: column; align-items: center; line-height: 1;
+  font-weight: 800; font-size: .92rem;
+}
+.playing-card .pc-corner.bot {
+  transform: rotate(180deg); align-self: flex-end;
+}
+.playing-card .pc-corner .pc-s { font-size: .82rem; margin-top: 1px; }
+.playing-card .pc-center {
+  font-size: 2.1rem; line-height: 1; text-align: center;
+  align-self: center; filter: drop-shadow(0 2px 2px rgba(0,0,0,.08));
+}
+.playing-card .pc-trump-badge {
+  position: absolute; top: 4px; right: 4px; font-size: .65rem;
+  background: var(--gold); color: #1a1723; border-radius: 4px;
+  padding: 1px 4px; font-weight: 800;
+}
+.playing-card.back {
+  cursor: default;
+  background: repeating-linear-gradient(45deg, #2c3e50, #2c3e50 6px, #34495e 6px, #34495e 12px);
+  border: 3px solid #ecf0f1;
+  display: flex; align-items: center; justify-content: center;
+}
+.playing-card.back::after {
+  content: '♠♥♣♦'; font-size: .75rem; letter-spacing: 2px;
+  color: rgba(255,255,255,.35); border: 1px solid rgba(255,255,255,.25);
+  padding: 18px 6px; border-radius: 6px;
+}
+.playing-card.back:hover { transform: none; box-shadow: 0 5px 14px rgba(0,0,0,.35); }
+
+/* Поле боя в Дураке */
+.durak-battle-row {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: 18px; min-height: 135px; padding: 10px;
+}
+.durak-pair {
+  position: relative; width: 92px; height: 124px;
+}
+.durak-pair .playing-card.atk { position: absolute; top: 0; left: 0; z-index: 1; }
+.durak-pair .playing-card.def {
+  position: absolute; top: 16px; left: 18px; z-index: 2;
+  transform: rotate(8deg);
+}
+.durak-deck-info {
+  display: flex; align-items: center; gap: 14px;
+  background: rgba(0,0,0,.32); padding: 10px 16px; border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.14);
+}
+
+/* Покерные фишки */
+.chips-rack {
+  display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center;
+}
+.poker-chip {
+  width: 52px; height: 52px; border-radius: 50%;
+  border: 4px dashed rgba(255,255,255,.85);
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+  font-weight: 800; font-size: .78rem; color: #fff;
+  box-shadow: 0 5px 12px rgba(0,0,0,.45), inset 0 0 0 3px rgba(0,0,0,.25);
+  cursor: pointer; transition: transform .18s, box-shadow .18s;
+  user-select: none; position: relative;
+}
+.poker-chip:hover { transform: translateY(-4px) scale(1.07); }
+.poker-chip.c-10  { background: #2980b9; }
+.poker-chip.c-25  { background: #27ae60; }
+.poker-chip.c-50  { background: #d35400; }
+.poker-chip.c-100 { background: #c0392b; }
+.poker-chip.c-500 { background: #8e44ad; border-color: #f1c40f; }
+.poker-pot-pill {
+  background: rgba(0,0,0,.5); border: 2px solid var(--gold);
+  color: var(--gold); padding: 8px 20px; border-radius: 999px;
+  font-weight: 800; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 8px;
+}
+.cg-controls {
+  display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 8px;
+}
+
+@media (max-width: 600px) {
+  .playing-card { width: 58px; height: 86px; padding: 4px 5px; border-radius: 8px; }
+  .playing-card .pc-corner { font-size: .76rem; }
+  .playing-card .pc-center { font-size: 1.55rem; }
+  .durak-pair { width: 74px; height: 102px; }
+  .calc-keys.pm-grid button { padding: 11px 1px; font-size: .88rem; }
+}
 </style>
 </head>
 <body>
@@ -1554,56 +1765,102 @@ input[type="range"]::-webkit-slider-thumb {
       </div>
     </div>
   </section>
-
-  <!-- КАЛЬКУЛЯТОР -->
+<!-- КАЛЬКУЛЯТОР (В СТИЛЕ PHOTOMATH) -->
   <section class="page" id="page-calculator">
-    <h2 class="section-title">🧮 Расширенный калькулятор</h2>
-    <p class="section-sub">Базовые операции, скобки, степени, корни, тригонометрия, логарифмы, факториал, константы π и e.</p>
+    <h2 class="section-title">🧮 Умный калькулятор Photomath</h2>
+    <p class="section-sub">Удобный ввод сложных формул, решение линейных и квадратных уравнений с разбором по шагам, построение графиков функций $f(x)$ и живое форматирование дробей и корней.</p>
+
     <div class="calc-layout">
       <div class="card">
-        <div class="calc-display">
-          <div class="calc-expr" id="calcExpr"></div>
-          <div class="calc-result" id="calcResult">0</div>
+        <!-- Переключатель режимов Photomath -->
+        <div class="pm-mode-tabs" id="pmModeTabs">
+          <button class="pm-tab active" data-pmmode="calc">🔢 Вычислить</button>
+          <button class="pm-tab" data-pmmode="solve">📐 Решить уравнение (x)</button>
+          <button class="pm-tab" data-pmmode="graph">📈 График f(x)</button>
         </div>
-        <div class="calc-keys" id="calcKeys">
+
+        <!-- Быстрые шаблоны уравнений -->
+        <div class="pm-templates" id="pmTemplates">
+          <button class="pm-tpl-btn" data-expr="x^2 - 5x + 6 = 0" data-mode="solve">x² − 5x + 6 = 0</button>
+          <button class="pm-tpl-btn" data-expr="2x^2 + 3x - 2 = 0" data-mode="solve">2x² + 3x − 2 = 0</button>
+          <button class="pm-tpl-btn" data-expr="3(x - 4) + 5 = 14" data-mode="solve">3(x − 4) + 5 = 14</button>
+          <button class="pm-tpl-btn" data-expr="√(144) + (15/3)^2" data-mode="calc">√144 + (15/3)²</button>
+          <button class="pm-tpl-btn" data-expr="sin(π/6) + cos(0)" data-mode="calc">sin(π/6) + cos(0)</button>
+          <button class="pm-tpl-btn" data-expr="x^2 - 4" data-mode="graph">График: x² − 4</button>
+        </div>
+
+        <!-- Экран с красивым предпросмотром и курсором -->
+        <div class="pm-screen">
+          <div class="pm-pretty-preview" id="calcExpr">Введи выражение или уравнение с x...</div>
+          <div class="pm-input-row">
+            <input type="text" id="pmInput" class="pm-input" placeholder="Например: x^2 - 5x + 6 = 0" autocomplete="off">
+          </div>
+          <div class="pm-live-res" id="calcResult">0</div>
+        </div>
+
+        <!-- Мобильная удобная клавиатура с перемещением курсора -->
+        <div class="calc-keys pm-grid" id="calcKeys">
+          <button class="var-btn" data-val="x">x</button>
+          <button class="var-btn" data-val="=">=</button>
+          <button class="op" data-val="^2">x²</button>
+          <button class="op" data-val="^">xⁿ</button>
+          <button class="fn" id="calcClear" style="color:var(--danger);font-weight:800;">AC</button>
+
+          <button class="fn" data-val="√(">√x</button>
+          <button class="fn" data-val="(a/b)">a/b</button>
+          <button class="op" data-val="(">(</button>
+          <button class="op" data-val=")">)</button>
+          <button class="fn" id="calcBack">⌫</button>
+
           <button class="fn" data-val="sin(">sin</button>
           <button class="fn" data-val="cos(">cos</button>
           <button class="fn" data-val="tan(">tan</button>
           <button class="fn" data-val="log(">log</button>
           <button class="fn" data-val="ln(">ln</button>
-          <button class="fn" data-val="π">π</button>
-          <button class="fn" data-val="e">e</button>
-          <button class="fn" data-val="√(">√</button>
-          <button class="fn" data-val="!">n!</button>
-          <button class="op" data-val="^">x^y</button>
+
           <button data-val="7">7</button>
           <button data-val="8">8</button>
           <button data-val="9">9</button>
           <button class="op" data-val="÷">÷</button>
-          <button class="op" data-val="(">(</button>
+          <button class="fn" data-val="π">π</button>
+
           <button data-val="4">4</button>
           <button data-val="5">5</button>
           <button data-val="6">6</button>
           <button class="op" data-val="×">×</button>
-          <button class="op" data-val=")">)</button>
+          <button class="fn" data-val="!">n!</button>
+
           <button data-val="1">1</button>
           <button data-val="2">2</button>
           <button data-val="3">3</button>
           <button class="op" data-val="−">−</button>
           <button class="op" data-val="%">%</button>
+
+          <button class="fn" id="pmLeft" title="Курсор влево">◀</button>
           <button data-val="0">0</button>
           <button data-val=".">.</button>
-          <button class="wide" id="calcBack">⌫ Стереть</button>
+          <button class="fn" id="pmRight" title="Курсор вправо">▶</button>
           <button class="op" data-val="+">+</button>
-          <button class="eq" id="calcEq">=</button>
+
+          <button class="eq" id="calcEq" style="grid-column: span 5; padding: 14px 0; font-size: 1.05rem;">✨ Решить и показать шаги (Photomath)</button>
         </div>
       </div>
+
+      <!-- Правая колонка: Пошаговое решение Photomath + График + История -->
       <div class="card">
-        <h3 style="margin-bottom:12px;">📜 История</h3>
+        <h3 style="margin-bottom:10px;">📖 Пошаговый разбор (Photomath)</h3>
+        <div class="pm-steps-box" id="pmStepsBox">
+          <p style="color:var(--text-soft);font-size:.88rem;">Введи выражение или уравнение (например, <code>x^2 - 5x + 6 = 0</code>) и нажми <b>«Решить и показать шаги»</b> — здесь появится подробное объяснение каждого действия.</p>
+        </div>
+        <canvas id="pmGraphCanvas" width="440" height="240"></canvas>
+
+        <h3 style="margin:18px 0 10px;">📜 История вычислений</h3>
         <div class="history-list" id="calcHistory"></div>
       </div>
     </div>
   </section>
+ 
+  
 
   <!-- ПОГОДА -->
   <section class="page" id="page-weather">
@@ -1930,6 +2187,136 @@ input[type="range"]::-webkit-slider-thumb {
           <span>Побед (против бота): <b id="fbWins">0</b></span>
         </div>
         <button class="btn small" id="footballRestart">🔄 Начать матч заново</button>
+      </div>
+    </div>
+    <!-- ===================== ОТДЕЛЬНЫЙ БЛОК: КАРТОЧНЫЕ ИГРЫ (ДУРАК И ПОКЕР) ===================== -->
+    <div class="card-games-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+        <div>
+          <h2 class="section-title" style="margin-bottom:4px;">🃏 Карточные игры: Дурак и Покер</h2>
+          <p class="section-sub" style="margin-bottom:0;">Детализированные карты, фишки казино, полные правила и 3 уровня интеллекта бота — переключайся между Дураком и Покером в 1 клик!</p>
+        </div>
+        <div class="difficulty-row" id="cardGameSwitch" style="margin-bottom:0;">
+          <button class="btn small" data-cgame="durak">🃏 Дурак (Подкидной)</button>
+          <button class="btn small secondary" data-cgame="poker">🎰 Покер (Техасский Холдем)</button>
+        </div>
+      </div>
+
+      <!-- ==================== ИГРА 1: ПОДКИДНОЙ ДУРАК ==================== -->
+      <div class="card" id="cardGame-durak">
+        <div class="game-head">
+          <h3>🃏 Подкидной Дурак (Колода 36 карт)</h3>
+          <div class="difficulty-row" id="durakDiffRow" style="margin-bottom:0;">
+            <button class="diff-btn active" data-ddiff="easy">🟢 Бот: Новичок</button>
+            <button class="diff-btn" data-ddiff="normal">🟡 Бот: Опытный</button>
+            <button class="diff-btn" data-ddiff="hard">🔴 Бот: Мастер</button>
+          </div>
+        </div>
+
+        <details class="rules" style="cursor:pointer;">
+          <summary><b>📖 Правила игры в Подкидного Дурака (нажми, чтобы развернуть)</b></summary>
+          <div style="margin-top:10px;line-height:1.6;">
+            1. <b>Цель игры:</b> первым избавиться от всех своих карт. Тот, у кого в конце остаются карты, остаётся в «дураках».<br>
+            2. <b>Колода и козырь:</b> играет 36 карт (от 6 до Туза). В начале каждому раздаётся по 6 карт, а следующая карта открывается и определяет <b>козырную масть</b> (отмечена значком ★). Козырная карта бьёт любую некозырную карту.<br>
+            3. <b>Ход и Подкидывание:</b> атакующий ходит любой картой. Когда первая карта выложена на стол, можно <b>подкидывать</b> карты того же достоинства (номинала), которые уже лежат на столе (как среди атакующих, так и среди отбитых карт).<br>
+            4. <b>Защита:</b> защищающийся должен побить каждую карту старшей картой той же масти либо любым козырем (козырь бьётся только старшим козырем). Если побить нечем (или не выгодно) — нажми <b>«Взять карты»</b>.
+          </div>
+        </details>
+
+        <div class="cg-table">
+          <!-- Зона бота -->
+          <div class="cg-zone">
+            <div class="cg-zone-label">
+              🤖 Карты соперника (<span id="durakBotCount">6</span> шт.) · Сложность: <b id="durakDiffLabel">Новичок</b>
+            </div>
+            <div class="cg-hand" id="durakBotHand"></div>
+          </div>
+
+          <!-- Центр стола: колода, козырь и поле боя -->
+          <div class="cg-zone">
+            <div class="durak-deck-info">
+              <span>Козырь: <b id="durakTrumpBadge" style="font-size:1.25rem;color:var(--gold);">♠</b></span>
+              <span>В колоде: <b id="durakDeckCount">24</b></span>
+              <span>Статус: <b id="durakStatusText" style="color:#a8f0cd;">Твой ход — выбери карту для атаки!</b></span>
+            </div>
+            <div class="durak-battle-row" id="durakBattlefield"></div>
+          </div>
+
+          <!-- Зона игрока -->
+          <div class="cg-zone">
+            <div class="cg-zone-label">👤 Твои карты (нажми на карту, чтобы сходить или отбиться)</div>
+            <div class="cg-hand" id="durakPlayerHand"></div>
+            <div class="cg-controls">
+              <button class="btn small" id="durakActionBtn">✅ Бито / Завершить ход</button>
+              <button class="btn small secondary" id="durakNewGameBtn">🔄 Новая партия</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== ИГРА 2: ПОКЕР (ТЕХАССКИЙ ХОЛДЕМ) ==================== -->
+      <div class="card" id="cardGame-poker" style="display:none;">
+        <div class="game-head">
+          <h3>🎰 Покер: Техасский Холдем (1×1 с дилером/ботом)</h3>
+          <div class="difficulty-row" id="pokerDiffRow" style="margin-bottom:0;">
+            <button class="diff-btn active" data-pdiff="easy">🟢 Бот: Осторожный</button>
+            <button class="diff-btn" data-pdiff="normal">🟡 Бот: Тактик</button>
+            <button class="diff-btn" data-pdiff="hard">🔴 Бот: Акула (Агрессор)</button>
+          </div>
+        </div>
+
+        <details class="rules" style="cursor:pointer;">
+          <summary><b>📖 Правила Техасского Холдема и старшинство комбинаций (нажми, чтобы развернуть)</b></summary>
+          <div style="margin-top:10px;line-height:1.6;">
+            1. <b>Ход раздачи:</b> каждому игроку сдаётся по <b>2 карманные карты</b> в закрытую. На стол по очереди выкладываются <b>5 общих карт</b>: <i>Флоп</i> (первые 3 карты), <i>Тёрн</i> (4-я карта) и <i>Ривер</i> (5-я карта). На каждом этапе идут торги фишками.<br>
+            2. <b>Комбинации по возрастанию силы (из любых 5 карт из 7 доступных):</b>
+            <br>• <b>Старшая карта</b> → <b>Пара</b> (2 одного ранга) → <b>Две пары</b> → <b>Сет / Тройка</b> (3 одного ранга) → <b>Стрит</b> (5 карт по порядку) → <b>Флеш</b> (5 карт одной масти) → <b>Фулл-хаус</b> (Тройка + Пара) → <b>Каре</b> (4 одного ранга) → <b>Стрит-флеш / Роял-флеш</b>.<br>
+            3. <b>Как ставить фишки:</b> нажимай на разноцветные фишки номиналом <b>10, 25, 50, 100, 500</b>, чтобы добавить их к ставке раунда, либо используй кнопки <b>Чек / Колл</b>, <b>Рейз</b> и <b>Фолд (Сброс)</b>.
+          </div>
+        </details>
+
+        <div class="cg-table">
+          <!-- Зона бота в покере -->
+          <div class="cg-zone">
+            <div class="cg-zone-label">
+              🤖 Банк бота: <b id="pokerBotBank" style="color:var(--gold);">1000</b> фишек · Ставка: <b id="pokerBotBet">0</b> · <span id="pokerBotCombo">Скрыто</span>
+            </div>
+            <div class="cg-hand" id="pokerBotHand"></div>
+          </div>
+
+          <!-- Общие карты (Борд) и Банк -->
+          <div class="cg-zone">
+            <div class="poker-pot-pill">
+              🪙 Общий банк (Pot): <span id="pokerPotVal">0</span> фишек · Этап: <span id="pokerStageLabel">Префлоп</span>
+            </div>
+            <div class="cg-hand" id="pokerCommunityCards"></div>
+            <div id="pokerStatusMsg" style="font-weight:700;color:#a8f0cd;text-align:center;">Выбери фишки для ставки или нажми Чек/Колл</div>
+          </div>
+
+          <!-- Зона игрока и фишки -->
+          <div class="cg-zone">
+            <div class="cg-zone-label">
+              👤 Твой стек: <b id="pokerPlayerBank" style="color:var(--gold);">1000</b> фишек · Твоя ставка: <b id="pokerPlayerBet">0</b> · Комбинация: <b id="pokerPlayerCombo" style="color:#a8f0cd;">—</b>
+            </div>
+            <div class="cg-hand" id="pokerPlayerHand"></div>
+
+            <!-- Лоток детализированных фишек казино -->
+            <div class="chips-rack" id="pokerChipsRack">
+              <div class="poker-chip c-10" data-chip="10"><span>10</span></div>
+              <div class="poker-chip c-25" data-chip="25"><span>25</span></div>
+              <div class="poker-chip c-50" data-chip="50"><span>50</span></div>
+              <div class="poker-chip c-100" data-chip="100"><span>100</span></div>
+              <div class="poker-chip c-500" data-chip="500"><span>500</span></div>
+            </div>
+
+            <div class="cg-controls">
+              <button class="btn small" id="pokerCheckCallBtn">✅ Чек / Колл</button>
+              <button class="btn small" id="pokerRaiseBtn" style="background:linear-gradient(135deg,#f0b45a,#d35400);">🔥 Повысить (+50)</button>
+              <button class="btn small secondary" id="pokerFoldBtn" style="color:var(--danger);border-color:var(--danger);">🏳 Фолд (Сбросить)</button>
+              <button class="btn small secondary" id="pokerNewDealBtn">🔄 Новая раздача</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -2344,27 +2731,51 @@ $('#noteGenSave').addEventListener('click', () => {
 });
 renderNotes();
 
-/* ===================== КАЛЬКУЛЯТОР ===================== */
+/* ===================== УМНЫЙ КАЛЬКУЛЯТОР (PHOTOMATH) ===================== */
 const CALC_HISTORY_KEY = 'mw_calc_history';
-let calcExpr = '';
+const pmInput = $('#pmInput');
 const calcExprEl = $('#calcExpr');
 const calcResultEl = $('#calcResult');
+const pmStepsBox = $('#pmStepsBox');
+const pmGraphCanvas = $('#pmGraphCanvas');
+let pmMode = 'calc';
 
 function formatNum(n) {
   if (typeof n !== 'number' || !isFinite(n)) return 'Ошибка';
   if (Number.isInteger(n)) return String(n);
-  return String(Math.round(n * 1e10) / 1e10);
+  return String(Math.round(n * 1e8) / 1e8);
 }
-function evaluateExpression(expr) {
+
+// Живой рендер красивой математической записи (дроби, степени, корни)
+function formatPrettyMath(str) {
+  if (!str || !str.trim()) return 'Введи выражение или уравнение с x...';
+  let h = escapeHtml(str)
+    .replace(/\^2/g, '²')
+    .replace(/\^3/g, '³')
+    .replace(/\^(\d+)/g, '<sup>$1</sup>')
+    .replace(/√\(([^)]+)\)/g, '√<span style="text-decoration:overline;">$1</span>')
+    .replace(/\((\d+[x]?)\/(\d+[x]?)\)/g, '<span class="frac"><span class="frac-num">$1</span><span class="frac-den">$2</span></span>');
+  return h;
+}
+
+// Вычисление выражения при заданном значении x
+function evaluateExpression(expr, xVal = 0) {
   let s = expr
     .replace(/÷/g, '/').replace(/×/g, '*').replace(/−/g, '-')
+    .replace(/²/g, '^2').replace(/³/g, '^3')
     .replace(/√/g, 'sqrt').replace(/π/g, 'PI')
     .replace(/(?<![a-zA-Z])e(?![a-zA-Z])/g, 'E')
     .replace(/%/g, '/100');
+
+  // Поддержка неявного умножения: 2x -> 2*x, 3(x+1) -> 3*(x+1), (x+1)(x-1) -> (x+1)*(x-1)
+  s = s.replace(/(\d)\s*([xX(])/g, '$1*$2');
+  s = s.replace(/([xX)])\s*(\d)/g, '$1*$2');
+  s = s.replace(/\)\s*\(/g, ')*(');
+  s = s.replace(/([xX])\s*\(/g, '$1*(');
+  s = s.replace(/[xX]/g, `(${xVal})`);
   s = s.replace(/(\d+(?:\.\d+)?)!/g, 'fact($1)');
   s = s.replace(/\^/g, '**');
-  const allowed = /^[0-9+\-*/().,\s*PIEsincotaglqrtf]*$/;
-  if (!allowed.test(s)) throw new Error('bad chars');
+
   const funcs = {
     PI: Math.PI, E: Math.E,
     sin: x => Math.sin(x), cos: x => Math.cos(x), tan: x => Math.tan(x),
@@ -2374,42 +2785,319 @@ function evaluateExpression(expr) {
   const fn = new Function(...Object.keys(funcs), `"use strict"; return (${s});`);
   return fn(...Object.values(funcs));
 }
-function updateCalcDisplay() {
-  calcExprEl.textContent = calcExpr || '';
-  if (!calcExpr) { calcResultEl.textContent = '0'; return; }
+
+// Пошаговый решатель уравнений в стиле Photomath
+function solvePhotomath(raw) {
+  const clean = raw.trim();
+  if (!clean) return;
+
+  const hasX = /[xX]/.test(clean);
+  const hasEq = clean.includes('=');
+
+  // Если выбран график или функция от x без знака '=' в режиме графика
+  if (pmMode === 'graph' || (hasX && !hasEq && pmMode !== 'solve')) {
+    drawFunctionGraph(clean.split('=')[0]);
+  } else {
+    pmGraphCanvas.style.display = 'none';
+  }
+
+  // 1. Обычное вычисление по шагам (без переменной x)
+  if (!hasX && !hasEq) {
+    try {
+      const val = evaluateExpression(clean, 0);
+      const resStr = formatNum(val);
+      calcResultEl.textContent = '= ' + resStr;
+      pmStepsBox.innerHTML = `
+        <div class="pm-step-item">
+          <div class="pm-step-title">Шаг 1: Исходное выражение</div>
+          <div class="pm-step-math">${escapeHtml(clean)}</div>
+        </div>
+        <div class="pm-step-item">
+          <div class="pm-step-title">Шаг 2: Вычисление функций, степеней и скобок</div>
+          <div class="pm-step-math">Выполняем операции по приоритету (скобки → степени/корни → умножение/деление → сложение)</div>
+        </div>
+        <div class="pm-step-item">
+          <div class="pm-step-title">✅ Итоговый ответ</div>
+          <div class="pm-step-math" style="color:var(--ok);font-size:1.15rem;">${escapeHtml(resStr)}</div>
+        </div>
+      `;
+      saveCalcHistory(clean, resStr);
+    } catch {
+      calcResultEl.textContent = 'Проверь скобки/ввод';
+    }
+    return;
+  }
+
+  // 2. Решение уравнения с переменной x: приводим к виду f(x) = Left(x) - Right(x) = 0
   try {
-    const val = evaluateExpression(calcExpr);
-    calcResultEl.textContent = (val === undefined || Number.isNaN(val)) ? '…' : formatNum(val);
-  } catch { calcResultEl.textContent = '…'; }
+    const parts = clean.split('=');
+    const leftExpr = parts[0].trim();
+    const rightExpr = (parts[1] !== undefined && parts[1].trim() !== '') ? parts[1].trim() : '0';
+
+    const f = x => evaluateExpression(leftExpr, x) - evaluateExpression(rightExpr, x);
+
+    // Находим коэффициенты многочлена a*x^2 + b*x + c = 0 через 3 точки: x = 0, 1, -1
+    const c = f(0);
+    const f1 = f(1);
+    const fm1 = f(-1);
+    const a = (f1 + fm1 - 2 * c) / 2;
+    const b = (f1 - fm1) / 2;
+
+    // Проверяем, действительно ли уравнение квадратное/линейное (проверкой в точке x = 2)
+    const isQuadOrLin = Math.abs((a * 4 + b * 2 + c) - f(2)) < 1e-6;
+
+    if (isQuadOrLin && Math.abs(a) < 1e-7 && Math.abs(b) > 1e-7) {
+      // ЛИНЕЙНОЕ УРАВНЕНИЕ: b*x + c = 0
+      const root = -c / b;
+      const rootStr = formatNum(root);
+      calcResultEl.textContent = `x = ${rootStr}`;
+      pmStepsBox.innerHTML = `
+        <div class="pm-step-item">
+          <div class="pm-step-title">Шаг 1: Переносим все слагаемые в левую часть и раскрываем скобки</div>
+          <div class="pm-step-math">${formatNum(b)}·x + (${formatNum(c)}) = 0</div>
+        </div>
+        <div class="pm-step-item">
+          <div class="pm-step-title">Шаг 2: Переносим свободный член в правую часть</div>
+          <div class="pm-step-math">${formatNum(b)}·x = ${formatNum(-c)}</div>
+        </div>
+        <div class="pm-step-item">
+          <div class="pm-step-title">Шаг 3: Делим обе части уравнения на коэффициент при x (${formatNum(b)})</div>
+          <div class="pm-step-math">x = ${formatNum(-c)} / ${formatNum(b)}</div>
+        </div>
+        <div class="pm-step-item">
+          <div class="pm-step-title">✅ Ответ</div>
+          <div class="pm-step-math" style="color:var(--ok);font-size:1.15rem;">x = ${rootStr}</div>
+        </div>
+      `;
+      drawFunctionGraph(`${leftExpr} - (${rightExpr})`);
+      saveCalcHistory(`${leftExpr} = ${rightExpr}`, `x = ${rootStr}`);
+      return;
+    }
+
+    if (isQuadOrLin && Math.abs(a) >= 1e-7) {
+      // КВАДРАТНОЕ УРАВНЕНИЕ: a*x^2 + b*x + c = 0
+      const D = b * b - 4 * a * c;
+      let stepsHtml = `
+        <div class="pm-step-item">
+          <div class="pm-step-title">Шаг 1: Приводим уравнение к стандартному виду ax² + bx + c = 0</div>
+          <div class="pm-step-math">${formatNum(a)}x² ${b >= 0 ? '+ ' + formatNum(b) : '− ' + formatNum(Math.abs(b))}x ${c >= 0 ? '+ ' + formatNum(c) : '− ' + formatNum(Math.abs(c))} = 0</div>
+          <div style="font-size:.8rem;color:var(--text-soft);margin-top:3px;">Коэффициенты: a = ${formatNum(a)}, b = ${formatNum(b)}, c = ${formatNum(c)}</div>
+        </div>
+        <div class="pm-step-item">
+          <div class="pm-step-title">Шаг 2: Вычисляем дискриминант по формуле D = b² − 4ac</div>
+          <div class="pm-step-math">D = (${formatNum(b)})² − 4 · (${formatNum(a)}) · (${formatNum(c)}) = ${formatNum(D)}</div>
+        </div>
+      `;
+
+      if (D < -1e-9) {
+        calcResultEl.textContent = 'Нет действительных корней (D < 0)';
+        stepsHtml += `
+          <div class="pm-step-item">
+            <div class="pm-step-title">✅ Вывод</div>
+            <div class="pm-step-math" style="color:var(--danger);">Так как D &lt; 0, уравнение не имеет действительных корней на множестве ℝ.</div>
+          </div>`;
+      } else if (Math.abs(D) <= 1e-9) {
+        const x1 = -b / (2 * a);
+        const rStr = `x = ${formatNum(x1)}`;
+        calcResultEl.textContent = rStr;
+        stepsHtml += `
+          <div class="pm-step-item">
+            <div class="pm-step-title">Шаг 3: Дискриминант равен 0 — один корень x = −b / (2a)</div>
+            <div class="pm-step-math" style="color:var(--ok);font-size:1.15rem;">x = ${formatNum(x1)}</div>
+          </div>`;
+        saveCalcHistory(`${leftExpr} = ${rightExpr}`, rStr);
+      } else {
+        const sqrtD = Math.sqrt(D);
+        const x1 = (-b - sqrtD) / (2 * a);
+        const x2 = (-b + sqrtD) / (2 * a);
+        const rStr = `x₁ = ${formatNum(x1)}; x₂ = ${formatNum(x2)}`;
+        calcResultEl.textContent = rStr;
+        stepsHtml += `
+          <div class="pm-step-item">
+            <div class="pm-step-title">Шаг 3: Находим корни по формуле x₁,₂ = (−b ± √D) / (2a), где √D = ${formatNum(sqrtD)}</div>
+            <div class="pm-step-math">x₁ = (${formatNum(-b)} − ${formatNum(sqrtD)}) / ${formatNum(2 * a)} = ${formatNum(x1)}</div>
+            <div class="pm-step-math">x₂ = (${formatNum(-b)} + ${formatNum(sqrtD)}) / ${formatNum(2 * a)} = ${formatNum(x2)}</div>
+          </div>
+          <div class="pm-step-item">
+            <div class="pm-step-title">✅ Ответ</div>
+            <div class="pm-step-math" style="color:var(--ok);font-size:1.12rem;">${rStr}</div>
+          </div>`;
+        saveCalcHistory(`${leftExpr} = ${rightExpr}`, rStr);
+      }
+      pmStepsBox.innerHTML = stepsHtml;
+      drawFunctionGraph(`${leftExpr} - (${rightExpr})`);
+      return;
+    }
+
+    // Численный поиск корней для произвольных нелинейных уравнений
+    const roots = [];
+    for (let x = -50; x <= 50; x += 0.5) {
+      const y1 = f(x), y2 = f(x + 0.5);
+      if (Math.abs(y1) < 1e-7) roots.push(x);
+      else if (y1 * y2 < 0) {
+        let lo = x, hi = x + 0.5;
+        for (let iter = 0; iter < 30; iter++) {
+          const mid = (lo + hi) / 2;
+          if (f(lo) * f(mid) <= 0) hi = mid; else lo = mid;
+        }
+        roots.push((lo + hi) / 2);
+      }
+    }
+    const uniqueRoots = [...new Set(roots.map(r => formatNum(Math.round(r * 1e5) / 1e5)))];
+    const ans = uniqueRoots.length ? uniqueRoots.map((r, i) => `x${i + 1} ≈ ${r}`).join('; ') : 'Корни на [-50; 50] не найдены';
+    calcResultEl.textContent = ans;
+    pmStepsBox.innerHTML = `
+      <div class="pm-step-item">
+        <div class="pm-step-title">Численный метод анализа уравнения</div>
+        <div class="pm-step-math">${escapeHtml(leftExpr)} = ${escapeHtml(rightExpr)}</div>
+      </div>
+      <div class="pm-step-item">
+        <div class="pm-step-title">✅ Найденные решения</div>
+        <div class="pm-step-math" style="color:var(--ok);">${escapeHtml(ans)}</div>
+      </div>
+    `;
+    drawFunctionGraph(`${leftExpr} - (${rightExpr})`);
+  } catch {
+    calcResultEl.textContent = 'Проверь запись уравнения';
+  }
 }
-function calcInput(val) { calcExpr += val; updateCalcDisplay(); }
+
+function drawFunctionGraph(exprStr) {
+  pmGraphCanvas.style.display = 'block';
+  const ctx = pmGraphCanvas.getContext('2d');
+  const W = pmGraphCanvas.width, H = pmGraphCanvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  ctx.fillStyle = '#1e1a2b';
+  ctx.fillRect(0, 0, W, H);
+
+  const scale = 22; // пикселей на 1 единицу
+  const ox = W / 2, oy = H / 2;
+
+  // Сетка
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.lineWidth = 1;
+  for (let x = ox % scale; x < W; x += scale) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (let y = oy % scale; y < H; y += scale) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+  // Оси X и Y
+  ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(W, oy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox, 0); ctx.lineTo(ox, H); ctx.stroke();
+
+  // График функции
+  ctx.strokeStyle = '#7ad0ac';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  let started = false;
+  for (let px = 0; px <= W; px += 2) {
+    const x = (px - ox) / scale;
+    try {
+      const y = evaluateExpression(exprStr, x);
+      if (isFinite(y)) {
+        const py = oy - y * scale;
+        if (py >= -100 && py <= H + 100) {
+          if (!started) { ctx.moveTo(px, py); started = true; }
+          else ctx.lineTo(px, py);
+        } else started = false;
+      } else started = false;
+    } catch { started = false; }
+  }
+  ctx.stroke();
+}
+
+function insertAtCursor(str) {
+  const start = pmInput.selectionStart ?? pmInput.value.length;
+  const end = pmInput.selectionEnd ?? pmInput.value.length;
+  const v = pmInput.value;
+  if (str === '(a/b)') {
+    pmInput.value = v.slice(0, start) + '( / )' + v.slice(end);
+    pmInput.focus();
+    pmInput.setSelectionRange(start + 1, start + 1);
+  } else {
+    pmInput.value = v.slice(0, start) + str + v.slice(end);
+    pmInput.focus();
+    pmInput.setSelectionRange(start + str.length, start + str.length);
+  }
+  onPmInputChange();
+}
+
+function onPmInputChange() {
+  const val = pmInput.value;
+  calcExprEl.innerHTML = formatPrettyMath(val);
+  if (!val.trim()) { calcResultEl.textContent = '0'; return; }
+  if (!/[xX=]/.test(val)) {
+    try {
+      const r = evaluateExpression(val, 0);
+      if (isFinite(r)) calcResultEl.textContent = '= ' + formatNum(r);
+    } catch { calcResultEl.textContent = '…'; }
+  } else {
+    calcResultEl.textContent = 'Нажми «Решить» ↓';
+  }
+}
+
+pmInput.addEventListener('input', onPmInputChange);
+pmInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); solvePhotomath(pmInput.value); }
+});
+
+$$('#pmModeTabs .pm-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    $$('#pmModeTabs .pm-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    pmMode = btn.dataset.pmmode;
+    if (pmMode === 'solve' && !pmInput.value.includes('x')) pmInput.value = 'x^2 - 5x + 6 = 0';
+    if (pmMode === 'graph' && !pmInput.value.includes('x')) pmInput.value = 'x^2 - 4';
+    onPmInputChange();
+    solvePhotomath(pmInput.value);
+  });
+});
+
+$$('#pmTemplates .pm-tpl-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    pmInput.value = btn.dataset.expr;
+    pmMode = btn.dataset.mode;
+    $$('#pmModeTabs .pm-tab').forEach(b => b.classList.toggle('active', b.dataset.pmmode === pmMode));
+    onPmInputChange();
+    solvePhotomath(pmInput.value);
+  });
+});
 
 $('#calcKeys').addEventListener('click', e => {
   const btn = e.target.closest('button');
   if (!btn) return;
-  if (btn.id === 'calcEq') { calcEquals(); return; }
-  if (btn.id === 'calcBack') { calcExpr = calcExpr.slice(0, -1); updateCalcDisplay(); return; }
-  if (btn.dataset.val !== undefined) calcInput(btn.dataset.val);
-});
-function calcEquals() {
-  if (!calcExpr.trim()) return;
-  try {
-    const res = evaluateExpression(calcExpr);
-    if (!isFinite(res) || Number.isNaN(res)) throw new Error('bad');
-    const resStr = formatNum(res);
-    const hist = LS.get(CALC_HISTORY_KEY, []);
-    hist.unshift({ expr: calcExpr, res: resStr });
-    if (hist.length > 40) hist.length = 40;
-    LS.set(CALC_HISTORY_KEY, hist);
-    renderCalcHistory();
-    calcExprEl.textContent = calcExpr + ' =';
-    calcResultEl.textContent = resStr;
-    calcExpr = resStr;
-  } catch {
-    calcResultEl.textContent = 'Ошибка';
-    toast('Не удалось вычислить выражение');
+  if (btn.id === 'calcEq') { solvePhotomath(pmInput.value); return; }
+  if (btn.id === 'calcClear') { pmInput.value = ''; onPmInputChange(); pmGraphCanvas.style.display = 'none'; return; }
+  if (btn.id === 'calcBack') {
+    const s = pmInput.selectionStart ?? pmInput.value.length;
+    if (s > 0) {
+      pmInput.value = pmInput.value.slice(0, s - 1) + pmInput.value.slice(s);
+      pmInput.focus();
+      pmInput.setSelectionRange(s - 1, s - 1);
+      onPmInputChange();
+    }
+    return;
   }
+  if (btn.id === 'pmLeft') {
+    const s = Math.max(0, (pmInput.selectionStart ?? 1) - 1);
+    pmInput.focus(); pmInput.setSelectionRange(s, s); return;
+  }
+  if (btn.id === 'pmRight') {
+    const s = Math.min(pmInput.value.length, (pmInput.selectionStart ?? 0) + 1);
+    pmInput.focus(); pmInput.setSelectionRange(s, s); return;
+  }
+  if (btn.dataset.val !== undefined) insertAtCursor(btn.dataset.val);
+});
+
+function saveCalcHistory(expr, res) {
+  const hist = LS.get(CALC_HISTORY_KEY, []);
+  hist.unshift({ expr, res });
+  if (hist.length > 30) hist.length = 30;
+  LS.set(CALC_HISTORY_KEY, hist);
+  renderCalcHistory();
 }
+
 function renderCalcHistory() {
   const hist = LS.get(CALC_HISTORY_KEY, []);
   const list = $('#calcHistory');
@@ -2421,22 +3109,495 @@ function renderCalcHistory() {
   hist.forEach(h => {
     const div = document.createElement('div');
     div.className = 'history-item';
-    div.innerHTML = `<div class="h-expr">${escapeHtml(h.expr)} =</div><div class="h-res">${escapeHtml(h.res)}</div>`;
-    div.addEventListener('click', () => { calcExpr = h.res; updateCalcDisplay(); });
+    div.innerHTML = `<div class="h-expr">${escapeHtml(h.expr)}</div><div class="h-res">${escapeHtml(h.res)}</div>`;
+    div.addEventListener('click', () => { pmInput.value = h.expr; onPmInputChange(); solvePhotomath(h.expr); });
     list.appendChild(div);
   });
 }
 renderCalcHistory();
-updateCalcDisplay();
 
-document.addEventListener('keydown', e => {
-  if (!$('#page-calculator').classList.contains('active')) return;
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-  const k = e.key;
-  if (/[0-9.+\-*/()%^]/.test(k)) calcInput(k === '*' ? '×' : k === '/' ? '÷' : k === '-' ? '−' : k);
-  else if (k === 'Enter') { e.preventDefault(); calcEquals(); }
-  else if (k === 'Backspace') { e.preventDefault(); calcExpr = calcExpr.slice(0, -1); updateCalcDisplay(); }
+/* ===================== КАРТОЧНЫЕ ИГРЫ: ДУРАК И ПОКЕР ===================== */
+const SUITS = [
+  { s: '♠', color: 'black', name: 'Пики' },
+  { s: '♥', color: 'red',   name: 'Черви' },
+  { s: '♦', color: 'red',   name: 'Бубны' },
+  { s: '♣', color: 'black', name: 'Трефы' }
+];
+
+function createCardHtml(card, trumpSuit = null, extraClass = '') {
+  if (card.hidden) return `<div class="playing-card back ${extraClass}"></div>`;
+  const isRed = card.suit === '♥' || card.suit === '♦';
+  const isTrump = trumpSuit && card.suit === trumpSuit;
+  return `
+    <div class="playing-card ${isRed ? 'red' : 'black'} ${extraClass}" data-cid="${card.id || ''}">
+      ${isTrump ? '<span class="pc-trump-badge">★</span>' : ''}
+      <div class="pc-corner"><span>${card.label}</span><span class="pc-s">${card.suit}</span></div>
+      <div class="pc-center">${card.suit}</div>
+      <div class="pc-corner bot"><span>${card.label}</span><span class="pc-s">${card.suit}</span></div>
+    </div>
+  `;
+}
+
+// Переключатель между Дураком и Покером
+$$('#cardGameSwitch button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.cgame;
+    $$('#cardGameSwitch button').forEach(b => b.classList.toggle('secondary', b !== btn));
+    $('#cardGame-durak').style.display = target === 'durak' ? 'block' : 'none';
+    $('#cardGame-poker').style.display = target === 'poker' ? 'block' : 'none';
+  });
 });
+
+/* -------------------- 1. ПОДКИДНОЙ ДУРАК -------------------- */
+(function initDurakGame() {
+  const RANKS_36 = [
+    { r: 6, l: '6' }, { r: 7, l: '7' }, { r: 8, l: '8' }, { r: 9, l: '9' },
+    { r: 10, l: '10' }, { r: 11, l: 'В' }, { r: 12, l: 'Д' }, { r: 13, l: 'К' }, { r: 14, l: 'Т' }
+  ];
+  let deck = [], playerHand = [], botHand = [], tablePairs = [];
+  let trumpSuit = '♠';
+  let attacker = 'player'; // 'player' | 'bot'
+  let diff = 'easy';
+  let gameOver = false;
+
+  function buildDeck() {
+    const d = [];
+    let id = 1;
+    for (const st of SUITS) {
+      for (const rk of RANKS_36) {
+        d.push({ id: 'c' + (id++), rank: rk.r, label: rk.l, suit: st.s });
+      }
+    }
+    for (let i = d.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [d[i], d[j]] = [d[j], d[i]];
+    }
+    return d;
+  }
+
+  function canBeat(atk, def) {
+    if (def.suit === atk.suit) return def.rank > atk.rank;
+    if (def.suit === trumpSuit && atk.suit !== trumpSuit) return true;
+    return false;
+  }
+
+  function canThrowIn(card) {
+    if (tablePairs.length === 0) return true;
+    if (tablePairs.length >= 6) return false;
+    const ranksOnTable = new Set();
+    tablePairs.forEach(p => {
+      ranksOnTable.add(p.atk.rank);
+      if (p.def) ranksOnTable.add(p.def.rank);
+    });
+    return ranksOnTable.has(card.rank);
+  }
+
+  function refillHands() {
+    while (playerHand.length < 6 && deck.length > 0) playerHand.push(deck.pop());
+    while (botHand.length < 6 && deck.length > 0) botHand.push(deck.pop());
+    playerHand.sort((a, b) => (a.suit === trumpSuit ? 100 : 0) + a.rank - ((b.suit === trumpSuit ? 100 : 0) + b.rank));
+  }
+
+  function checkWinner() {
+    if (deck.length > 0) return false;
+    if (playerHand.length === 0 && botHand.length === 0) {
+      $('#durakStatusText').textContent = '🤝 Ничья! Карты закончились у обоих.';
+      gameOver = true; return true;
+    }
+    if (playerHand.length === 0) {
+      $('#durakStatusText').textContent = '🏆 ПОБЕДА! Ты вышел из игры первым!';
+      toast('🏆 Поздравляем! Ты обыграл бота в Дурака!');
+      gameOver = true; return true;
+    }
+    if (botHand.length === 0) {
+      $('#durakStatusText').textContent = '😅 Бот вышел первым — ты остался в дураках!';
+      gameOver = true; return true;
+    }
+    return false;
+  }
+
+  function renderDurak() {
+    $('#durakTrumpBadge').textContent = trumpSuit;
+    $('#durakDeckCount').textContent = deck.length;
+    $('#durakBotCount').textContent = botHand.length;
+
+    $('#durakBotHand').innerHTML = botHand.map(() => createCardHtml({ hidden: true })).join('');
+    $('#durakPlayerHand').innerHTML = playerHand.map(c => createCardHtml(c, trumpSuit)).join('');
+
+    $('#durakBattlefield').innerHTML = tablePairs.map(p => `
+      <div class="durak-pair">
+        ${createCardHtml(p.atk, trumpSuit, 'atk')}
+        ${p.def ? createCardHtml(p.def, trumpSuit, 'def') : ''}
+      </div>
+    `).join('');
+
+    const actBtn = $('#durakActionBtn');
+    if (attacker === 'player') {
+      actBtn.textContent = '✅ Бито (Завершить атаку)';
+      actBtn.disabled = tablePairs.length === 0;
+    } else {
+      const hasUnbeaten = tablePairs.some(p => !p.def);
+      actBtn.textContent = hasUnbeaten ? '📥 Взять карты со стола' : '⏳ Ждём хода бота...';
+      actBtn.disabled = !hasUnbeaten;
+    }
+
+    $$('#durakPlayerHand .playing-card').forEach(el => {
+      el.addEventListener('click', () => onPlayerCardClick(el.dataset.cid));
+    });
+  }
+
+  function cardValue(c) {
+    let val = c.rank + (c.suit === trumpSuit ? 20 : 0);
+    if (diff === 'hard' && c.suit === trumpSuit) val += 10; // Мастер бережёт козыри до последнего
+    return val;
+  }
+
+  function onPlayerCardClick(cid) {
+    if (gameOver) return;
+    const idx = playerHand.findIndex(c => c.id === cid);
+    if (idx === -1) return;
+    const card = playerHand[idx];
+
+    if (attacker === 'player') {
+      if (botHand.length === 0) return;
+      if (!canThrowIn(card)) {
+        toast('Можно подкидывать только карты того же номинала, что уже есть на столе!');
+        return;
+      }
+      playerHand.splice(idx, 1);
+      tablePairs.push({ atk: card, def: null });
+      renderDurak();
+      setTimeout(botDefend, 350);
+    } else {
+      const unbeatenPair = tablePairs.find(p => !p.def);
+      if (!unbeatenPair) return;
+      if (!canBeat(unbeatenPair.atk, card)) {
+        toast('Этой картой нельзя побить! Нужна старшая карта той же масти или козырь.');
+        return;
+      }
+      playerHand.splice(idx, 1);
+      unbeatenPair.def = card;
+      renderDurak();
+      if (checkWinner()) return;
+      setTimeout(botThrowInOrFinish, 450);
+    }
+  }
+
+  function botDefend() {
+    if (gameOver) return;
+    const unbeatenPair = tablePairs.find(p => !p.def);
+    if (!unbeatenPair) return;
+
+    const valid = botHand.filter(c => canBeat(unbeatenPair.atk, c));
+    let chosen = null;
+
+    if (valid.length > 0) {
+      if (diff === 'easy') {
+        chosen = valid[Math.floor(Math.random() * valid.length)];
+      } else {
+        valid.sort((a, b) => cardValue(a) - cardValue(b));
+        // Мастер не тратит крупный козырь в начале игры, если колода ещё полная
+        if (diff === 'hard' && deck.length > 8 && valid[0].suit === trumpSuit && valid[0].rank >= 12 && tablePairs.length <= 2) {
+          chosen = null;
+        } else {
+          chosen = valid[0];
+        }
+      }
+    }
+
+    if (chosen) {
+      botHand = botHand.filter(c => c.id !== chosen.id);
+      unbeatenPair.def = chosen;
+      $('#durakStatusText').textContent = 'Бот отбился! Можешь подкинуть ещё карту или нажать «Бито».';
+      renderDurak();
+      checkWinner();
+    } else {
+      // Бот забирает карты
+      tablePairs.forEach(p => { botHand.push(p.atk); if (p.def) botHand.push(p.def); });
+      tablePairs = [];
+      refillHands();
+      $('#durakStatusText').textContent = '🤖 Бот забрал карты! Твой ход снова — атакуй!';
+      attacker = 'player';
+      renderDurak();
+      checkWinner();
+    }
+  }
+
+  function botAttackStart() {
+    if (gameOver || checkWinner()) return;
+    if (botHand.length === 0) return;
+
+    botHand.sort((a, b) => cardValue(a) - cardValue(b));
+    const atkCard = diff === 'easy' ? botHand[Math.floor(Math.random() * botHand.length)] : botHand[0];
+    botHand = botHand.filter(c => c.id !== atkCard.id);
+    tablePairs.push({ atk: atkCard, def: null });
+    $('#durakStatusText').textContent = '⚔️ Бот атакует! Выбери карту для защиты или нажми «Взять карты».';
+    renderDurak();
+  }
+
+  function botThrowInOrFinish() {
+    if (gameOver || checkWinner()) return;
+    if (playerHand.length === 0 || tablePairs.length >= 6) {
+      endBoutBeaten(); return;
+    }
+    const throwable = botHand.filter(c => canThrowIn(c) && (diff !== 'hard' || c.suit !== trumpSuit || deck.length === 0));
+    if (throwable.length > 0) {
+      throwable.sort((a, b) => cardValue(a) - cardValue(b));
+      const nextAtk = throwable[0];
+      botHand = botHand.filter(c => c.id !== nextAtk.id);
+      tablePairs.push({ atk: nextAtk, def: null });
+      $('#durakStatusText').textContent = '🔥 Бот подкинул ещё карту! Отбивайся или бери.';
+      renderDurak();
+    } else {
+      endBoutBeaten();
+    }
+  }
+
+  function endBoutBeaten() {
+    tablePairs = [];
+    refillHands();
+    attacker = attacker === 'player' ? 'bot' : 'player';
+    renderDurak();
+    if (checkWinner()) return;
+    if (attacker === 'bot') {
+      $('#durakStatusText').textContent = 'Ход перешёл к боту...';
+      setTimeout(botAttackStart, 450);
+    } else {
+      $('#durakStatusText').textContent = '✅ Бито! Теперь твоя очередь атаковать.';
+    }
+  }
+
+  $('#durakActionBtn').addEventListener('click', () => {
+    if (gameOver) return;
+    if (attacker === 'player') {
+      endBoutBeaten();
+    } else {
+      // Игрок забирает все карты со стола
+      tablePairs.forEach(p => { playerHand.push(p.atk); if (p.def) playerHand.push(p.def); });
+      tablePairs = [];
+      refillHands();
+      attacker = 'bot';
+      $('#durakStatusText').textContent = 'Ты забрал карты. Бот снова атакует!';
+      renderDurak();
+      setTimeout(botAttackStart, 500);
+    }
+  });
+
+  function startNewDurak() {
+    deck = buildDeck();
+    trumpSuit = deck[0].suit;
+    playerHand = []; botHand = []; tablePairs = [];
+    gameOver = false; attacker = 'player';
+    refillHands();
+    $('#durakStatusText').textContent = 'Твой ход — нажми на любую свою карту для атаки!';
+    renderDurak();
+  }
+
+  $$('#durakDiffRow .diff-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('#durakDiffRow .diff-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      diff = btn.dataset.ddiff;
+      $('#durakDiffLabel').textContent = btn.textContent.replace(/^[^\s]+\sБот:\s/, '');
+      startNewDurak();
+    });
+  });
+
+  $('#durakNewGameBtn').addEventListener('click', startNewDurak);
+  startNewDurak();
+})();
+
+/* -------------------- 2. ПОКЕР: ТЕХАССКИЙ ХОЛДЕМ -------------------- */
+(function initPokerGame() {
+  const RANKS_52 = [
+    { r: 2, l: '2' }, { r: 3, l: '3' }, { r: 4, l: '4' }, { r: 5, l: '5' },
+    { r: 6, l: '6' }, { r: 7, l: '7' }, { r: 8, l: '8' }, { r: 9, l: '9' },
+    { r: 10, l: '10' }, { r: 11, l: 'J' }, { r: 12, l: 'Q' }, { r: 13, l: 'K' }, { r: 14, l: 'A' }
+  ];
+  let deck = [], playerHand = [], botHand = [], community = [];
+  let playerBank = 1000, botBank = 1000, pot = 0, playerBet = 0, botBet = 0;
+  let stage = 0; // 0: Префлоп, 1: Флоп (3), 2: Тёрн (4), 3: Ривер (5), 4: Вскрытие (Showdown)
+  let pDiff = 'easy';
+  let roundOver = false;
+
+  const STAGE_NAMES = ['Префлоп', 'Флоп (3 карты)', 'Тёрн (4 карты)', 'Ривер (5 карт)', 'Вскрытие карт'];
+
+  function buildDeck52() {
+    const d = [];
+    let id = 1;
+    for (const st of SUITS) {
+      for (const rk of RANKS_52) d.push({ id: 'p' + (id++), rank: rk.r, label: rk.l, suit: st.s });
+    }
+    for (let i = d.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [d[i], d[j]] = [d[j], d[i]];
+    }
+    return d;
+  }
+
+  // Оценка силы комбинации из доступных карт (возвращает числовой рейтинг и название)
+  function evaluatePokerHand(cards) {
+    if (cards.length < 2) return { score: 0, name: '—' };
+    const counts = {};
+    const suitCounts = {};
+    cards.forEach(c => {
+      counts[c.rank] = (counts[c.rank] || 0) + 1;
+      suitCounts[c.suit] = (suitCounts[c.suit] || 0) + 1;
+    });
+
+    const pairs = Object.entries(counts).map(([r, cnt]) => ({ r: Number(r), cnt }))
+      .sort((a, b) => b.cnt - a.cnt || b.r - a.r);
+
+    const flushSuit = Object.keys(suitCounts).find(s => suitCounts[s] >= 5);
+    const uniqueRanks = [...new Set(cards.map(c => c.rank))].sort((a, b) => b - a);
+    if (uniqueRanks.includes(14)) uniqueRanks.push(1); // Туз для младшего стрита A-2-3-4-5
+
+    let straightHigh = 0;
+    for (let i = 0; i <= uniqueRanks.length - 5; i++) {
+      if (uniqueRanks[i] - uniqueRanks[i + 4] === 4) { straightHigh = uniqueRanks[i]; break; }
+    }
+
+    if (flushSuit && straightHigh) return { score: 800 + straightHigh, name: straightHigh === 14 ? '👑 Роял-Флеш!' : '🔥 Стрит-Флеш' };
+    if (pairs[0].cnt === 4) return { score: 700 + pairs[0].r, name: '💣 Каре' };
+    if (pairs[0].cnt === 3 && pairs[1] && pairs[1].cnt >= 2) return { score: 600 + pairs[0].r, name: '🏠 Фулл-Хаус' };
+    if (flushSuit) return { score: 500 + uniqueRanks[0], name: '♠️ Флеш' };
+    if (straightHigh) return { score: 400 + straightHigh, name: '📏 Стрит' };
+    if (pairs[0].cnt === 3) return { score: 300 + pairs[0].r, name: '🎲 Сет (Тройка)' };
+    if (pairs[0].cnt === 2 && pairs[1] && pairs[1].cnt === 2) return { score: 200 + pairs[0].r + pairs[1].r * 0.01, name: '✌️ Две пары' };
+    if (pairs[0].cnt === 2) return { score: 100 + pairs[0].r, name: '👍 Пара' };
+    return { score: pairs[0].r, name: 'Старшая карта' };
+  }
+
+  function renderPoker() {
+    $('#pokerPlayerBank').textContent = playerBank;
+    $('#pokerBotBank').textContent = botBank;
+    $('#pokerPotVal').textContent = pot;
+    $('#pokerPlayerBet').textContent = playerBet;
+    $('#pokerBotBet').textContent = botBet;
+    $('#pokerStageLabel').textContent = STAGE_NAMES[stage];
+
+    $('#pokerPlayerHand').innerHTML = playerHand.map(c => createCardHtml(c)).join('');
+    $('#pokerBotHand').innerHTML = botHand.map(c => createCardHtml(stage === 4 ? c : { hidden: true })).join('');
+
+    const commCards = [];
+    for (let i = 0; i < 5; i++) {
+      if (i < community.length) commCards.push(createCardHtml(community[i]));
+      else commCards.push(createCardHtml({ hidden: true }));
+    }
+    $('#pokerCommunityCards').innerHTML = commCards.join('');
+
+    const pEval = evaluatePokerHand([...playerHand, ...community]);
+    $('#pokerPlayerCombo').textContent = pEval.name;
+
+    if (stage === 4) {
+      const bEval = evaluatePokerHand([...botHand, ...community]);
+      $('#pokerBotCombo').textContent = bEval.name;
+    } else {
+      $('#pokerBotCombo').textContent = 'Карты скрыты';
+    }
+  }
+
+  function addChipBet(amount) {
+    if (roundOver) return;
+    const actual = Math.min(amount, playerBank, botBank);
+    if (actual <= 0) { toast('Недостаточно фишек в стеке!'); return; }
+    playerBank -= actual;
+    botBank -= actual; // Бот поддерживает ставку или отвечает
+    playerBet += actual;
+    botBet += actual;
+    pot += actual * 2;
+    $('#pokerStatusMsg').textContent = `Ты поставил фишку +${actual}. Бот уравнял ставку! Нажми «Чек / Колл» для следующей карты.`;
+    renderPoker();
+  }
+
+  function nextPokerStage() {
+    if (roundOver) return;
+    stage++;
+    if (stage === 1) community.push(deck.pop(), deck.pop(), deck.pop());
+    else if (stage === 2 || stage === 3) community.push(deck.pop());
+    else if (stage === 4) {
+      showdownPoker();
+      return;
+    }
+
+    // Поведение бота на новом круге торговли в зависимости от сложности
+    const bEval = evaluatePokerHand([...botHand, ...community]);
+    if (pDiff === 'hard' && (bEval.score >= 100 || Math.random() < 0.35) && playerBank >= 25 && botBank >= 25) {
+      playerBank -= 25; botBank -= 25; pot += 50; playerBet += 25; botBet += 25;
+      $('#pokerStatusMsg').textContent = `🔥 Бот-Акула взвинтил ставку на +25 фишек (уравнено)! Оцени борд и делай ход.`;
+    } else if (pDiff === 'normal' && bEval.score >= 200 && playerBank >= 25 && botBank >= 25) {
+      playerBank -= 25; botBank -= 25; pot += 50; playerBet += 25; botBet += 25;
+      $('#pokerStatusMsg').textContent = `🤖 Бот уверен в картах и добавил +25 в банк.`;
+    } else {
+      $('#pokerStatusMsg').textContent = `Открыт этап: ${STAGE_NAMES[stage]}. Добавь фишек или жми «Чек / Колл».`;
+    }
+    renderPoker();
+  }
+
+  function showdownPoker() {
+    roundOver = true;
+    const pEval = evaluatePokerHand([...playerHand, ...community]);
+    const bEval = evaluatePokerHand([...botHand, ...community]);
+    renderPoker();
+
+    if (pEval.score > bEval.score) {
+      playerBank += pot;
+      $('#pokerStatusMsg').textContent = `🏆 ТЫ ВЫИГРАЛ БАНК (${pot} фишек)! Твоя комбинация: ${pEval.name} сильнее бота (${bEval.name}).`;
+      toast(`🏆 Победа в раздаче! +${pot} фишек`);
+    } else if (bEval.score > pEval.score) {
+      botBank += pot;
+      $('#pokerStatusMsg').textContent = `🤖 Бот забирает банк (${pot} фишек) с комбинацией ${bEval.name} против твоей (${pEval.name}).`;
+    } else {
+      playerBank += Math.floor(pot / 2);
+      botBank += Math.ceil(pot / 2);
+      $('#pokerStatusMsg').textContent = `🤝 Равные комбинации (${pEval.name})! Банк поделён пополам.`;
+    }
+    pot = 0;
+    renderPoker();
+  }
+
+  function startNewDeal() {
+    if (playerBank < 20) { playerBank = 1000; toast('Твой стек пополнен до 1000 фишек!'); }
+    if (botBank < 20) { botBank = 1000; }
+    deck = buildDeck52();
+    playerHand = [deck.pop(), deck.pop()];
+    botHand = [deck.pop(), deck.pop()];
+    community = [];
+    stage = 0; roundOver = false;
+    // Обязательный блайнд 20 фишек
+    playerBank -= 20; botBank -= 20;
+    playerBet = 20; botBet = 20; pot = 40;
+    $('#pokerStatusMsg').textContent = 'Новая раздача! Сделан начальный взнос (блайнд) по 20 фишек. Кликай по фишкам или жми Чек/Колл.';
+    renderPoker();
+  }
+
+  $$('#pokerChipsRack .poker-chip').forEach(chip => {
+    chip.addEventListener('click', () => addChipBet( parseInt(chip.dataset.chip, 10) ));
+  });
+
+  $('#pokerCheckCallBtn').addEventListener('click', nextPokerStage);
+  $('#pokerRaiseBtn').addEventListener('click', () => { addChipBet(50); nextPokerStage(); });
+  $('#pokerFoldBtn').addEventListener('click', () => {
+    if (roundOver) return;
+    roundOver = true;
+    botBank += pot;
+    $('#pokerStatusMsg').textContent = `🏳 Ты сбросил карты (Фолд). Бот забирает банк ${pot} фишек.`;
+    pot = 0;
+    renderPoker();
+  });
+  $('#pokerNewDealBtn').addEventListener('click', startNewDeal);
+
+  $$('#pokerDiffRow .diff-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('#pokerDiffRow .diff-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      pDiff = btn.dataset.pdiff;
+      startNewDeal();
+    });
+  });
+
+  startNewDeal();
+})();
 
 /* ===================== ПОГОДА ===================== */
 const weatherCache = {};
