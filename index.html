@@ -1407,7 +1407,224 @@ input[type="range"]::-webkit-slider-thumb {
       </div>
     </div>
   </section>
+<!-- ПОЛЕЗНЫЕ ИНСТРУКЦИИ (DOLPHIN ANTY, GITHUB, VPN, KIWI, БАН НА UNU, ОЧИСТКА ТГ) -->
+  <section class="page" id="page-guides">
+    <h2 class="section-title">📚 Полезные инструкции и гайды</h2>
+    <p class="section-sub">Полное руководство по всем инструментам: антидетект-браузер Dolphin Anty, скачивание с GitHub, настройка VPN (v2rayNG), установка Violentmonkey и Kiwi Browser, а также обход блокировок.</p>
 
+    <!-- ГАЙД 1: DOLPHIN ANTY -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="sc-top" style="margin-bottom:12px;">
+        <div class="sc-badges">
+          <span class="sc-badge ext">🐬 Антидетект-браузер</span>
+          <span class="sc-badge">До 10 профилей бесплатно</span>
+        </div>
+        <span class="sc-ver">Официальный стандарт</span>
+      </div>
+      <h3 style="font-size:1.35rem;margin-bottom:8px;">🐬 Полный гайд по Dolphin Anty (установка, профили, прокси и расширения)</h3>
+      <p style="font-size:.92rem;color:var(--text-soft);margin-bottom:16px;">
+        <b>Dolphin {anty}</b> создаёт изолированные браузерные профили с уникальным цифровым отпечатком (Canvas, WebGL, User-Agent, WebRTC, геолокация и часовой пояс). Буксы и биржи видят каждый профиль как совершенно отдельный компьютер, что защищает от бана за мультиаккаунтинг.
+      </p>
+
+      <div class="install-guide-grid" style="margin-bottom:16px;">
+        <div class="ban-sit-box">
+          <h4>1️⃣ Скачивание и регистрация (официальный сайт)</h4>
+          <ol>
+            <li>Перейди на официальный сайт <a href="https://dolphin-anty.com" target="_blank" rel="noopener">dolphin-anty.com</a> (если сайт не открывается — сначала включи VPN из инструкции ниже).</li>
+            <li>Нажми <b>«Регистрация»</b> и создай аккаунт. Автоматически активируется тариф <b>Free</b> — он даёт <b>10 уникальных браузерных профилей бесплатно и навсегда</b>.</li>
+            <li>Скачай установщик под свою ОС (Windows / macOS / Linux), установи программу и войди в свой аккаунт внутри приложения.</li>
+          </ol>
+        </div>
+
+        <div class="ban-sit-box">
+          <h4>2️⃣ Создание чистого профиля и привязка прокси</h4>
+          <ol>
+            <li>В верхней панели программы нажми кнопку <b>«➕ Создать профиль»</b>.</li>
+            <li>Укажи понятное название (например, <code>UNU Акк 2</code>) и выбери операционную систему (по официальным правилам Dolphin нужно выбирать ту же ОС, которая установлена на твоём реальном ПК).</li>
+            <li>В блоке <b>«Прокси»</b> нажми <b>«Новый прокси»</b>, выбери протокол (<code>HTTP</code> или <code>SOCKS5</code>) и вставь купленный прокси (с px6.net или proxyline.net) в формате <code>ip:port:login:password</code>.</li>
+            <li>Нажми на кнопку со стрелочками (🔄) справа от поля ввода — должен появиться зелёный статус соединения, IP и страна.</li>
+            <li>Параметры отпечатка (WebRTC, Canvas, WebGL, ОЗУ, Процессор) оставь в стандартном положении (<b>Real / Altered</b>) — Dolphin подбирает их с реальных устройств автоматически.</li>
+            <li>Нажми <b>«Создать»</b> вверху справа, а затем кнопку <b>«Запуск» (Start)</b> напротив появившегося профиля.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="sc-howto">
+        <div class="sc-howto-title">3️⃣ Как добавить скрипты и расширения сразу во все профили Dolphin Anty:</div>
+        <ol class="sc-steps">
+          <li>В левом боковом меню программы Dolphin Anty открой вкладку <b>«Расширения»</b> (иконка пазла 🧩).</li>
+          <li>Нажми <b>«➕ Добавить»</b> в правом верхнем углу.</li>
+          <li>Вставь ссылку на <b>Violentmonkey</b> из магазина Chrome Web Store или перетащи ZIP-архив расширения <b>UnuHelper</b> (выбрав загрузку из файла).</li>
+          <li>Теперь это расширение будет автоматически установлено во все твои рабочие профили при их запуске!</li>
+        </ol>
+      </div>
+
+      <div class="info-note" style="margin-top:14px;">
+        💡 <b>Правила безопасности Dolphin Anty:</b> строго <b>1 профиль = 1 индивидуальный прокси = 1 аккаунт на буксе</b>. Всегда закрывай профиль кнопкой «Стоп» или крестиком окна и жди 3–5 секунд, пока статус сменится с «Синхронизация» на «Готов», чтобы не потерять Cookie и авторизацию.
+      </div>
+    </div>
+
+    <!-- ГАЙД 2: GITHUB -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="sc-top" style="margin-bottom:12px;">
+        <div class="sc-badges">
+          <span class="sc-badge">🐙 GitHub</span>
+          <span class="sc-badge market">Скачивание ZIP, APK и EXE</span>
+        </div>
+        <span class="sc-ver">Официальные положения</span>
+      </div>
+      <h3 style="font-size:1.35rem;margin-bottom:8px;">🐙 Как пользоваться GitHub (как скачивать расширения, Kiwi Browser и программы)</h3>
+      <p style="font-size:.92rem;color:var(--text-soft);margin-bottom:16px;">
+        На <b>GitHub</b> выкладывают чистые сборки без рекламы и вирусов: браузер <b>Kiwi Browser</b>, менеджер скриптов <b>Violentmonkey</b> и клиент <b>v2rayNG</b>. Многие новички случайно скачивают исходный код вместо самой программы — вот как делать правильно:
+      </p>
+
+      <div class="ban-situations-grid" style="margin-bottom:14px;">
+        <div class="ban-sit-box">
+          <h4>📦 Способ 1: Скачивание готовой программы или APK (Раздел Releases)</h4>
+          <ol>
+            <li>Перейди по ссылке на страницу проекта на <a href="https://github.com" target="_blank" rel="noopener">github.com</a>.</li>
+            <li>На ПК посмотри в правую колонку страницы (на телефоне — прокрути описание вниз) и найди блок <b>«Releases»</b>. Нажми на версию с зелёной меткой <b>Latest</b>.</li>
+            <li>Прокрути список изменений до заголовка <b>«Assets»</b> (Прикреплённые файлы) и раскрой его.</li>
+            <li><b>Что скачивать:</b>
+              <br>• Для телефона Android — файл с окончанием <code>.apk</code> (универсальный вариант — <code>universal.apk</code> или <code>arm64-v8a.apk</code>).
+              <br>• Для ПК Windows — файл <code>.exe</code> или <code>.msi</code>.
+              <br>• Для браузерного расширения — готовый архив <code>.zip</code>.
+              <br>• <i>Не нажимай на Source code (zip / tar.gz), если тебе нужна готовая программа!</i>
+            </li>
+          </ol>
+        </div>
+
+        <div class="ban-sit-box">
+          <h4>📁 Способ 2: Скачивание всего репозитория архивом (Code → Download ZIP)</h4>
+          <ol>
+            <li>Если в репозитории лежат готовые файлы скриптов или папка с расширением, найди вверху справа яркую зелёную кнопку <b>«&lt;&gt; Code»</b>.</li>
+            <li>Нажми на неё и в появившемся меню выбери <b>«Download ZIP»</b>.</li>
+            <li>Распакуй скачанный ZIP-архив в отдельную папку на компьютере или телефоне.</li>
+          </ol>
+        </div>
+
+        <div class="ban-sit-box">
+          <h4>📜 Способ 3: Быстрая установка скрипта в 1 клик (Кнопка Raw)</h4>
+          <ol>
+            <li>Открой на GitHub нужный файл скрипта (с расширением <code>.user.js</code>).</li>
+            <li>В правом верхнем углу рамки с кодом нажми кнопку <b>«Raw»</b>.</li>
+            <li>Браузер откроет прямую ссылку на скрипт, и расширение <b>Violentmonkey</b> само откроет окно установки — останется только нажать <b>«Подтвердить установку»</b>.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- ГАЙД 3: VPN V2RAYNG -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="sc-top" style="margin-bottom:12px;">
+        <div class="sc-badges">
+          <span class="sc-badge ext">🛡 VPN / v2rayNG</span>
+          <span class="sc-badge">Для GitHub и Dolphin Anty</span>
+        </div>
+        <span class="sc-ver">VLESS / Reality / Xray</span>
+      </div>
+      <h3 style="font-size:1.35rem;margin-bottom:8px;">🛡 Установка и настройка VPN (v2rayNG) для доступа к GitHub и Dolphin</h3>
+      <p style="font-size:.92rem;color:var(--text-soft);margin-bottom:16px;">
+        Клиент <b>v2rayNG</b> работает на современных протоколах (VLESS / Reality / VMess / Shadowsocks), не режет скорость интернета и открывает стабильный доступ к репозиториям GitHub, магазинам расширений и серверам Dolphin Anty.
+      </p>
+
+      <div class="install-guide-grid" style="margin-bottom:16px;">
+        <div class="ban-sit-box">
+          <h4>📲 Пошаговая инструкция по подключению v2rayNG</h4>
+          <ol>
+            <li><b>Скачай и установи v2rayNG:</b> из Google Play или скачай официальный <code>.apk</code> с GitHub-репозитория <code>2dust/v2rayNG</code> (раздел <b>Releases → Assets</b>).</li>
+            <li><b>Скопируй ключ доступа (конфиг)</b> или ссылку на подписку в буфер обмена (начинается с <code>vless://</code>, <code>vmess://</code>, <code>ss://</code> или <code>https://</code>).</li>
+            <li>Открой приложение <b>v2rayNG</b> и нажми на значок <b>«➕» (Плюс)</b> в правом верхнем углу экрана.</li>
+            <li>Выбери пункт <b>«Импорт конфигурации из буфера обмена»</b> (<i>Import config from clipboard</i>) — сервер сразу появится в списке.</li>
+            <li><b>Если у тебя ссылка-подписка (https://):</b> нажми три точки (⋮) в правом верхнем углу → <b>«Обновить подписку»</b> (<i>Update subscription</i>), чтобы загрузился весь список серверов.</li>
+            <li>Нажми на добавленный профиль в списке (чтобы он выделился) и нажми круглую кнопку <b>«V»</b> внизу экрана. Разреши добавление конфигурации VPN.</li>
+          </ol>
+        </div>
+
+        <div class="ban-sit-box" style="display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <h4>⚙️ Проверка соединения и тонкая настройка</h4>
+            <ul>
+              <li><b>Тест пинга:</b> когда кнопка внизу горит оранжевым/зелёным, нажми на полоску статуса внизу экрана (<i>Тест задержки текущего профиля</i>). Если появилось значение в миллисекундах (например, <code>55 ms</code>) — ключ рабочий и интернет идёт через VPN.</li>
+              <li><b>Если пишет «Не удаётся проверить» / «-1 ms»:</b> обнови подписку через три точки (⋮) или выбери другой сервер из списка.</li>
+              <li><b>Выбор отдельных приложений (Per-App Proxy):</b> в боковом меню (☰) → <b>«Настройки»</b> можно поставить галочку <b>«Раздельное проксирование приложений»</b> и отметить только нужный браузер (Kiwi / Chrome), чтобы VPN работал только в нём.</li>
+            </ul>
+          </div>
+          <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+            <p style="font-size:.85rem;color:var(--text-soft);margin-bottom:10px;">📖 Полный гайд по v2rayNG со всеми деталями в Notion:</p>
+            <a class="btn small" style="width:100%;" href="https://tulip-taker-347.notion.site/v2rayNG-b79aa4871ab74b05b80b433a3b774ac2" target="_blank" rel="noopener">🔗 Открыть инструкцию по v2rayNG (Notion) →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ГАЙД 4: УСТАНОВКА VIOLENTMONKEY И KIWI BROWSER -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="sc-top" style="margin-bottom:12px;">
+        <div class="sc-badges">
+          <span class="sc-badge ext">🐵 Violentmonkey + Kiwi</span>
+          <span class="sc-badge">ПК и Телефон</span>
+        </div>
+        <span class="sc-ver">База для скриптов</span>
+      </div>
+      <h3 style="font-size:1.35rem;margin-bottom:8px;">🐵 Как установить Violentmonkey и расширения на ПК и телефон</h3>
+      <p style="font-size:.92rem;color:var(--text-soft);margin-bottom:16px;">
+        Мы используем <b>Violentmonkey</b> вместо Tampermonkey, потому что он проще в настройке и не нагружает процессор при большом потоке заданий.
+      </p>
+
+      <div class="install-guide-grid">
+        <div class="ban-sit-box">
+          <h4>💻 На ПК (Chrome / Яндекс / Dolphin Anty)</h4>
+          <ol>
+            <li>Установи расширение <b>Violentmonkey</b> из магазина Chrome Web Store.</li>
+            <li>Открой <code>chrome://extensions/</code>, включи в правом верхнем углу <b>«Режим разработчика»</b>.</li>
+            <li>Нажми <b>«Сведения»</b> под Violentmonkey и включи ползунок <b>«Разрешить пользовательские скрипты»</b>.</li>
+            <li>Чтобы добавить скрипт: нажми на иконку обезьянки → шестерёнка (⚙️) → плюс (➕) → выбери скачанный файл скрипта и нажми <b>«Сохранить и закрыть»</b>.</li>
+            <li>Чтобы установить расширение <b>UnuHelper</b> из ZIP-архива: на странице <code>chrome://extensions/</code> нажми <b>«Загрузить распакованное расширение»</b> и выбери папку/архив.</li>
+          </ol>
+        </div>
+
+        <div class="ban-sit-box">
+          <h4>📲 На телефон Android (через Kiwi Browser)</h4>
+          <ol>
+            <li>Скачай и установи <b>Kiwi Browser</b> (с GitHub или из нашего ТГ-канала).</li>
+            <li>Попробуй установить Violentmonkey из магазина Chrome. Если пишет, что версия браузера старая: скачай первый ZIP-файл со страницы релизов Violentmonkey на GitHub, распакуй его и добавь вручную в меню <b>«Расширения»</b> внутри Kiwi.</li>
+            <li>Для установки расширения <b>UnuHelper</b> на телефон: открой Kiwi → три точки вверху → <b>«Расширения»</b> → включи <b>«Режим разработчика»</b> → нажми <b>«Загрузить распакованное / +(from .zip)»</b> и выбери скачанный ZIP-архив.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- ГАЙД 5: БАН НА UNU И ОЧИСТКА ТГ -->
+    <div class="card">
+      <div class="sc-top" style="margin-bottom:12px;">
+        <div class="sc-badges">
+          <span class="sc-badge" style="color:var(--danger);border-color:var(--danger);">🚨 Антибан и Чистка ТГ</span>
+        </div>
+        <span class="sc-ver">Шпаргалка</span>
+      </div>
+      <h3 style="font-size:1.35rem;margin-bottom:8px;">🚨 Быстрые памятки: Бан на UNU и Очистка Telegram</h3>
+      <div class="install-guide-grid" style="margin-bottom:0;">
+        <div class="ban-sit-box">
+          <h4>⁉️ Что делать при бане на UNU</h4>
+          <ul>
+            <li><b>Временный бан:</b> первым делом немедленно выведи деньги со счёта! Затем предельно вежливо напиши в поддержку и извинись (в 99% случаев аккаунт оставят живым, но сбросят статистику).</li>
+            <li><b>Перманентный бан:</b> не опускай руки — создавай полностью чистый аккаунт с нуля.</li>
+            <li><b>Как не спалиться при создании нового:</b> на ПК используй <b>Dolphin Anty + индивидуальный прокси</b>; на телефоне — смени устройство. Обязательно заведи <b>новые соцсети и новые реквизиты выплат</b> (новый кошелёк ЮMoney или виртуальную карту другого банка).</li>
+          </ul>
+        </div>
+
+        <div class="ban-sit-box">
+          <h4>🧹 Быстрая очистка Telegram от старых каналов</h4>
+          <ul>
+            <li><b>На ПК (TinyTask):</b> в настройках Prefs включи <i>Continuous Playback</i>, задай хоткей записи (<code>F8</code>) и повтора (<code>Ctrl+Shift+P</code>). Запиши один выход из канала (ПКМ → Покинуть канал) и запусти авто-повтор.</li>
+            <li><b>На телефоне (Автокликер):</b> зажми первый канал в списке, расставь 5–6 точек по вертикали с интервалом <b>500 мс</b>, запусти выделение и нажми на корзину.</li>
+            <li><b>Важно:</b> чисти только те аккаунты, где с последней оплаченной подписки прошло <b>минимум 2 месяца</b>!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
   <!-- ПАРОЛИ -->
   <section class="page" id="page-password">
     <h2 class="section-title">🔐 Генератор паролей</h2>
