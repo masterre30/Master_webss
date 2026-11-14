@@ -2290,6 +2290,12 @@ header {
         <p>Дурак (Подкидной и Переводной) и Покер с фишками и ботами.</p>
         <div class="game-play">Играть →</div>
       </div>
+      <div class="game-card" data-game="tanks">
+        <div class="game-icon">🪖</div>
+        <h3>Танки: Арена</h3>
+        <p>5 сезонных карт, физика поверхностей, A* ИИ (4 уровня), сплит-экран PvP, WebSocket-лобби и квесты.</p>
+        <div class="game-play">В бой →</div>
+      </div>
     </div>
 
     <!-- ШАХМАТЫ -->
@@ -2588,6 +2594,95 @@ header {
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <!-- ТАНКИ: ПОЛНОЦЕННАЯ МОДУЛЬНАЯ АРЕНА -->
+    <div class="game-window hidden" id="game-tanks">
+      <div class="game-head">
+        <h3>🪖 Танки: Арена 1600×1200</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button class="btn small secondary" id="tanksQuestsToggle">🏆 Квесты и Ачивки</button>
+          <button class="btn small secondary" id="tanksPauseBtn">⏸ Пауза (Esc)</button>
+          <button class="game-close" data-close="tanks">✕ Закрыть</button>
+        </div>
+      </div>
+
+      <!-- Панель квестов и достижений (сворачиваемая) -->
+      <div class="game-progress-card" id="tanksQuestDrawer">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+          <div class="gp-title" style="margin:0;">📋 Ежедневные и сюжетные квесты · Очки: <b id="tanksMetaPoints">0</b></div>
+          <div id="tanksSkinsRow" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+        </div>
+        <div class="gp-bar-wrap"><div class="gp-bar" id="tanksGpBar"></div></div>
+        <div class="gp-quests" id="tanksQuestsList"></div>
+        <div id="tanksAchievementsRow" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;"></div>
+      </div>
+
+      <!-- Лобби и настройки матча -->
+      <div class="card" id="tanksLobbyPanel" style="margin-bottom:14px;padding:16px;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:12px;">
+          <div>
+            <label>Режим игры</label>
+            <select id="tanksPvpMode">
+              <option value="pve">🤖 Против ИИ-ботов</option>
+              <option value="local2p">👥 Локальный PvP (Сплит-экран)</option>
+              <option value="net">🌐 Сетевой PvP (WebSocket)</option>
+            </select>
+          </div>
+          <div>
+            <label>Формат матча</label>
+            <select id="tanksMatchFormat">
+              <option value="1v1">⚔️ Дуэль 1v1</option>
+              <option value="2v2">🛡 Командный бой 2v2</option>
+              <option value="tdm">🚩 Командный бой 3v3</option>
+              <option value="dm">💀 Deathmatch (Каждый сам за себя)</option>
+            </select>
+          </div>
+          <div>
+            <label>Сложность ИИ ботов</label>
+            <select id="tanksBotDiff">
+              <option value="easy">🟢 Easy (Новичок)</option>
+              <option value="normal" selected>🟡 Normal (Боец)</option>
+              <option value="hard">🟠 Hard (Ветеран)</option>
+              <option value="nightmare">🔴 Nightmare (Кошмар)</option>
+            </select>
+          </div>
+          <div>
+            <label>Карта (рандом без повторов)</label>
+            <select id="tanksMapSelect">
+              <option value="random">🎲 Случайная (не повторять прошлую)</option>
+              <option value="winter">❄️ Зимняя (Лёд и метель)</option>
+              <option value="summer">☀️ Летняя (Трава и пыль)</option>
+              <option value="autumn">🍂 Осенняя (Грязь и листья)</option>
+              <option value="desert">🏜 Пустыня (Песчаная буря)</option>
+              <option value="night">🌃 Ночь / Город (Свет и туман)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Сетевое WebSocket-лобби (показывается в режиме net) -->
+        <div id="tanksNetLobbyBox" style="display:none;background:var(--bg-soft);padding:12px;border-radius:12px;margin-bottom:12px;border:1px solid var(--border);">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <input type="text" id="tanksWsUrl" value="ws://localhost:8080" style="max-width:220px;" placeholder="ws://server:8080">
+            <button class="btn small" id="tanksCreateRoomBtn">➕ Создать комнату</button>
+            <input type="text" id="tanksRoomCodeInput" placeholder="Код комнаты (напр. A7K2)" style="max-width:170px;text-transform:uppercase;">
+            <button class="btn small secondary" id="tanksJoinRoomBtn">🔗 Войти по коду</button>
+            <span id="tanksNetStatus" style="font-size:.84rem;font-weight:700;color:var(--accent);">Офлайн</span>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+          <div style="font-size:.82rem;color:var(--text-soft);">
+            <b>Игрок 1:</b> WASD (корпус), Мышь / ←→ (башня), ЛКМ / Пробел (огонь), R (перезарядка), E (бонус), Shift (boost), Tab (счёт).
+            <span id="tanksP2Hint" style="display:none;"><br><b>Игрок 2 (Сплит-экран):</b> Стрелки ↑↓←→ (корпус), Numpad 4/6 или ,/. (башня), Enter / Numpad 0 (огонь), Right Shift (boost).</span>
+          </div>
+          <button class="btn" id="tanksStartMatchBtn">🚀 Начать бой!</button>
+        </div>
+      </div>
+
+      <!-- Игровой Canvas -->
+      <div style="position:relative;width:100%;display:flex;justify-content:center;">
+        <canvas id="tanksCanvas" width="960" height="600" style="width:100%;max-width:960px;border-radius:16px;border:2px solid var(--border);background:#12151f;cursor:crosshair;touch-action:none;"></canvas>
       </div>
     </div>
   </section>
@@ -3991,7 +4086,1777 @@ $$('#cardGameSwitch button').forEach(btn => {
 
   startNewDeal();
 })();
+  /**
+ * maps.js — Модуль карт для игры «Танки»
+ * Размер арены: 1600x1200 (25 x 19 тайлов по 64px).
+ * Чтобы добавить 6-ю карту — просто добавьте новый объект в массив TANK_MAPS.
+ */
+window.TANK_MAPS = (function () {
+  const TILE = 64;
+  const COLS = 25; // 25 * 64 = 1600
+  const ROWS = 19; // 19 * 64 = 1216 (~1200)
 
+  // Типы тайлов поверхности:
+  // 0: стандартный грунт/асфальт
+  // 1: лёд (низкое трение, сильная инерция/скольжение)
+  // 2: грязь/лужа (сильное замедление)
+  // 3: песок (вязкость, среднее замедление)
+  // Типы объектов:
+  // 'wall': неразрушаемая стена
+  // 'brick': разрушаемый блок (HP = 60)
+  // 'bush': маскировочный куст (скрывает танк внутри)
+
+  function createGrid(fill = 0) {
+    return Array.from({ length: ROWS }, () => Array(COLS).fill(fill));
+  }
+
+  function buildMapData({ id, name, season, palette, weather, physics, light, layoutFn }) {
+    const tiles = createGrid(0);
+    const obstacles = [];
+    const decor = [];
+    layoutFn({ tiles, obstacles, decor, COLS, ROWS, TILE });
+    return {
+      id,
+      name,
+      season,
+      tileSize: TILE,
+      width: COLS * TILE,
+      height: ROWS * TILE,
+      cols: COLS,
+      rows: ROWS,
+      palette,
+      weather,   // { type, density, windX, windY, fogRadius }
+      physics,   // { baseFriction, accelMult, maxSpeedMult }
+      light,     // { ambientTint, nightMode, streetLights }
+      tiles,
+      obstacles,
+      decor,
+      spawns: {
+        blue: [
+          { x: 140, y: 200, angle: 0 },
+          { x: 140, y: 600, angle: 0 },
+          { x: 140, y: 1000, angle: 0 }
+        ],
+        red: [
+          { x: 1460, y: 200, angle: Math.PI },
+          { x: 1460, y: 600, angle: Math.PI },
+          { x: 1460, y: 1000, angle: Math.PI }
+        ],
+        dm: [
+          { x: 160, y: 180, angle: 0 },
+          { x: 1440, y: 180, angle: Math.PI },
+          { x: 160, y: 1020, angle: 0 },
+          { x: 1440, y: 1020, angle: Math.PI },
+          { x: 800, y: 180, angle: Math.PI / 2 },
+          { x: 800, y: 1020, angle: -Math.PI / 2 }
+        ]
+      }
+    };
+  }
+
+  return [
+    // 1. ЗИМНЯЯ КАРТА
+    buildMapData({
+      id: 'winter',
+      name: 'Зимняя: Ледяной перевал',
+      season: 'winter',
+      palette: {
+        ground: '#dce9f5',
+        groundAlt: '#cfe0f0',
+        specialTile: '#9ed8ff', // Лёд
+        wall: '#52687a',
+        brick: '#8bb8d8',
+        bush: '#e8f4fc',
+        trackColor: 'rgba(110, 145, 175, 0.35)'
+      },
+      weather: { type: 'snow', density: 130, windX: -45, windY: 95, fogRadius: 0 },
+      physics: { baseFriction: 0.96, accelMult: 0.85, maxSpeedMult: 1.15 }, // Скольжение на льду
+      light: { ambientTint: 'rgba(130, 190, 255, 0.14)', nightMode: false, streetLights: [] },
+      layoutFn({ tiles, obstacles, decor }) {
+        // Ледяное озеро в центре
+        for (let r = 5; r <= 13; r++) {
+          for (let c = 8; c <= 16; c++) tiles[r][c] = 1;
+        }
+        // Укрытия из ледяных глыб (brick) и скал (wall)
+        const walls = [[3,5],[3,19],[15,5],[15,19],[9,4],[9,20],[6,12],[12,12]];
+        walls.forEach(([r, c]) => obstacles.push({ c, r, type: 'wall', hp: Infinity }));
+        const bricks = [[4,8],[4,16],[14,8],[14,16],[8,10],[10,14],[7,7],[11,17]];
+        bricks.forEach(([r, c]) => obstacles.push({ c, r, type: 'brick', hp: 60, maxHp: 60 }));
+        // Заснеженные ёлки и кусты маскировки
+        [[2,10],[2,14],[16,10],[16,14],[9,7],[9,17]].forEach(([r, c]) => {
+          obstacles.push({ c, r, type: 'bush', hp: Infinity });
+          decor.push({ x: c * TILE + 32, y: r * TILE + 32, kind: 'pine_snow' });
+        });
+      }
+    }),
+
+    // 2. ЛЕТНЯЯ КАРТА
+    buildMapData({
+      id: 'summer',
+      name: 'Летняя: Солнечный полигон',
+      season: 'summer',
+      palette: {
+        ground: '#5ea84f',
+        groundAlt: '#539945',
+        specialTile: '#e3c878', // Песчаные тропы
+        wall: '#5c5852',
+        brick: '#b85d3b',
+        bush: '#2d6e26',
+        trackColor: 'rgba(70, 55, 35, 0.28)'
+      },
+      weather: { type: 'dust', density: 45, windX: 25, windY: -10, fogRadius: 0 },
+      physics: { baseFriction: 0.90, accelMult: 1.0, maxSpeedMult: 1.0 },
+      light: { ambientTint: 'rgba(255, 215, 110, 0.10)', nightMode: false, streetLights: [] },
+      layoutFn({ tiles, obstacles, decor }) {
+        for (let c = 2; c < 23; c++) { tiles[9][c] = 3; tiles[4][c] = 3; tiles[14][c] = 3; }
+        [[5,6],[5,18],[13,6],[13,18],[9,12]].forEach(([r, c]) => obstacles.push({ c, r, type: 'wall', hp: Infinity }));
+        [[3,9],[3,15],[15,9],[15,15],[7,11],[11,13],[8,5],[10,19]].forEach(([r, c]) => {
+          obstacles.push({ c, r, type: 'brick', hp: 60, maxHp: 60 });
+        });
+        [[2,7],[2,17],[16,7],[16,17],[6,14],[12,10]].forEach(([r, c]) => {
+          obstacles.push({ c, r, type: 'bush', hp: Infinity });
+          decor.push({ x: c * TILE + 32, y: r * TILE + 32, kind: 'palm' });
+        });
+      }
+    }),
+
+    // 3. ОСЕННЯЯ КАРТА
+    buildMapData({
+      id: 'autumn',
+      name: 'Осенняя: Дождливая просека',
+      season: 'autumn',
+      palette: {
+        ground: '#8f6b3e',
+        groundAlt: '#805e35',
+        specialTile: '#4b3b2b', // Грязь и лужи
+        wall: '#4a4542',
+        brick: '#9e472a',
+        bush: '#c96b24',
+        trackColor: 'rgba(35, 25, 18, 0.38)'
+      },
+      weather: { type: 'leaves_rain', density: 110, windX: 55, windY: 120, fogRadius: 0 },
+      physics: { baseFriction: 0.84, accelMult: 0.72, maxSpeedMult: 0.78 }, // Грязь сильно замедляет
+      light: { ambientTint: 'rgba(210, 120, 40, 0.14)', nightMode: false, streetLights: [] },
+      layoutFn({ tiles, obstacles, decor }) {
+        // Грязевые топи и лужи
+        for (let r = 3; r <= 15; r += 3) {
+          for (let c = 5; c <= 19; c += 2) tiles[r][c] = 2;
+        }
+        [[4,7],[4,17],[14,7],[14,17],[9,9],[9,15]].forEach(([r, c]) => obstacles.push({ c, r, type: 'wall', hp: Infinity }));
+        [[6,5],[12,5],[6,19],[12,19],[7,12],[11,12]].forEach(([r, c]) => {
+          obstacles.push({ c, r, type: 'brick', hp: 60, maxHp: 60 });
+        });
+        [[2,12],[16,12],[5,11],[13,13]].forEach(([r, c]) => {
+          obstacles.push({ c, r, type: 'bush', hp: Infinity });
+          decor.push({ x: c * TILE + 32, y: r * TILE + 32, kind: 'dry_tree' });
+        });
+      }
+    }),
+
+    // 4. ПУСТЫНЯ
+    buildMapData({
+      id: 'desert',
+      name: 'Пустыня: Песчаный каньон',
+      season: 'desert',
+      palette: {
+        ground: '#e2bd74',
+        groundAlt: '#d6b065',
+        specialTile: '#cfa252', // Зыбучие дюны
+        wall: '#8c6239',
+        brick: '#b88246',
+        bush: '#6c8c3e',
+        trackColor: 'rgba(130, 95, 45, 0.3)'
+      },
+      weather: { type: 'sandstorm', density: 160, windX: -140, windY: 25, fogRadius: 430 }, // Буря ухудшает обзор
+      physics: { baseFriction: 0.87, accelMult: 0.82, maxSpeedMult: 0.86 }, // Вязкий песок
+      light: { ambientTint: 'rgba(245, 185, 85, 0.18)', nightMode: false, streetLights: [] },
+      layoutFn({ tiles, obstacles, decor }) {
+        for (let r = 2; r < 17; r++) {
+          for (let c = 6; c < 19; c++) if ((r + c) % 3 === 0) tiles[r][c] = 3;
+        }
+        [[3,8],[3,16],[15,8],[15,16],[9,6],[9,18],[9,12]].forEach(([r, c]) => obstacles.push({ c, r, type: 'wall', hp: Infinity }));
+        [[6,9],[6,15],[12,9],[12,15],[8,11],[10,13]].forEach(([r, c]) => {
+          obstacles.push({ c, r, type: 'brick', hp: 60, maxHp: 60 });
+        });
+        [[4,12],[14,12],[7,4],[11,20]].forEach(([r, c]) => {
+          obstacles.push({ c, r, type: 'bush', hp: Infinity });
+          decor.push({ x: c * TILE + 32, y: r * TILE + 32, kind: 'cactus' });
+        });
+      }
+    }),
+
+    // 5. НОЧЬ / ГОРОД
+    buildMapData({
+      id: 'night',
+      name: 'Ночь / Город: Неоновый квартал',
+      season: 'night',
+      palette: {
+        ground: '#262936',
+        groundAlt: '#212430',
+        specialTile: '#323647', // Асфальтовые проспекты
+        wall: '#161822',        // Бетонные здания
+        brick: '#5c4b51',       // Баррикады
+        bush: '#1f4235',
+        trackColor: 'rgba(15, 17, 24, 0.45)'
+      },
+      weather: { type: 'sparks', density: 55, windX: 12, windY: -35, fogRadius: 360 }, // Туман войны + фонари
+      physics: { baseFriction: 0.92, accelMult: 1.08, maxSpeedMult: 1.08 }, // Быстрый асфальт
+      light: {
+        ambientTint: 'rgba(10, 14, 30, 0.68)',
+        nightMode: true,
+        streetLights: [
+          { x: 350, y: 260, r: 210 },
+          { x: 1250, y: 260, r: 210 },
+          { x: 800, y: 600, r: 260 },
+          { x: 350, y: 940, r: 210 },
+          { x: 1250, y: 940, r: 210 }
+        ]
+      },
+      layoutFn({ tiles, obstacles, decor }) {
+        for (let c = 1; c < 24; c++) { tiles[4][c] = 3; tiles[9][c] = 3; tiles[14][c] = 3; }
+        for (let r = 1; r < 18; r++) { tiles[r][6] = 3; tiles[r][12] = 3; tiles[r][18] = 3; }
+        // Городские кварталы (стены) и разрушаемые баррикады
+        [[2,4],[2,8],[2,16],[2,20],[6,8],[6,16],[12,8],[12,16],[16,4],[16,8],[16,16],[16,20]].forEach(([r, c]) => {
+          obstacles.push({ c, r, type: 'wall', hp: Infinity });
+        });
+        [[7,10],[7,14],[11,10],[11,14],[9,5],[9,19]].forEach(([r, c]) => {
+          obstacles.push({ c, r, type: 'brick', hp: 60, maxHp: 60 });
+        });
+        [[5,12],[13,12]].forEach(([r, c]) => obstacles.push({ c, r, type: 'bush', hp: Infinity }));
+      }
+    })
+  ];
+})();
+  window.TankAudio = (function () {
+  let ctx = null;
+  let muted = false;
+  let ambienceNode = null;
+
+  function ensureCtx() {
+    if (!ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) ctx = new AudioCtx();
+    }
+    if (ctx && ctx.state === 'suspended') ctx.resume();
+  }
+
+  function playShot(isBig = false) {
+    if (muted) return;
+    ensureCtx();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(isBig ? 140 : 190, now);
+    osc.frequency.exponentialRampToValueAtTime(32, now + 0.18);
+    gain.gain.setValueAtTime(0.22, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.19);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.2);
+  }
+
+  function playExplosion(big = false) {
+    if (muted) return;
+    ensureCtx();
+    if (!ctx) return;
+    const dur = big ? 0.55 : 0.22;
+    const bufferSize = ctx.sampleRate * dur;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.35));
+
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = big ? 280 : 520;
+    const gain = ctx.createGain();
+    gain.gain.value = big ? 0.35 : 0.18;
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    noise.start();
+  }
+
+  function playBonus() {
+    if (muted) return;
+    ensureCtx();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(440, now);
+    osc.frequency.setValueAtTime(660, now + 0.08);
+    gain.gain.setValueAtTime(0.14, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.23);
+  }
+
+  function setSeasonAmbience(season) {
+    stopAmbience();
+    if (muted) return;
+    ensureCtx();
+    if (!ctx) return;
+    const bufferSize = ctx.sampleRate * 2;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+    const src = ctx.createBufferSource();
+    src.buffer = buffer;
+    src.loop = true;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = season === 'winter' ? 420 : season === 'autumn' ? 950 : 260;
+    filter.Q.value = season === 'winter' ? 2.5 : 0.8;
+
+    const gain = ctx.createGain();
+    gain.gain.value = season === 'night' ? 0.012 : 0.025;
+
+    src.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    src.start();
+    ambienceNode = src;
+  }
+
+  function stopAmbience() {
+    if (ambienceNode) {
+      try { ambienceNode.stop(); } catch {}
+      ambienceNode = null;
+    }
+  }
+
+  return { playShot, playExplosion, playBonus, setSeasonAmbience, stopAmbience };
+})();
+  window.TanksModule = (function () {
+  /* ===================== 1. КОНФИГ УПРАВЛЕНИЯ И ИИ ===================== */
+  const CONTROLS_CONFIG = {
+    p1: {
+      up: 'KeyW',
+      down: 'KeyS',
+      left: 'KeyA',
+      right: 'KeyD',
+      turretLeft: 'ArrowLeft',
+      turretRight: 'ArrowRight',
+      fire: 'Space',
+      reload: 'KeyR',
+      useBonus: 'KeyE',
+      boost: 'ShiftLeft'
+    },
+    p2: {
+      up: 'ArrowUp',
+      down: 'ArrowDown',
+      left: 'ArrowLeft',
+      right: 'ArrowRight',
+      turretLeft: 'Comma',      // клавиша '<' / 'Б'
+      turretRight: 'Period',    // клавиша '>' / 'Ю'
+      fire: 'Enter',
+      reload: 'NumpadDecimal',
+      useBonus: 'NumpadAdd',
+      boost: 'ShiftRight'
+    },
+    system: {
+      scoreboard: 'Tab',
+      pause: 'Escape'
+    }
+  };
+
+  const AI_DIFFICULTY_CONFIG = {
+    easy:      { reactionTime: 0.75, aimError: 0.26, aggression: 0.45, dodgeChance: 0.05, retreatHP: 0.15, useCover: false, predictShot: false },
+    normal:    { reactionTime: 0.40, aimError: 0.11, aggression: 0.68, dodgeChance: 0.30, retreatHP: 0.28, useCover: true,  predictShot: true  },
+    hard:      { reactionTime: 0.20, aimError: 0.045, aggression: 0.85, dodgeChance: 0.62, retreatHP: 0.38, useCover: true,  predictShot: true  },
+    nightmare: { reactionTime: 0.07, aimError: 0.012, aggression: 0.96, dodgeChance: 0.88, retreatHP: 0.45, useCover: true,  predictShot: true  }
+  };
+
+  const SKINS = [
+    { id: 'standard', name: 'Стандарт', cost: 0, accent: '#4da6ff' },
+    { id: 'neon',     name: 'Неон Кибер', cost: 100, accent: '#00f5d4' },
+    { id: 'gold',     name: 'Золотая Броня', cost: 250, accent: '#ffd166' },
+    { id: 'stealth',  name: 'Тёмный Фантом', cost: 400, accent: '#b5a0e8' }
+  ];
+
+  const QUEST_DEFS = [
+    { id: 'q_kills',   type: 'daily', text: 'Уничтожь 5 вражеских танков', target: 5, reward: 80 },
+    { id: 'q_streak',  type: 'story', text: 'Попади 4 раза подряд без промаха', target: 4, reward: 120 },
+    { id: 'q_bonuses', type: 'daily', text: 'Собери 4 боевых бонуса', target: 4, reward: 60 },
+    { id: 'q_boost',   type: 'daily', text: 'Используй ускорение (Boost) 6 раз', target: 6, reward: 50 },
+    { id: 'q_winter',  type: 'story', text: 'Победи на Зимней карте', target: 1, reward: 150 },
+    { id: 'q_flawless',type: 'story', text: 'Выиграй матч, не потеряв ни одной жизни', target: 1, reward: 200 }
+  ];
+
+  const ACHIEVEMENTS = [
+    { id: 'a_first_blood', icon: '🎯', title: 'Первая кровь', desc: 'Уничтожен первый танк' },
+    { id: 'a_sharpshooter',icon: '🦅', title: 'Снайпер', desc: '4 попадания подряд без промаха' },
+    { id: 'a_ice_king',    icon: '❄️', title: 'Покоритель льда', desc: 'Победа на Зимней карте' },
+    { id: 'a_untouchable', icon: '🛡', title: 'Неуязвимый', desc: 'Матч пройден без урона' }
+  ];
+
+  /* ===================== 2. СОСТОЯНИЕ ДВИЖКА И СОХРАНЕНИЯ ===================== */
+  let canvas, ctx;
+  let animId = null;
+  let lastFrameTime = 0;
+  let lastMapId = null;
+  let currentMap = null;
+
+  // Состояния матча: 'lobby' | 'countdown' | 'playing' | 'paused' | 'gameover'
+  let matchState = 'lobby';
+  let countdownTimer = 0;
+  let matchTime = 0;
+  let winnerText = '';
+
+  let tanks = [];
+  let bullets = [];
+  let bonuses = [];
+  let particles = [];
+  let tracks = [];
+  let weatherParticles = [];
+  let bonusSpawnTimer = 0;
+
+  const keys = {};
+  const mouse = { x: 480, y: 300, down: false };
+
+  // Сетевой клиент (WebSocket)
+  const net = {
+    ws: null,
+    connected: false,
+    roomCode: '',
+    myPlayerId: null,
+    serverSnapshots: []
+  };
+
+  function getMeta() {
+    return LS.get('mw_tanks_meta', {
+      points: 0,
+      selectedSkin: 'standard',
+      unlockedSkins: ['standard'],
+      quests: QUEST_DEFS.map(q => ({ id: q.id, progress: 0, done: false })),
+      achievements: []
+    });
+  }
+  function saveMeta(meta) {
+    LS.set('mw_tanks_meta', meta);
+    renderMetaUI();
+  }
+
+  function addQuestEvent(questId, amount = 1, isAbsolute = false) {
+    const meta = getMeta();
+    const def = QUEST_DEFS.find(q => q.id === questId);
+    const st = meta.quests.find(q => q.id === questId);
+    if (!def || !st || st.done) return;
+    st.progress = isAbsolute ? Math.max(st.progress, amount) : st.progress + amount;
+    if (st.progress >= def.target) {
+      st.progress = def.target;
+      st.done = true;
+      meta.points += def.reward;
+      toast(`🏆 Квест выполнен: ${def.text} (+${def.reward} очков!)`);
+    }
+    saveMeta(meta);
+  }
+
+  function unlockAchievement(achId) {
+    const meta = getMeta();
+    if (meta.achievements.includes(achId)) return;
+    meta.achievements.push(achId);
+    const ach = ACHIEVEMENTS.find(a => a.id === achId);
+    if (ach) toast(`🎖 Достижение: ${ach.icon} ${ach.title}!`);
+    saveMeta(meta);
+  }
+
+  function renderMetaUI() {
+    const meta = getMeta();
+    const ptsEl = $('#tanksMetaPoints');
+    if (ptsEl) ptsEl.textContent = meta.points;
+
+    const doneCount = meta.quests.filter(q => q.done).length;
+    const bar = $('#tanksGpBar');
+    if (bar) bar.style.width = ((doneCount / QUEST_DEFS.length) * 100) + '%';
+
+    const qList = $('#tanksQuestsList');
+    if (qList) {
+      qList.innerHTML = QUEST_DEFS.map(def => {
+        const st = meta.quests.find(q => q.id === def.id) || { progress: 0, done: false };
+        return `<div class="${st.done ? 'q-done' : ''}">
+          ${st.done ? '✅' : '🎯'} [${def.type === 'daily' ? 'Ежедневный' : 'Сюжет'}] ${def.text} — <b>${st.progress}/${def.target}</b> (+${def.reward} очк.)
+        </div>`;
+      }).join('');
+    }
+
+    const skinsRow = $('#tanksSkinsRow');
+    if (skinsRow) {
+      skinsRow.innerHTML = SKINS.map(sk => {
+        const unlocked = meta.unlockedSkins.includes(sk.id);
+        const active = meta.selectedSkin === sk.id;
+        return `<button class="diff-btn ${active ? 'active' : ''}" data-skin="${sk.id}" style="padding:4px 10px;font-size:.75rem;">
+          ${unlocked ? (active ? '✓ ' : '') + sk.name : `🔒 ${sk.name} (${sk.cost})`}
+        </button>`;
+      }).join('');
+      $$('button[data-skin]', skinsRow).forEach(btn => {
+        btn.onclick = () => {
+          const sk = SKINS.find(s => s.id === btn.dataset.skin);
+          const m = getMeta();
+          if (m.unlockedSkins.includes(sk.id)) {
+            m.selectedSkin = sk.id;
+            saveMeta(m);
+          } else if (m.points >= sk.cost) {
+            m.points -= sk.cost;
+            m.unlockedSkins.push(sk.id);
+            m.selectedSkin = sk.id;
+            saveMeta(m);
+            toast(`🎨 Скин «${sk.name}» разблокирован!`);
+          } else {
+            toast(`Недостаточно очков (нужно ${sk.cost})`);
+          }
+        };
+      });
+    }
+
+    const achRow = $('#tanksAchievementsRow');
+    if (achRow) {
+      achRow.innerHTML = ACHIEVEMENTS.map(a => {
+        const has = meta.achievements.includes(a.id);
+        return `<span title="${a.desc}" style="padding:3px 10px;border-radius:999px;font-size:.75rem;border:1px solid var(--border);opacity:${has ? 1 : 0.42};background:var(--surface);">
+          ${a.icon} ${a.title}
+        </span>`;
+      }).join('');
+    }
+  }
+
+  /* ===================== 3. ВСПОМОГАТЕЛЬНАЯ МАТЕМАТИКА И A* PATHFINDING ===================== */
+  function normalizeAngle(a) {
+    while (a > Math.PI) a -= Math.PI * 2;
+    while (a < -Math.PI) a += Math.PI * 2;
+    return a;
+  }
+
+  function lerpAngle(current, target, maxStep) {
+    const diff = normalizeAngle(target - current);
+    if (Math.abs(diff) <= maxStep) return target;
+    return current + Math.sign(diff) * maxStep;
+  }
+
+  function circleRectCollide(cx, cy, cr, rx, ry, rw, rh) {
+    const closestX = Math.max(rx, Math.min(cx, rx + rw));
+    const closestY = Math.max(ry, Math.min(cy, ry + rh));
+    const dx = cx - closestX;
+    const dy = cy - closestY;
+    return (dx * dx + dy * dy) < (cr * cr);
+  }
+
+  // Простой сеточный A* для объезда стен ботами
+  function findNextWaypointAStar(startX, startY, goalX, goalY) {
+    const T = currentMap.tileSize;
+    const sc = Math.max(0, Math.min(currentMap.cols - 1, Math.floor(startX / T)));
+    const sr = Math.max(0, Math.min(currentMap.rows - 1, Math.floor(startY / T)));
+    const gc = Math.max(0, Math.min(currentMap.cols - 1, Math.floor(goalX / T)));
+    const gr = Math.max(0, Math.min(currentMap.rows - 1, Math.floor(goalY / T)));
+    if (sc === gc && sr === gr) return { x: goalX, y: goalY };
+
+    const blocked = new Set();
+    currentMap.obstacles.forEach(o => {
+      if (o.type === 'wall' || o.type === 'brick') blocked.add(`${o.c},${o.r}`);
+    });
+
+    const open = [{ c: sc, r: sr, g: 0, f: Math.hypot(gc - sc, gr - sr), parent: null }];
+    const closed = new Set();
+    let bestNode = open[0];
+    let steps = 0;
+
+    while (open.length > 0 && steps++ < 180) {
+      open.sort((a, b) => a.f - b.f);
+      const cur = open.shift();
+      const key = `${cur.c},${cur.r}`;
+      if (closed.has(key)) continue;
+      closed.add(key);
+      if (Math.hypot(gc - cur.c, gr - cur.r) < Math.hypot(gc - bestNode.c, gr - bestNode.r)) bestNode = cur;
+      if (cur.c === gc && cur.r === gr) { bestNode = cur; break; }
+
+      for (const [dc, dr] of [[1,0],[-1,0],[0,1],[0,-1]]) {
+        const nc = cur.c + dc, nr = cur.r + dr;
+        if (nc < 0 || nc >= currentMap.cols || nr < 0 || nr >= currentMap.rows) continue;
+        const nKey = `${nc},${nr}`;
+        if (closed.has(nKey) || blocked.has(nKey)) continue;
+        const g = cur.g + 1;
+        const h = Math.hypot(gc - nc, gr - nr);
+        open.push({ c: nc, r: nr, g, f: g + h, parent: cur });
+      }
+    }
+
+    let stepNode = bestNode;
+    while (stepNode.parent && stepNode.parent.parent) stepNode = stepNode.parent;
+    return { x: stepNode.c * T + T / 2, y: stepNode.r * T + T / 2 };
+  }
+
+  /* ===================== 4. СОЗДАНИЕ ТАНКА И ФИЗИКА ===================== */
+  function createTank({ id, name, team, x, y, angle, isPlayer = false, playerIndex = 0, aiDiff = 'normal', skin = 'standard' }) {
+    return {
+      id,
+      name,
+      team, // 'blue' | 'red'
+      x,
+      y,
+      vx: 0,
+      vy: 0,
+      radius: 22,
+      bodyAngle: angle,
+      turretAngle: angle,
+      trackOffset: 0,
+      antennaPhase: Math.random() * Math.PI * 2,
+      recoilOffset: 0,
+      muzzleFlash: 0,
+      hp: 100,
+      maxHp: 100,
+      shieldTimer: 0,
+      damageBoostTimer: 0,
+      heldBonus: null, // 'repair' | 'shield' | 'rapid'
+      energy: 100,     // Топливо для Boost (Shift)
+      maxEnergy: 100,
+      boosting: false,
+      ammo: 5,
+      maxAmmo: 5,
+      fireCooldown: 0,
+      reloadTimer: 0,
+      isReloading: false,
+      kills: 0,
+      deaths: 0,
+      hitStreak: 0,
+      tookDamageThisMatch: false,
+      respawnTimer: 0,
+      hiddenInBush: false,
+      isPlayer,
+      playerIndex,
+      skin,
+      // Поля конечного автомата ИИ (FSM)
+      ai: {
+        cfg: AI_DIFFICULTY_CONFIG[aiDiff] || AI_DIFFICULTY_CONFIG.normal,
+        state: 'patrol', // 'patrol' | 'chase' | 'attack' | 'retreat' | 'collect'
+        thinkTimer: 0,
+        waypoint: null
+      }
+    };
+  }
+
+  function getSurfaceAt(x, y) {
+    const c = Math.max(0, Math.min(currentMap.cols - 1, Math.floor(x / currentMap.tileSize)));
+    const r = Math.max(0, Math.min(currentMap.rows - 1, Math.floor(y / currentMap.tileSize)));
+    return currentMap.tiles[r][c];
+  }
+
+  function updateTankPhysics(tank, input, dt) {
+    if (tank.respawnTimer > 0) {
+      tank.respawnTimer -= dt;
+      if (tank.respawnTimer <= 0) {
+        const list = currentMap.spawns[tank.team] || currentMap.spawns.dm;
+        const sp = list[Math.floor(Math.random() * list.length)];
+        tank.x = sp.x; tank.y = sp.y; tank.vx = 0; tank.vy = 0;
+        tank.hp = tank.maxHp; tank.ammo = tank.maxAmmo; tank.isReloading = false;
+        tank.shieldTimer = 2.5;
+      }
+      return;
+    }
+
+    // Таймеры эффектов и перезарядки
+    if (tank.shieldTimer > 0) tank.shieldTimer -= dt;
+    if (tank.damageBoostTimer > 0) tank.damageBoostTimer -= dt;
+    if (tank.fireCooldown > 0) tank.fireCooldown -= dt;
+    if (tank.recoilOffset > 0) tank.recoilOffset = Math.max(0, tank.recoilOffset - 38 * dt);
+    if (tank.muzzleFlash > 0) tank.muzzleFlash = Math.max(0, tank.muzzleFlash - dt);
+
+    if (tank.isReloading) {
+      tank.reloadTimer -= dt;
+      if (tank.reloadTimer <= 0) {
+        tank.ammo = tank.maxAmmo;
+        tank.isReloading = false;
+      }
+    } else if (input.reload && tank.ammo < tank.maxAmmo) {
+      tank.isReloading = true;
+      tank.reloadTimer = 1.4;
+    }
+
+    // Использование активного бонуса на клавишу E
+    if (input.useBonus && tank.heldBonus) {
+      if (tank.heldBonus === 'repair') {
+        tank.hp = Math.min(tank.maxHp, tank.hp + 45);
+        spawnParticles(tank.x, tank.y, '#6dbf9a', 14);
+      } else if (tank.heldBonus === 'shield') {
+        tank.shieldTimer = 6.0;
+      } else if (tank.heldBonus === 'rapid') {
+        tank.damageBoostTimer = 6.0;
+        tank.ammo = tank.maxAmmo;
+        tank.isReloading = false;
+      }
+      if (tank.isPlayer && tank.playerIndex === 0) window.TankAudio.playBonus();
+      tank.heldBonus = null;
+    }
+
+    // Влияние поверхности тайла на физику
+    const tileType = getSurfaceAt(tank.x, tank.y);
+    let friction = currentMap.physics.baseFriction;
+    let speedMult = currentMap.physics.maxSpeedMult;
+    let accelMult = currentMap.physics.accelMult;
+    if (tileType === 1) { friction = 0.985; speedMult = 1.22; accelMult = 0.65; } // Лёд
+    if (tileType === 2) { friction = 0.80;  speedMult = 0.68; accelMult = 0.68; } // Грязь
+    if (tileType === 3) { friction = 0.88;  speedMult = 0.92; accelMult = 0.90; } // Песок
+
+    // Ускорение (Boost) с расходом энергии
+    const wasBoosting = tank.boosting;
+    if (input.boost && tank.energy > 5 && (input.throttle !== 0)) {
+      tank.boosting = true;
+      tank.energy = Math.max(0, tank.energy - 34 * dt);
+      if (!wasBoosting && tank.isPlayer && tank.playerIndex === 0) addQuestEvent('q_boost', 1);
+    } else {
+      tank.boosting = false;
+      tank.energy = Math.min(tank.maxEnergy, tank.energy + 18 * dt);
+    }
+
+    const boostMult = tank.boosting ? 1.55 : 1.0;
+
+    // Плавный поворот корпуса
+    const turnSpeed = 2.6 * dt;
+    tank.bodyAngle = normalizeAngle(tank.bodyAngle + input.turn * turnSpeed);
+
+    // Инерционное движение вперёд/назад
+    const accel = 420 * accelMult * boostMult;
+    const forwardX = Math.cos(tank.bodyAngle);
+    const forwardY = Math.sin(tank.bodyAngle);
+
+    tank.vx += forwardX * input.throttle * accel * dt;
+    tank.vy += forwardY * input.throttle * accel * dt;
+
+    // Подавление бокового заноса (меньше на льду, сильнее на асфальте)
+    const sideX = -forwardY, sideY = forwardX;
+    const lateralSpeed = tank.vx * sideX + tank.vy * sideY;
+    const grip = tileType === 1 ? 0.04 : 0.22;
+    tank.vx -= sideX * lateralSpeed * grip;
+    tank.vy -= sideY * lateralSpeed * grip;
+
+    // Трение и ограничение максимальной скорости
+    tank.vx *= Math.pow(friction, dt * 60);
+    tank.vy *= Math.pow(friction, dt * 60);
+
+    const maxSpeed = 235 * speedMult * boostMult;
+    const curSpeed = Math.hypot(tank.vx, tank.vy);
+    if (curSpeed > maxSpeed) {
+      tank.vx = (tank.vx / curSpeed) * maxSpeed;
+      tank.vy = (tank.vy / curSpeed) * maxSpeed;
+    }
+
+    // Анимация гусениц, антенны и следов
+    tank.trackOffset = (tank.trackOffset + curSpeed * dt * 0.6) % 12;
+    tank.antennaPhase += (2.5 + curSpeed * 0.04) * dt;
+    if (curSpeed > 35 && Math.random() < 0.38) {
+      tracks.push({ x: tank.x, y: tank.y, angle: tank.bodyAngle, life: 4.5, maxLife: 4.5 });
+      const dustColor = currentMap.season === 'winter' ? '#ffffff' : currentMap.season === 'desert' ? '#e8c47c' : '#8c7d6b';
+      spawnParticles(tank.x - forwardX * 20, tank.y - forwardY * 20, dustColor, 1);
+    }
+
+    // Движение с проверкой коллизий со стенами и границами арены
+    const nextX = Math.max(28, Math.min(currentMap.width - 28, tank.x + tank.vx * dt));
+    if (!collidesWithObstacles(nextX, tank.y, tank.radius)) tank.x = nextX;
+    else tank.vx *= -0.25;
+
+    const nextY = Math.max(28, Math.min(currentMap.height - 28, tank.y + tank.vy * dt));
+    if (!collidesWithObstacles(tank.x, nextY, tank.radius)) tank.y = nextY;
+    else tank.vy *= -0.25;
+
+    // Проверка маскировки в кустах
+    tank.hiddenInBush = currentMap.obstacles.some(o =>
+      o.type === 'bush' && circleRectCollide(tank.x, tank.y, 12, o.c * 64, o.r * 64, 64, 64)
+    );
+
+    // Плавное вращение башни (к цели мыши или клавишами)
+    if (input.targetTurretAngle !== null && input.targetTurretAngle !== undefined) {
+      tank.turretAngle = lerpAngle(tank.turretAngle, input.targetTurretAngle, 4.8 * dt);
+    } else if (input.turretTurn) {
+      tank.turretAngle = normalizeAngle(tank.turretAngle + input.turretTurn * 3.4 * dt);
+    }
+
+    // Выстрел
+    if (input.fire && tank.fireCooldown <= 0 && !tank.isReloading && tank.ammo > 0) {
+      fireTankWeapon(tank);
+    }
+  }
+
+  function collidesWithObstacles(x, y, r) {
+    const T = currentMap.tileSize;
+    for (const o of currentMap.obstacles) {
+      if (o.type === 'bush') continue;
+      if (circleRectCollide(x, y, r, o.c * T, o.r * T, T, T)) return true;
+    }
+    return false;
+  }
+
+  function fireTankWeapon(tank) {
+    tank.ammo -= 1;
+    tank.fireCooldown = tank.damageBoostTimer > 0 ? 0.28 : 0.55;
+    tank.recoilOffset = 8;
+    tank.muzzleFlash = 0.09;
+
+    if (tank.ammo === 0) {
+      tank.isReloading = true;
+      tank.reloadTimer = 1.4;
+    }
+
+    // Физическая отдача корпуса
+    tank.vx -= Math.cos(tank.turretAngle) * 32;
+    tank.vy -= Math.sin(tank.turretAngle) * 32;
+
+    const barrelLen = 34;
+    const bx = tank.x + Math.cos(tank.turretAngle) * barrelLen;
+    const by = tank.y + Math.sin(tank.turretAngle) * barrelLen;
+
+    bullets.push({
+      ownerId: tank.id,
+      team: tank.team,
+      x: bx,
+      y: by,
+      vx: Math.cos(tank.turretAngle) * 680,
+      vy: Math.sin(tank.turretAngle) * 680,
+      damage: tank.damageBoostTimer > 0 ? 45 : 28,
+      life: 2.2
+    });
+
+    spawnParticles(bx, by, '#ffd166', 6);
+    if (tank.isPlayer) window.TankAudio.playShot(tank.damageBoostTimer > 0);
+  }
+
+  /* ===================== 5. КОНЕЧНЫЙ АВТОМАТ ИИ (FSM) ===================== */
+  function updateBotAI(bot, dt) {
+    if (bot.respawnTimer > 0) return;
+    const cfg = bot.ai.cfg;
+    bot.ai.thinkTimer -= dt;
+
+    // Поиск ближайшего противника (учитывая маскировку в кустах)
+    let nearestEnemy = null;
+    let minEnemyDist = Infinity;
+    for (const other of tanks) {
+      if (other.id === bot.id || other.respawnTimer > 0) continue;
+      if (other.team === bot.team && other.team !== 'dm') continue;
+      const dist = Math.hypot(other.x - bot.x, other.y - bot.y);
+      if (other.hiddenInBush && dist > 165) continue; // В кустах танк не виден издалека
+      if (dist < minEnemyDist) { minEnemyDist = dist; nearestEnemy = other; }
+    }
+
+    // Поиск ближайшего бонуса
+    let nearestBonus = null;
+    let minBonusDist = Infinity;
+    for (const b of bonuses) {
+      const d = Math.hypot(b.x - bot.x, b.y - bot.y);
+      if (d < minBonusDist) { minBonusDist = d; nearestBonus = b; }
+    }
+
+    // Смена состояний конечного автомата (FSM)
+    if (bot.ai.thinkTimer <= 0) {
+      bot.ai.thinkTimer = cfg.reactionTime;
+      if (bot.hp / bot.maxHp <= cfg.retreatHP && nearestEnemy) {
+        bot.ai.state = 'retreat';
+      } else if (nearestBonus && minBonusDist < 360 && (cfg.useCover || bot.hp < 70)) {
+        bot.ai.state = 'collect';
+      } else if (nearestEnemy && minEnemyDist < 540) {
+        bot.ai.state = 'attack';
+      } else if (nearestEnemy) {
+        bot.ai.state = 'chase';
+      } else {
+        bot.ai.state = 'patrol';
+      }
+
+      // Расчёт точки маршрута через A*
+      if (bot.ai.state === 'collect' && nearestBonus) {
+        bot.ai.waypoint = findNextWaypointAStar(bot.x, bot.y, nearestBonus.x, nearestBonus.y);
+      } else if (bot.ai.state === 'retreat' && nearestEnemy) {
+        const awayX = Math.max(80, Math.min(currentMap.width - 80, bot.x + (bot.x - nearestEnemy.x)));
+        const awayY = Math.max(80, Math.min(currentMap.height - 80, bot.y + (bot.y - nearestEnemy.y)));
+        bot.ai.waypoint = findNextWaypointAStar(bot.x, bot.y, awayX, awayY);
+      } else if ((bot.ai.state === 'chase' || bot.ai.state === 'attack') && nearestEnemy) {
+        bot.ai.waypoint = findNextWaypointAStar(bot.x, bot.y, nearestEnemy.x, nearestEnemy.y);
+      } else if (!bot.ai.waypoint || Math.hypot(bot.ai.waypoint.x - bot.x, bot.ai.waypoint.y - bot.y) < 70) {
+        bot.ai.waypoint = {
+          x: 150 + Math.random() * (currentMap.width - 300),
+          y: 150 + Math.random() * (currentMap.height - 300)
+        };
+      }
+    }
+
+    // Формирование виртуального ввода для бота
+    const input = { throttle: 0, turn: 0, fire: false, boost: false, useBonus: Boolean(bot.heldBonus), targetTurretAngle: null };
+
+    // Уклонение от летящих снарядов (Nightmare / Hard)
+    let dodging = false;
+    if (Math.random() < cfg.dodgeChance) {
+      const threat = bullets.find(b => b.team !== bot.team && Math.hypot(b.x - bot.x, b.y - bot.y) < 210);
+      if (threat) {
+        const perpAngle = Math.atan2(threat.vy, threat.vx) + Math.PI / 2;
+        const diffA = normalizeAngle(perpAngle - bot.bodyAngle);
+        input.turn = Math.sign(diffA);
+        input.throttle = 1;
+        input.boost = cfg.aggression > 0.8;
+        dodging = true;
+      }
+    }
+
+    if (!dodging && bot.ai.waypoint) {
+      const desiredAngle = Math.atan2(bot.ai.waypoint.y - bot.y, bot.ai.waypoint.x - bot.x);
+      const angleDiff = normalizeAngle(desiredAngle - bot.bodyAngle);
+      if (Math.abs(angleDiff) > 0.14) input.turn = Math.sign(angleDiff);
+      if (bot.ai.state === 'attack' && minEnemyDist < 280) {
+        input.throttle = 0.25; // Плавное маневрирование в бою
+      } else {
+        input.throttle = Math.abs(angleDiff) < 1.1 ? 1 : 0.3;
+      }
+      if ((bot.ai.state === 'retreat' || bot.ai.state === 'chase') && cfg.aggression > 0.85) {
+        input.boost = true;
+      }
+    }
+
+    // Прицеливание башни с упреждением и погрешностью сложности
+    if (nearestEnemy) {
+      let aimX = nearestEnemy.x;
+      let aimY = nearestEnemy.y;
+      if (cfg.predictShot) {
+        const flightTime = minEnemyDist / 680;
+        aimX += nearestEnemy.vx * flightTime;
+        aimY += nearestEnemy.vy * flightTime;
+      }
+      const baseAim = Math.atan2(aimY - bot.y, aimX - bot.x);
+      const jitter = (Math.random() - 0.5) * cfg.aimError;
+      input.targetTurretAngle = baseAim + jitter;
+
+      if (Math.abs(normalizeAngle(baseAim - bot.turretAngle)) < 0.18 && minEnemyDist < 650) {
+        input.fire = true;
+      }
+    }
+
+    updateTankPhysics(bot, input, dt);
+  }
+
+  /* ===================== 6. ПРОЦЕДУРНАЯ ВЕКТОРНАЯ ОТРИСОВКА ТАНКА ===================== */
+  function drawTank(tank) {
+    if (tank.respawnTimer > 0) return;
+
+    ctx.save();
+    if (tank.hiddenInBush) ctx.globalAlpha = 0.52; // Полупрозрачность в маскировочном кусте
+    ctx.translate(tank.x, tank.y);
+
+    // 1. Свечение при Boost
+    if (tank.boosting) {
+      ctx.save();
+      ctx.shadowColor = '#00f5d4';
+      ctx.shadowBlur = 22;
+      ctx.fillStyle = 'rgba(0, 245, 212, 0.22)';
+      ctx.beginPath();
+      ctx.arc(0, 0, 32, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // 2. Энергощит
+    if (tank.shieldTimer > 0) {
+      ctx.strokeStyle = 'rgba(100, 210, 255, 0.85)';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(0, 0, 30, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    // 3. Корпус и анимированные гусеницы
+    ctx.save();
+    ctx.rotate(tank.bodyAngle);
+
+    // Тень под корпусом
+    ctx.fillStyle = 'rgba(0,0,0,0.34)';
+    ctx.beginPath();
+    ctx.roundRect(-24, -19, 50, 42, 8);
+    ctx.fill();
+
+    // Гусеницы (левая и правая) с анимированными сегментами
+    ctx.fillStyle = '#1f232b';
+    ctx.beginPath();
+    ctx.roundRect(-25, -22, 50, 8, 3);
+    ctx.roundRect(-25, 14, 50, 8, 3);
+    ctx.fill();
+
+    ctx.fillStyle = '#4b5262';
+    for (let gx = -22 + (tank.trackOffset % 8); gx < 22; gx += 8) {
+      ctx.fillRect(gx, -21, 4, 6);
+      ctx.fillRect(gx, 15, 4, 6);
+    }
+
+    // Металлический градиент корпуса
+    const isBlue = tank.team === 'blue';
+    const skinObj = SKINS.find(s => s.id === tank.skin);
+    const mainC1 = isBlue ? (tank.isPlayer && skinObj ? skinObj.accent : '#3a86ff') : '#e63946';
+    const mainC2 = isBlue ? '#1d4ed8' : '#9b1c26';
+
+    const hullGrad = ctx.createLinearGradient(-22, -16, 22, 16);
+    hullGrad.addColorStop(0, mainC1);
+    hullGrad.addColorStop(1, mainC2);
+
+    ctx.fillStyle = hullGrad;
+    ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(-22, -15, 44, 30, 7);
+    ctx.fill();
+    ctx.stroke();
+
+    // Номер на борту и флажок команды
+    ctx.fillStyle = 'rgba(255,255,255,0.88)';
+    ctx.font = 'bold 9px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(tank.id.toUpperCase(), -6, 3);
+
+    // Флаг команды на корме
+    ctx.fillStyle = isBlue ? '#60a5fa' : '#f87171';
+    ctx.fillRect(-20, -11, 7, 5);
+
+    // Качающаяся антенна
+    const antTipY = -12 + Math.sin(tank.antennaPhase) * 4;
+    ctx.strokeStyle = '#d1d5db';
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.moveTo(-16, -10);
+    ctx.lineTo(-26, antTipY);
+    ctx.stroke();
+
+    ctx.restore();
+
+    // 4. Независимая башня со стволом и дульным тормозом
+    ctx.save();
+    ctx.rotate(tank.turretAngle);
+
+    const recoil = tank.recoilOffset;
+    // Ствол с дульным тормозом
+    ctx.fillStyle = '#374151';
+    ctx.strokeStyle = '#9ca3af';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(8 - recoil, -3.5, 26, 7, 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Дульный тормоз на конце ствола
+    ctx.fillStyle = '#1f2937';
+    ctx.fillRect(30 - recoil, -5, 6, 10);
+
+    // Вспышка выстрела
+    if (tank.muzzleFlash > 0) {
+      ctx.fillStyle = '#fef08a';
+      ctx.beginPath();
+      ctx.arc(40 - recoil, 0, 10, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Купол башни
+    const turretGrad = ctx.createRadialGradient(-3, -3, 2, 0, 0, 15);
+    turretGrad.addColorStop(0, '#ffffff');
+    turretGrad.addColorStop(0.35, mainC1);
+    turretGrad.addColorStop(1, mainC2);
+
+    ctx.fillStyle = turretGrad;
+    ctx.beginPath();
+    ctx.arc(0, 0, 13, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+    ctx.stroke();
+
+    // Командирский люк
+    ctx.fillStyle = 'rgba(0,0,0,0.35)';
+    ctx.beginPath();
+    ctx.arc(-3, 3, 4.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+
+    // 5. Полоска HP, энергии и имя над танком
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.fillRect(-24, -36, 48, 5);
+    ctx.fillStyle = tank.hp > 35 ? '#4ade80' : '#f87171';
+    ctx.fillRect(-24, -36, 48 * (tank.hp / tank.maxHp), 5);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(tank.name, 0, -40);
+
+    ctx.restore();
+  }
+
+  /* ===================== 7. ЧАСТИЦЫ, ПОГОДА, АРЕНА И МИНИКАРТА ===================== */
+  function spawnParticles(x, y, color, count = 8) {
+    for (let i = 0; i < count; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const spd = 40 + Math.random() * 140;
+      particles.push({
+        x, y,
+        vx: Math.cos(a) * spd,
+        vy: Math.sin(a) * spd,
+        color,
+        size: 2.5 + Math.random() * 3.5,
+        life: 0.35 + Math.random() * 0.4,
+        maxLife: 0.75
+      });
+    }
+  }
+
+  function initWeatherParticles() {
+    weatherParticles = [];
+    for (let i = 0; i < currentMap.weather.density; i++) {
+      weatherParticles.push({
+        x: Math.random() * currentMap.width,
+        y: Math.random() * currentMap.height,
+        size: 2 + Math.random() * 3,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  function renderArenaViewport(camX, camY, vpW, vpH, focusTank) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(0, 0, vpW, vpH);
+    ctx.clip();
+
+    ctx.translate(-camX, -camY);
+
+    // 1. Отрисовка тайлов поверхности 64x64
+    const T = currentMap.tileSize;
+    for (let r = 0; r < currentMap.rows; r++) {
+      for (let c = 0; c < currentMap.cols; c++) {
+        const t = currentMap.tiles[r][c];
+        if (t !== 0) ctx.fillStyle = currentMap.palette.specialTile;
+        else ctx.fillStyle = (r + c) % 2 === 0 ? currentMap.palette.ground : currentMap.palette.groundAlt;
+        ctx.fillRect(c * T, r * T, T, T);
+      }
+    }
+
+    // 2. Следы от гусениц
+    for (const tr of tracks) {
+      ctx.save();
+      ctx.translate(tr.x, tr.y);
+      ctx.rotate(tr.angle);
+      ctx.fillStyle = currentMap.palette.trackColor;
+      ctx.globalAlpha = tr.life / tr.maxLife;
+      ctx.fillRect(-14, -18, 28, 4);
+      ctx.fillRect(-14, 14, 28, 4);
+      ctx.restore();
+    }
+
+    // 3. Стены и разрушаемые блоки
+    for (const o of currentMap.obstacles) {
+      if (o.type === 'bush') continue;
+      ctx.fillStyle = o.type === 'wall' ? currentMap.palette.wall : currentMap.palette.brick;
+      ctx.beginPath();
+      ctx.roundRect(o.c * T + 2, o.r * T + 2, T - 4, T - 4, 8);
+      ctx.fill();
+      if (o.type === 'brick') {
+        ctx.strokeStyle = 'rgba(0,0,0,0.35)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(o.c * T + 6, o.r * T + 6, T - 12, T - 12);
+      }
+    }
+
+    // 4. Бонусы на карте
+    for (const b of bonuses) {
+      ctx.fillStyle = b.color;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, 14, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 13px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(b.icon, b.x, b.y + 5);
+    }
+
+    // 5. Танки и снаряды
+    tanks.forEach(drawTank);
+
+    for (const bl of bullets) {
+      ctx.fillStyle = bl.team === 'blue' ? '#60a5fa' : '#f87171';
+      ctx.beginPath();
+      ctx.arc(bl.x, bl.y, 5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // 6. Кусты маскировки и сезонный декор поверх танков
+    for (const o of currentMap.obstacles) {
+      if (o.type !== 'bush') continue;
+      ctx.fillStyle = currentMap.palette.bush;
+      ctx.globalAlpha = 0.85;
+      ctx.beginPath();
+      ctx.arc(o.c * T + 32, o.r * T + 32, 30, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    for (const d of currentMap.decor) {
+      ctx.font = '26px sans-serif';
+      ctx.textAlign = 'center';
+      const icon = d.kind === 'pine_snow' ? '🎄' : d.kind === 'palm' ? '🌴' : d.kind === 'dry_tree' ? '🍂' : '🌵';
+      ctx.fillText(icon, d.x, d.y + 8);
+    }
+
+    // 7. Частицы взрывов и погоды
+    for (const p of particles) {
+      ctx.globalAlpha = Math.max(0, p.life / p.maxLife);
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    for (const wp of weatherParticles) {
+      ctx.fillStyle = currentMap.weather.type === 'snow' ? 'rgba(255,255,255,0.85)'
+        : currentMap.weather.type === 'leaves_rain' ? '#e67e22'
+        : currentMap.weather.type === 'sandstorm' ? 'rgba(235, 195, 115, 0.65)'
+        : 'rgba(255,255,255,0.45)';
+      ctx.beginPath();
+      ctx.arc(wp.x, wp.y, wp.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.restore();
+
+    // 8. Сезонное освещение, ночной туман войны и уличные фонари
+    if (currentMap.light.nightMode && focusTank) {
+      const fogCanvas = document.createElement('canvas');
+      fogCanvas.width = vpW; fogCanvas.height = vpH;
+      const fctx = fogCanvas.getContext('2d');
+      fctx.fillStyle = 'rgba(8, 12, 24, 0.84)';
+      fctx.fillRect(0, 0, vpW, vpH);
+      fctx.globalCompositeOperation = 'destination-out';
+
+      // Фара вокруг танка игрока
+      const px = focusTank.x - camX, py = focusTank.y - camY;
+      const g1 = fctx.createRadialGradient(px, py, 60, px, py, currentMap.weather.fogRadius);
+      g1.addColorStop(0, 'rgba(0,0,0,1)');
+      g1.addColorStop(1, 'rgba(0,0,0,0)');
+      fctx.fillStyle = g1;
+      fctx.beginPath(); fctx.arc(px, py, currentMap.weather.fogRadius, 0, Math.PI * 2); fctx.fill();
+
+      // Уличные фонари
+      for (const sl of currentMap.light.streetLights) {
+        const sx = sl.x - camX, sy = sl.y - camY;
+        const gs = fctx.createRadialGradient(sx, sy, 20, sx, sy, sl.r);
+        gs.addColorStop(0, 'rgba(0,0,0,0.92)');
+        gs.addColorStop(1, 'rgba(0,0,0,0)');
+        fctx.fillStyle = gs;
+        fctx.beginPath(); fctx.arc(sx, sy, sl.r, 0, Math.PI * 2); fctx.fill();
+      }
+      ctx.drawImage(fogCanvas, 0, 0);
+    } else {
+      ctx.fillStyle = currentMap.light.ambientTint;
+      ctx.fillRect(0, 0, vpW, vpH);
+    }
+  }
+
+  function drawMinimap() {
+    const mw = 176, mh = 132;
+    const mx = canvas.width - mw - 14;
+    const my = 14;
+    const scaleX = mw / currentMap.width;
+    const scaleY = mh / currentMap.height;
+
+    ctx.save();
+    ctx.fillStyle = 'rgba(15, 18, 28, 0.78)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(mx, my, mw, mh, 10);
+    ctx.fill();
+    ctx.stroke();
+
+    // Препятствия на миникарте
+    for (const o of currentMap.obstacles) {
+      if (o.type === 'bush') continue;
+      ctx.fillStyle = o.type === 'wall' ? '#94a3b8' : '#d97706';
+      ctx.fillRect(mx + o.c * 64 * scaleX, my + o.r * 64 * scaleY, 64 * scaleX, 64 * scaleY);
+    }
+
+    // Бонусы
+    for (const b of bonuses) {
+      ctx.fillStyle = '#facc15';
+      ctx.fillRect(mx + b.x * scaleX - 2, my + b.y * scaleY - 2, 4, 4);
+    }
+
+    // Танки
+    for (const t of tanks) {
+      if (t.respawnTimer > 0) continue;
+      ctx.fillStyle = t.team === 'blue' ? '#38bdf8' : '#f87171';
+      ctx.beginPath();
+      ctx.arc(mx + t.x * scaleX, my + t.y * scaleY, t.isPlayer ? 4 : 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function drawHUD(p1) {
+    if (!p1) return;
+    ctx.save();
+    ctx.fillStyle = 'rgba(15, 18, 28, 0.78)';
+    ctx.beginPath();
+    ctx.roundRect(14, 14, 295, 76, 12);
+    ctx.fill();
+
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 13px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(`🗺 ${currentMap.name}`, 24, 34);
+    ctx.fillText(`❤️ HP: ${Math.max(0, Math.round(p1.hp))}  ⚡ Boost: ${Math.round(p1.energy)}%`, 24, 54);
+    const ammoText = p1.isReloading ? '⏳ Перезарядка...' : `🔫 Снаряды: ${'●'.repeat(p1.ammo)}${'○'.repeat(p1.maxAmmo - p1.ammo)}`;
+    const bonusText = p1.heldBonus ? ` | [E] Бонус: ${p1.heldBonus.toUpperCase()}` : '';
+    ctx.fillText(ammoText + bonusText, 24, 74);
+
+    // Таблица счёта при удержании Tab или в конце боя
+    if (keys['Tab'] || matchState === 'gameover') {
+      ctx.fillStyle = 'rgba(15, 18, 28, 0.88)';
+      ctx.beginPath();
+      ctx.roundRect(canvas.width / 2 - 220, 120, 440, 260, 16);
+      ctx.fill();
+      ctx.fillStyle = '#ffd166';
+      ctx.font = 'bold 20px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(matchState === 'gameover' ? winnerText : '📊 ТАБЛИЦА СЧЁТА (TAB)', canvas.width / 2, 155);
+
+      ctx.font = '14px sans-serif';
+      ctx.textAlign = 'left';
+      tanks.forEach((t, idx) => {
+        ctx.fillStyle = t.team === 'blue' ? '#60a5fa' : '#f87171';
+        ctx.fillText(`${idx + 1}. ${t.name} — Фраги: ${t.kills} | Смерти: ${t.deaths}`, canvas.width / 2 - 180, 190 + idx * 24);
+      });
+    }
+
+    if (matchState === 'countdown') {
+      ctx.fillStyle = 'rgba(0,0,0,0.45)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#ffd166';
+      ctx.font = 'bold 64px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(Math.ceil(countdownTimer), canvas.width / 2, canvas.height / 2);
+    }
+    ctx.restore();
+  }
+
+  /* ===================== 8. ИГРОВОЙ ЦИКЛ, ВВОД (КЛАВИАТУРА + GAMEPAD) И СЕТЕВОЙ PVP ===================== */
+  function readPlayer1Input(p1) {
+    const c = CONTROLS_CONFIG.p1;
+    const input = {
+      throttle: (keys[c.up] ? 1 : 0) - (keys[c.down] ? 1 : 0),
+      turn: (keys[c.right] ? 1 : 0) - (keys[c.left] ? 1 : 0),
+      turretTurn: (keys[c.turretRight] ? 1 : 0) - (keys[c.turretLeft] ? 1 : 0),
+      fire: Boolean(keys[c.fire] || mouse.down),
+      reload: Boolean(keys[c.reload]),
+      useBonus: Boolean(keys[c.useBonus]),
+      boost: Boolean(keys[c.boost]),
+      targetTurretAngle: null
+    };
+
+    // Поворот башни за курсором мыши (если мышь двигалась)
+    if (p1 && mouse.active) {
+      const camX = Math.max(0, Math.min(currentMap.width - canvas.width, p1.x - canvas.width / 2));
+      const camY = Math.max(0, Math.min(currentMap.height - canvas.height, p1.y - canvas.height / 2));
+      input.targetTurretAngle = Math.atan2(mouse.y + camY - p1.y, mouse.x + camX - p1.x);
+    }
+
+    // Поддержка Gamepad API (опционально)
+    const gp = navigator.getGamepads ? navigator.getGamepads()[0] : null;
+    if (gp) {
+      if (Math.abs(gp.axes[1]) > 0.2) input.throttle = -gp.axes[1];
+      if (Math.abs(gp.axes[0]) > 0.2) input.turn = gp.axes[0];
+      if (Math.abs(gp.axes[2]) > 0.2 || Math.abs(gp.axes[3]) > 0.2) {
+        input.targetTurretAngle = Math.atan2(gp.axes[3], gp.axes[2]);
+      }
+      if (gp.buttons[7]?.pressed || gp.buttons[0]?.pressed) input.fire = true;
+      if (gp.buttons[1]?.pressed) input.boost = true;
+    }
+
+    return input;
+  }
+
+  function readPlayer2Input() {
+    const c = CONTROLS_CONFIG.p2;
+    return {
+      throttle: (keys[c.up] ? 1 : 0) - (keys[c.down] ? 1 : 0),
+      turn: (keys[c.right] ? 1 : 0) - (keys[c.left] ? 1 : 0),
+      turretTurn: (keys[c.turretRight] ? 1 : 0) - (keys[c.turretLeft] ? 1 : 0),
+      fire: Boolean(keys[c.fire]),
+      reload: Boolean(keys[c.reload]),
+      useBonus: Boolean(keys[c.useBonus]),
+      boost: Boolean(keys[c.boost]),
+      targetTurretAngle: null
+    };
+  }
+
+  function updateSimulation(dt) {
+    if (matchState === 'countdown') {
+      countdownTimer -= dt;
+      if (countdownTimer <= 0) matchState = 'playing';
+      return;
+    }
+    if (matchState !== 'playing') return;
+
+    matchTime += dt;
+
+    // Обновление погоды и следов
+    for (const wp of weatherParticles) {
+      wp.x = (wp.x + currentMap.weather.windX * dt + currentMap.width) % currentMap.width;
+      wp.y = (wp.y + currentMap.weather.windY * dt + currentMap.height) % currentMap.height;
+    }
+    tracks.forEach(tr => tr.life -= dt);
+    tracks = tracks.filter(tr => tr.life > 0);
+    particles.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt; });
+    particles = particles.filter(p => p.life > 0);
+
+    // Спавн бонусов на арене
+    bonusSpawnTimer += dt;
+    if (bonusSpawnTimer > 7 && bonuses.length < 4) {
+      bonusSpawnTimer = 0;
+      const types = [
+        { type: 'repair', icon: '🔧', color: '#22c55e' },
+        { type: 'shield', icon: '🛡', color: '#38bdf8' },
+        { type: 'rapid',  icon: '⚡', color: '#f59e0b' }
+      ];
+      const chosen = types[Math.floor(Math.random() * types.length)];
+      const bx = 140 + Math.random() * (currentMap.width - 280);
+      const by = 140 + Math.random() * (currentMap.height - 280);
+      if (!collidesWithObstacles(bx, by, 18)) bonuses.push({ x: bx, y: by, ...chosen });
+    }
+
+    // Обновление танков (Игроки и Боты)
+    for (const t of tanks) {
+      if (t.isPlayer) {
+        const inp = t.playerIndex === 0 ? readPlayer1Input(t) : readPlayer2Input();
+        if (net.connected && net.ws) {
+          net.ws.send(JSON.stringify({ type: 'input', room: net.roomCode, input: inp }));
+        }
+        updateTankPhysics(t, inp, dt);
+      } else {
+        updateBotAI(t, dt);
+      }
+
+      // Подбор бонусов
+      for (let i = bonuses.length - 1; i >= 0; i--) {
+        const b = bonuses[i];
+        if (Math.hypot(t.x - b.x, t.y - b.y) < 34) {
+          t.heldBonus = b.type;
+          bonuses.splice(i, 1);
+          if (t.isPlayer && t.playerIndex === 0) {
+            window.TankAudio.playBonus();
+            addQuestEvent('q_bonuses', 1);
+            toast(`🎁 Подобран бонус: ${b.type.toUpperCase()} (Нажми E)`);
+          }
+        }
+      }
+    }
+
+    // Обновление снарядов и попаданий
+    for (let i = bullets.length - 1; i >= 0; i--) {
+      const bl = bullets[i];
+      bl.x += bl.vx * dt;
+      bl.y += bl.vy * dt;
+      bl.life -= dt;
+
+      if (bl.life <= 0 || bl.x < 0 || bl.x > currentMap.width || bl.y < 0 || bl.y > currentMap.height) {
+        const shooter = tanks.find(t => t.id === bl.ownerId);
+        if (shooter) shooter.hitStreak = 0;
+        bullets.splice(i, 1);
+        continue;
+      }
+
+      // Попадание в стены и разрушаемые блоки
+      const T = currentMap.tileSize;
+      let hitWall = false;
+      for (let oi = currentMap.obstacles.length - 1; oi >= 0; oi--) {
+        const o = currentMap.obstacles[oi];
+        if (o.type === 'bush') continue;
+        if (circleRectCollide(bl.x, bl.y, 5, o.c * T, o.r * T, T, T)) {
+          hitWall = true;
+          spawnParticles(bl.x, bl.y, '#fbbf24', 7);
+          if (o.type === 'brick') {
+            o.hp -= bl.damage;
+            if (o.hp <= 0) {
+              currentMap.obstacles.splice(oi, 1);
+              window.TankAudio.playExplosion(false);
+            }
+          }
+          break;
+        }
+      }
+      if (hitWall) {
+        bullets.splice(i, 1);
+        continue;
+      }
+
+      // Попадание в танк
+      for (const target of tanks) {
+        if (target.id === bl.ownerId || target.respawnTimer > 0) continue;
+        if (target.team === bl.team && target.team !== 'dm') continue;
+        if (Math.hypot(target.x - bl.x, target.y - bl.y) < target.radius + 4) {
+          const shooter = tanks.find(t => t.id === bl.ownerId);
+          if (shooter) {
+            shooter.hitStreak += 1;
+            if (shooter.isPlayer && shooter.playerIndex === 0 && shooter.hitStreak >= 4) {
+              addQuestEvent('q_streak', shooter.hitStreak, true);
+              unlockAchievement('a_sharpshooter');
+            }
+          }
+
+          if (target.shieldTimer <= 0) {
+            target.hp -= bl.damage;
+            target.tookDamageThisMatch = true;
+          }
+          spawnParticles(bl.x, bl.y, '#f87171', 12);
+          window.TankAudio.playExplosion(false);
+
+          if (target.hp <= 0) {
+            target.deaths += 1;
+            target.respawnTimer = 3.0;
+            spawnParticles(target.x, target.y, '#ff6b35', 32);
+            window.TankAudio.playExplosion(true);
+            if (shooter) {
+              shooter.kills += 1;
+              if (shooter.isPlayer && shooter.playerIndex === 0) {
+                addQuestEvent('q_kills', 1);
+                unlockAchievement('a_first_blood');
+              }
+            }
+          }
+          bullets.splice(i, 1);
+          break;
+        }
+      }
+    }
+
+    // Проверка победы (до 5 фрагов)
+    const blueKills = tanks.filter(t => t.team === 'blue').reduce((s, t) => s + t.kills, 0);
+    const redKills  = tanks.filter(t => t.team === 'red').reduce((s, t) => s + t.kills, 0);
+    const topDm     = tanks.reduce((best, t) => (t.kills > (best?.kills || 0) ? t : best), null);
+
+    if (blueKills >= 5 || redKills >= 5 || (topDm && topDm.kills >= 5)) {
+      matchState = 'gameover';
+      const playerWon = blueKills >= 5 || (topDm && topDm.isPlayer && topDm.playerIndex === 0);
+      winnerText = playerWon ? '🏆 ПОБЕДА СИНЕЙ КОМАНДЫ!' : '💥 ПОБЕДА КРАСНЫХ!';
+      const p1 = tanks.find(t => t.isPlayer && t.playerIndex === 0);
+      if (playerWon && p1) {
+        if (currentMap.id === 'winter') { addQuestEvent('q_winter', 1); unlockAchievement('a_ice_king'); }
+        if (!p1.tookDamageThisMatch) { addQuestEvent('q_flawless', 1); unlockAchievement('a_untouchable'); }
+      }
+    }
+  }
+
+  function gameLoop(now) {
+    const dt = Math.min(0.05, (now - lastFrameTime) / 1000);
+    lastFrameTime = now;
+
+    updateSimulation(dt);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const p1 = tanks.find(t => t.isPlayer && t.playerIndex === 0) || tanks[0];
+    const p2 = tanks.find(t => t.isPlayer && t.playerIndex === 1);
+
+    if (p2) {
+      // Режим сплит-экрана для 2 игроков на одном ПК
+      const halfW = canvas.width / 2;
+      const cam1X = Math.max(0, Math.min(currentMap.width - halfW, p1.x - halfW / 2));
+      const cam1Y = Math.max(0, Math.min(currentMap.height - canvas.height, p1.y - canvas.height / 2));
+      renderArenaViewport(cam1X, cam1Y, halfW, canvas.height, p1);
+
+      ctx.save();
+      ctx.translate(halfW, 0);
+      const cam2X = Math.max(0, Math.min(currentMap.width - halfW, p2.x - halfW / 2));
+      const cam2Y = Math.max(0, Math.min(currentMap.height - canvas.height, p2.y - canvas.height / 2));
+      renderArenaViewport(cam2X, cam2Y, halfW, canvas.height, p2);
+      ctx.restore();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(halfW - 2, 0, 4, canvas.height);
+    } else if (p1) {
+      const camX = Math.max(0, Math.min(currentMap.width - canvas.width, p1.x - canvas.width / 2));
+      const camY = Math.max(0, Math.min(currentMap.height - canvas.height, p1.y - canvas.height / 2));
+      renderArenaViewport(camX, camY, canvas.width, canvas.height, p1);
+    }
+
+    drawMinimap();
+    drawHUD(p1);
+
+    animId = requestAnimationFrame(gameLoop);
+  }
+
+  /* ===================== 9. ЗАПУСК МАТЧА И СЕТЕВОЕ ЛОББИ ===================== */
+  function startMatch() {
+    const pvpMode = $('#tanksPvpMode').value;
+    const format  = $('#tanksMatchFormat').value;
+    const botDiff = $('#tanksBotDiff').value;
+    const mapChoice = $('#tanksMapSelect').value;
+
+    // Выбор карты (рандомно без повторения предыдущей)
+    if (mapChoice === 'random') {
+      const pool = window.TANK_MAPS.filter(m => m.id !== lastMapId);
+      const picked = pool[Math.floor(Math.random() * pool.length)];
+      lastMapId = picked.id;
+      currentMap = JSON.parse(JSON.stringify(picked));
+    } else {
+      const picked = window.TANK_MAPS.find(m => m.id === mapChoice) || window.TANK_MAPS[0];
+      lastMapId = picked.id;
+      currentMap = JSON.parse(JSON.stringify(picked));
+    }
+
+    const meta = getMeta();
+    tanks = [];
+    bullets = [];
+    bonuses = [];
+    particles = [];
+    tracks = [];
+    initWeatherParticles();
+    window.TankAudio.setSeasonAmbience(currentMap.season);
+
+    // Игрок 1
+    tanks.push(createTank({
+      id: 'P1', name: 'Игрок 1', team: format === 'dm' ? 'dm' : 'blue',
+      x: currentMap.spawns.blue[0].x, y: currentMap.spawns.blue[0].y, angle: 0,
+      isPlayer: true, playerIndex: 0, skin: meta.selectedSkin
+    }));
+
+    if (pvpMode === 'local2p') {
+      tanks.push(createTank({
+        id: 'P2', name: 'Игрок 2', team: format === 'dm' ? 'dm' : 'red',
+        x: currentMap.spawns.red[0].x, y: currentMap.spawns.red[0].y, angle: Math.PI,
+        isPlayer: true, playerIndex: 1
+      }));
+    } else {
+      const teamSize = format === '1v1' ? 1 : format === '2v2' ? 2 : 3;
+      // Союзные боты
+      for (let i = 1; i < teamSize; i++) {
+        const sp = currentMap.spawns.blue[i % currentMap.spawns.blue.length];
+        tanks.push(createTank({
+          id: 'B' + i, name: `Союзник-${i}`, team: format === 'dm' ? 'dm' : 'blue',
+          x: sp.x, y: sp.y, angle: 0, aiDiff: botDiff
+        }));
+      }
+      // Вражеские боты
+      for (let i = 0; i < teamSize; i++) {
+        const sp = currentMap.spawns.red[i % currentMap.spawns.red.length];
+        tanks.push(createTank({
+          id: 'R' + (i + 1), name: `Бот-${i + 1}`, team: format === 'dm' ? 'dm' : 'red',
+          x: sp.x, y: sp.y, angle: Math.PI, aiDiff: botDiff
+        }));
+      }
+    }
+
+    matchState = 'countdown';
+    countdownTimer = 2.0;
+    matchTime = 0;
+  }
+
+  function connectWebSocket(action, code = '') {
+    const url = $('#tanksWsUrl').value.trim();
+    if (net.ws) try { net.ws.close(); } catch {}
+    net.ws = new WebSocket(url);
+    net.ws.onopen = () => {
+      net.connected = true;
+      net.ws.send(JSON.stringify({ type: action, room: code }));
+      $('#tanksNetStatus').textContent = 'Подключено...';
+    };
+    net.ws.onmessage = e => {
+      const msg = JSON.parse(e.data);
+      if (msg.type === 'room_joined') {
+        net.roomCode = msg.room;
+        net.myPlayerId = msg.playerId;
+        $('#tanksNetStatus').textContent = `Комната: ${msg.room} (Онлайн)`;
+        toast(`🌐 Комната ${msg.room} готова!`);
+      } else if (msg.type === 'state' && Array.isArray(msg.tanks)) {
+        // Интерполяция серверного состояния (Authoritative Server)
+        msg.tanks.forEach(st => {
+          const local = tanks.find(t => t.id === st.id);
+          if (local && !local.isPlayer) {
+            local.x += (st.x - local.x) * 0.45;
+            local.y += (st.y - local.y) * 0.45;
+            local.bodyAngle = st.bodyAngle;
+            local.turretAngle = st.turretAngle;
+            local.hp = st.hp;
+          }
+        });
+      }
+    };
+    net.ws.onclose = () => {
+      net.connected = false;
+      $('#tanksNetStatus').textContent = 'Отключено (Локальный режим)';
+    };
+  }
+
+  function mount() {
+    canvas = $('#tanksCanvas');
+    ctx = canvas.getContext('2d');
+    renderMetaUI();
+
+    $('#tanksPvpMode').onchange = e => {
+      const v = e.target.value;
+      $('#tanksNetLobbyBox').style.display = v === 'net' ? 'block' : 'none';
+      $('#tanksP2Hint').style.display = v === 'local2p' ? 'inline' : 'none';
+    };
+
+    $('#tanksStartMatchBtn').onclick = startMatch;
+    $('#tanksCreateRoomBtn').onclick = () => connectWebSocket('create');
+    $('#tanksJoinRoomBtn').onclick = () => connectWebSocket('join', $('#tanksRoomCodeInput').value.trim().toUpperCase());
+    $('#tanksQuestsToggle').onclick = () => {
+      const d = $('#tanksQuestDrawer');
+      d.style.display = d.style.display === 'none' ? 'block' : 'none';
+    };
+    $('#tanksPauseBtn').onclick = () => {
+      if (matchState === 'playing') { matchState = 'paused'; toast('⏸ Пауза'); }
+      else if (matchState === 'paused') { matchState = 'playing'; toast('▶️ Бой продолжен'); }
+    };
+
+    const onKeyDown = e => {
+      if (!$('#page-games').classList.contains('active') || $('#game-tanks').classList.contains('hidden')) return;
+      if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.code)) e.preventDefault();
+      keys[e.code] = true;
+      if (e.code === CONTROLS_CONFIG.system.pause) $('#tanksPauseBtn').click();
+    };
+    const onKeyUp = e => { keys[e.code] = false; };
+    const onMouseMove = e => {
+      const r = canvas.getBoundingClientRect();
+      mouse.x = (e.clientX - r.left) * (canvas.width / r.width);
+      mouse.y = (e.clientY - r.top) * (canvas.height / r.height);
+      mouse.active = true;
+    };
+    const onMouseDown = () => { mouse.down = true; };
+    const onMouseUp = () => { mouse.down = false; };
+
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('keyup', onKeyUp);
+    canvas.addEventListener('mousemove', onMouseMove);
+    canvas.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mouseup', onMouseUp);
+
+    startMatch();
+    lastFrameTime = performance.now();
+    cancelAnimationFrame(animId);
+    animId = requestAnimationFrame(gameLoop);
+
+    activeGame.cleanup = () => {
+      cancelAnimationFrame(animId);
+      window.TankAudio.stopAmbience();
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('keyup', onKeyUp);
+      canvas.removeEventListener('mousemove', onMouseMove);
+      canvas.removeEventListener('mousedown', onMouseDown);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+  }
+
+  return { mount, CONTROLS_CONFIG, AI_DIFFICULTY_CONFIG };
+})();
+  
 /* ===================== ПОГОДА ===================== */
 const weatherCache = {};
 function weatherEmoji(code) {
@@ -4252,6 +6117,7 @@ function openGame(name) {
   if (name === 'race') initRace();
   if (name === 'tetris') initTetris();
   if (name === 'snake') initSnake();
+  if (name === 'tanks' && window.TanksModule) window.TanksModule.mount();
   if (name === 'football') initFootball();
   setTimeout(() => {
     const win = $('#game-' + name);
