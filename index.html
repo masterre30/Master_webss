@@ -1449,6 +1449,28 @@ header {
   opacity: 1 !important;
   transform: translateX(-50%) translateY(0) scale(1) !important;
 }
+  /* 3D-перспектива Apple TV для интерактивных плиток */
+.preview-grid,
+.scripts-grid,
+.exchange-grid,
+.games-grid {
+  perspective: 1100px;
+}
+
+.preview-card,
+.script-card,
+.exchange-card,
+.game-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.preview-card.is-tilting,
+.script-card.is-tilting,
+.exchange-card.is-tilting,
+.game-card.is-tilting {
+  transition: transform 0.08s ease-out, box-shadow 0.35s var(--spring), border-color 0.35s ease !important;
+}
 </style>
 </head>
 <body>
@@ -5805,36 +5827,58 @@ function initFootball() {
   };
   activeGame.cleanup = footballCleanup;
 }
-  /* ===================== ИНТЕРАКТИВНЫЙ СТЕКЛЯННЫЙ БЛИК И КАСКАД iOS ===================== */
+  /* ===================== ИНТЕРАКТИВНЫЙ СТЕКЛЯННЫЙ БЛИК + 3D-НАКЛОН APPLE TV ===================== */
 (function initLiquidGlassEffects() {
-  const glassSelectors = '.card, .preview-card, .script-card, .exchange-card, .game-card';
+  const glareSelectors = '.card, .preview-card, .script-card, .exchange-card, .game-card';
+  const tiltSelectors = '.preview-card, .script-card, .exchange-card, .game-card';
 
-  function attachGlare(el) {
+  function attachGlareAndTilt(el) {
     if (el.dataset.glassInit) return;
     el.dataset.glassInit = '1';
+
     const glare = document.createElement('div');
     glare.className = 'glass-glare';
     el.appendChild(glare);
 
+    const isTiltable = el.matches(tiltSelectors);
+
     el.addEventListener('pointermove', e => {
+      if (e.pointerType === 'touch') return; // На сенсорных экранах оставляем только пружинное нажатие
       const rect = el.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      el.style.setProperty('--gx', x.toFixed(1) + '%');
-      el.style.setProperty('--gy', y.toFixed(1) + '%');
+      const relX = (e.clientX - rect.left) / rect.width;
+      const relY = (e.clientY - rect.top) / rect.height;
+
+      // Позиция стеклянного блика
+      el.style.setProperty('--gx', (relX * 100).toFixed(1) + '%');
+      el.style.setProperty('--gy', (relY * 100).toFixed(1) + '%');
+
+      // Плавный 3D-наклон Apple TV (угол до ±7 градусов)
+      if (isTiltable) {
+        el.classList.add('is-tilting');
+        const maxTilt = el.classList.contains('script-card') ? 4.5 : 7.5;
+        const rotateY = ((relX - 0.5) * 2 * maxTilt).toFixed(2);
+        const rotateX = ((0.5 - relY) * 2 * maxTilt).toFixed(2);
+        el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px) scale(1.018)`;
+      }
     }, { passive: true });
+
+    el.addEventListener('pointerleave', () => {
+      if (isTiltable) {
+        el.classList.remove('is-tilting');
+        el.style.transform = '';
+      }
+    });
   }
 
   function scanGlassCards() {
-    document.querySelectorAll(glassSelectors).forEach(attachGlare);
+    document.querySelectorAll(glareSelectors).forEach(attachGlareAndTilt);
   }
 
-  // Навешиваем блик на текущие и динамически создаваемые карточки
   scanGlassCards();
   const observer = new MutationObserver(() => scanGlassCards());
   observer.observe(document.body, { childList: true, subtree: true });
 
-  // Плавное каскадное появление карточек при переключении разделов
+  // Каскадное появление карточек при переключении разделов
   const origShowPage = window.showPage;
   if (typeof origShowPage === 'function') {
     window.showPage = function (name) {
