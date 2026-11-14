@@ -893,6 +893,44 @@ input[type="range"]::-webkit-slider-thumb {
 }
 .chess-cell.capture { box-shadow: inset 0 0 0 4px var(--danger); }
 .chess-cell.check { background: #e07a8b !important; }
+  .chess-cell.last-move {
+  box-shadow: inset 0 0 0 100px rgba(240, 180, 90, 0.34);
+}
+.chess-main-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  align-items: flex-start;
+  justify-content: center;
+}
+.chess-side-panel {
+  flex: 1;
+  min-width: 220px;
+  max-width: 280px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+}
+.chess-moves-log {
+  max-height: 360px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-family: 'Courier New', monospace;
+  font-size: .88rem;
+  margin-top: 8px;
+}
+.chess-move-row {
+  display: grid;
+  grid-template-columns: 34px 1fr 1fr;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: var(--surface);
+}
+.chess-move-row span.m-num { color: var(--text-soft); font-weight: 700; }
 .chess-coords {
   display: grid; width: min(92vw, 520px);
   font-size: .8rem; color: var(--text-soft);
@@ -2320,12 +2358,24 @@ header {
         <button class="diff-btn" data-elo="2200">Сложный (2200)</button>
         <button class="diff-btn" data-elo="3000">Мастер (3000)</button>
       </div>
-      <div class="chess-board-wrap">
-        <div class="chess-board" id="chessBoard"></div>
-        <div class="chess-coords files" id="chessFiles">
-          <span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span>
+     <div class="chess-main-layout">
+        <div class="chess-board-wrap" style="width:auto;">
+          <div class="chess-board" id="chessBoard"></div>
+          <div class="chess-coords files" id="chessFiles">
+            <span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span>
+          </div>
+          <p id="chessStatus">Твой ход</p>
         </div>
-        <p id="chessStatus">Твой ход</p>
+
+        <div class="chess-side-panel">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;">
+            <b style="font-size:.95rem;">📜 Запись ходов</b>
+            <button class="btn small secondary" id="chessResetBtn" style="padding:5px 10px;font-size:.78rem;">🔄 Заново</button>
+          </div>
+          <div class="chess-moves-log" id="chessMovesLog">
+            <span style="color:var(--text-soft);font-size:.82rem;">Сделай первый ход...</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -2398,6 +2448,10 @@ header {
       <div class="tetris-wrap">
         <canvas id="tetrisCanvas" width="300" height="600"></canvas>
         <div class="tetris-side">
+          <div class="stat" style="text-align:center;">
+            <div style="font-size:.78rem;color:var(--text-soft);margin-bottom:4px;">Следующая фигура</div>
+            <canvas id="tetrisNextCanvas" width="96" height="64" style="background:#14111d;border-radius:8px;border:1px solid var(--border);"></canvas>
+          </div>
           <div class="stat">Счёт: <b id="tetrisScore">0</b></div>
           <div class="stat">Рекорд: <b id="tetrisRecord">0</b></div>
           <div class="stat">Линий: <b id="tetrisLines">0</b></div>
@@ -6154,7 +6208,7 @@ function closeGame() {
 $$('.game-card').forEach(card => card.addEventListener('click', () => openGame(card.dataset.game)));
 $$('.game-close').forEach(btn => btn.addEventListener('click', closeGame));
 
-/* ===================== ШАХМАТЫ ===================== */
+/* ===================== ШАХМАТЫ (ПОДСВЕТКА ХОДА, НОТАЦИЯ, ЗВУКИ) ===================== */
 function initChess() {
   const boardEl = $('#chessBoard');
   const initial = [
@@ -6170,14 +6224,84 @@ function initChess() {
   let board = initial.slice();
   let selected = null;
   let currentHints = [];
+  let lastMove = null; // { from, to }
+  let moveHistory = []; // [{ white, black }]
   let turn = 'white';
   let mode = 'bot';
   let playerColor = 'black';
   let elo = 800;
   let gameOver = false;
-
-  // Права на рокировку: wK/wQ — белые (короткая/длинная), bK/bQ — чёрные
   let castling = { wK: true, wQ: true, bK: true, bQ: true };
+
+  // Звуковой синтезатор для шахмат (Web Audio API)
+  const ChessAudio = (function () {
+    let ctx = null;
+    function beep(freq, endFreq, dur, type = 'triangle', vol = 0.12) {
+      try {
+        if (!ctx) {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) ctx = new AC();
+        }
+        if (!ctx) return;
+        if (ctx.state === 'suspended') ctx.resume();
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, now);
+        if (endFreq) osc.frequency.exponentialRampToValueAtTime(endFreq, now + dur);
+        gain.gain.setValueAtTime(vol, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + dur + 0.01);
+      } catch {}
+    }
+    return {
+      move: () => beep(260, 170, 0.07, 'triangle', 0.11),
+      capture: () => beep(190, 75, 0.13, 'sawtooth', 0.15),
+      castle: () => { beep(280, 200, 0.06); setTimeout(() => beep(340, 240, 0.07), 70); },
+      check: () => { beep(520, 440, 0.12, 'sine', 0.14); setTimeout(() => beep(660, 580, 0.14, 'sine', 0.14), 110); },
+      mate: () => { beep(440, 330, 0.18, 'sawtooth', 0.14); setTimeout(() => beep(330, 190, 0.32, 'sawtooth', 0.16), 160); }
+    };
+  })();
+
+  function idxToCoord(idx) {
+    const files = ['a','b','c','d','e','f','g','h'];
+    const r = Math.floor(idx / 8);
+    const c = idx % 8;
+    return files[c] + (8 - r);
+  }
+
+  function formatNotation(piece, from, to, cap, isCastle, isCheckState, isMateState) {
+    if (isCastle) {
+      const base = (to % 8 === 6) ? 'O-O' : 'O-O-O';
+      return base + (isMateState ? '#' : isCheckState ? '+' : '');
+    }
+    const symMap = { k: '♔', q: '♕', r: '♖', b: '♗', n: '♘', p: '' };
+    const pSym = symMap[piece.toLowerCase()] || '';
+    const sep = cap ? '×' : '–';
+    const suffix = isMateState ? '#' : isCheckState ? '+' : '';
+    return `${pSym}${idxToCoord(from)}${sep}${idxToCoord(to)}${suffix}`;
+  }
+
+  function renderMovesLog() {
+    const logEl = $('#chessMovesLog');
+    if (!logEl) return;
+    if (!moveHistory.length) {
+      logEl.innerHTML = '<span style="color:var(--text-soft);font-size:.82rem;">Сделай первый ход...</span>';
+      return;
+    }
+    logEl.innerHTML = moveHistory.map((pair, i) => `
+      <div class="chess-move-row">
+        <span class="m-num">${i + 1}.</span>
+        <span>${escapeHtml(pair.white || '')}</span>
+        <span>${escapeHtml(pair.black || '')}</span>
+      </div>
+    `).join('');
+    logEl.scrollTop = logEl.scrollHeight;
+  }
 
   boardEl.innerHTML = '';
   const cellEls = [];
@@ -6190,7 +6314,6 @@ function initChess() {
     cellEls.push(cell);
   }
 
-  // Определяем, нужно ли перевернуть доску чёрными вниз
   function isFlipped() {
     if (mode === 'friend') return turn === 'black';
     return playerColor === 'black';
@@ -6215,6 +6338,11 @@ function initChess() {
       cell.textContent = '';
       cell.style.color = '';
       cell.style.textShadow = '';
+
+      if (lastMove && (bIdx === lastMove.from || bIdx === lastMove.to)) {
+        cell.classList.add('last-move');
+      }
+
       if (p) {
         const isW = p === p.toUpperCase();
         const glyph = isW
@@ -6252,7 +6380,6 @@ function initChess() {
   function colorOf(p) { return isWhite(p) ? 'white' : isBlack(p) ? 'black' : null; }
   function opposite(color) { return color === 'white' ? 'black' : 'white'; }
 
-  // Базовые псевдо-ходы (без рокировки, чтобы избежать рекурсии при проверке атак)
   function pseudoMoves(from, b = board) {
     const p = b[from];
     if (!p) return [];
@@ -6325,39 +6452,26 @@ function initChess() {
     return isAttacked(k, opposite(color), b);
   }
 
-  // Выполнение хода с поддержкой превращения пешки в ферзя и рокировки
   function makeMove(from, to, b = board, cr = castling) {
     const movedPiece = b[from];
     const cap = b[to];
     const prevCastling = { ...cr };
     let rookMove = null;
 
-    // Проверка рокировки (король шагает на 2 клетки по горизонтали)
     if (movedPiece && movedPiece.toLowerCase() === 'k' && Math.abs((to % 8) - (from % 8)) === 2) {
-      if (to === 62) { // Белые O-O
-        rookMove = { rFrom: 63, rTo: 61, rPiece: b[63] };
-        b[61] = b[63]; b[63] = '';
-      } else if (to === 58) { // Белые O-O-O
-        rookMove = { rFrom: 56, rTo: 59, rPiece: b[56] };
-        b[59] = b[56]; b[56] = '';
-      } else if (to === 6) { // Чёрные O-O
-        rookMove = { rFrom: 7, rTo: 5, rPiece: b[7] };
-        b[5] = b[7]; b[7] = '';
-      } else if (to === 2) { // Чёрные O-O-O
-        rookMove = { rFrom: 0, rTo: 3, rPiece: b[0] };
-        b[3] = b[0]; b[0] = '';
-      }
+      if (to === 62) { rookMove = { rFrom: 63, rTo: 61, rPiece: b[63] }; b[61] = b[63]; b[63] = ''; }
+      else if (to === 58) { rookMove = { rFrom: 56, rTo: 59, rPiece: b[56] }; b[59] = b[56]; b[56] = ''; }
+      else if (to === 6) { rookMove = { rFrom: 7, rTo: 5, rPiece: b[7] }; b[5] = b[7]; b[7] = ''; }
+      else if (to === 2) { rookMove = { rFrom: 0, rTo: 3, rPiece: b[0] }; b[3] = b[0]; b[0] = ''; }
     }
 
     b[to] = movedPiece;
     b[from] = '';
 
-    // Превращение пешки в ферзя на крайней горизонтали
     const toRow = Math.floor(to / 8);
     if (movedPiece === 'P' && toRow === 0) b[to] = 'Q';
     else if (movedPiece === 'p' && toRow === 7) b[to] = 'q';
 
-    // Обновление прав на рокировку
     if (movedPiece === 'K') { cr.wK = false; cr.wQ = false; }
     if (movedPiece === 'k') { cr.bK = false; cr.bQ = false; }
     if (from === 63 || to === 63) cr.wK = false;
@@ -6385,21 +6499,12 @@ function initChess() {
     const opp = opposite(col);
     const candidates = pseudoMoves(from, b);
 
-    // Добавляем ходы рокировки для короля
     if (p === 'K' && from === 60 && !inCheck('white', b)) {
-      if (cr.wK && b[63] === 'R' && !b[61] && !b[62] && !isAttacked(61, opp, b) && !isAttacked(62, opp, b)) {
-        candidates.push(62);
-      }
-      if (cr.wQ && b[56] === 'R' && !b[59] && !b[58] && !b[57] && !isAttacked(59, opp, b) && !isAttacked(58, opp, b)) {
-        candidates.push(58);
-      }
+      if (cr.wK && b[63] === 'R' && !b[61] && !b[62] && !isAttacked(61, opp, b) && !isAttacked(62, opp, b)) candidates.push(62);
+      if (cr.wQ && b[56] === 'R' && !b[59] && !b[58] && !b[57] && !isAttacked(59, opp, b) && !isAttacked(58, opp, b)) candidates.push(58);
     } else if (p === 'k' && from === 4 && !inCheck('black', b)) {
-      if (cr.bK && b[7] === 'r' && !b[5] && !b[6] && !isAttacked(5, opp, b) && !isAttacked(6, opp, b)) {
-        candidates.push(6);
-      }
-      if (cr.bQ && b[0] === 'r' && !b[3] && !b[2] && !b[1] && !isAttacked(3, opp, b) && !isAttacked(2, opp, b)) {
-        candidates.push(2);
-      }
+      if (cr.bK && b[7] === 'r' && !b[5] && !b[6] && !isAttacked(5, opp, b) && !isAttacked(6, opp, b)) candidates.push(6);
+      if (cr.bQ && b[0] === 'r' && !b[3] && !b[2] && !b[1] && !isAttacked(3, opp, b) && !isAttacked(2, opp, b)) candidates.push(2);
     }
 
     const result = [];
@@ -6419,6 +6524,35 @@ function initChess() {
       for (const to of legalMoves(i, b, cr)) res.push({ from: i, to });
     }
     return res;
+  }
+
+  function commitMoveAndRecord(from, to) {
+    const moverColor = turn;
+    const st = makeMove(from, to);
+    lastMove = { from, to };
+    turn = opposite(turn);
+
+    const oppHasMoves = allLegalMoves(turn).length > 0;
+    const oppInCheck = inCheck(turn);
+    const isMate = !oppHasMoves && oppInCheck;
+
+    // Звуковое сопровождение хода
+    if (isMate) ChessAudio.mate();
+    else if (oppInCheck) ChessAudio.check();
+    else if (st.rookMove) ChessAudio.castle();
+    else if (st.cap) ChessAudio.capture();
+    else ChessAudio.move();
+
+    // Запись в шахматную нотацию
+    const note = formatNotation(st.movedPiece, from, to, st.cap, Boolean(st.rookMove), oppInCheck, isMate);
+    if (moverColor === 'white') {
+      moveHistory.push({ white: note, black: '' });
+    } else {
+      if (!moveHistory.length) moveHistory.push({ white: '...', black: note });
+      else moveHistory[moveHistory.length - 1].black = note;
+    }
+    renderMovesLog();
+    return st;
   }
 
   function checkGameEnd() {
@@ -6490,13 +6624,12 @@ function initChess() {
     if (mode === 'friend') {
       if (selected !== null && currentHints.includes(idx)) {
         const wasPawn = board[selected] && board[selected].toLowerCase() === 'p';
-        makeMove(selected, idx);
+        commitMoveAndRecord(selected, idx);
         if (wasPawn && (Math.floor(idx / 8) === 0 || Math.floor(idx / 8) === 7)) {
           toast('👑 Пешка превратилась в Ферзя!');
         }
         selected = null;
         currentHints = [];
-        turn = opposite(turn);
         render();
         if (checkGameEnd()) return;
         $('#chessStatus').textContent = `Ход ${turn === 'white' ? 'белых (♔)' : 'чёрных (♚)'}`;
@@ -6513,13 +6646,12 @@ function initChess() {
     if (turn !== playerColor) return;
     if (selected !== null && currentHints.includes(idx)) {
       const wasPawn = board[selected] && board[selected].toLowerCase() === 'p';
-      makeMove(selected, idx);
+      commitMoveAndRecord(selected, idx);
       if (wasPawn && (Math.floor(idx / 8) === 0 || Math.floor(idx / 8) === 7)) {
         toast('👑 Пешка превратилась в Ферзя!');
       }
       selected = null;
       currentHints = [];
-      turn = opposite(turn);
       render();
       if (checkGameEnd()) return;
       $('#chessStatus').textContent = 'Ход бота...';
@@ -6574,8 +6706,7 @@ function initChess() {
       }
     }
     if (!bestMove) bestMove = allMoves[0];
-    makeMove(bestMove.from, bestMove.to);
-    turn = opposite(turn);
+    commitMoveAndRecord(bestMove.from, bestMove.to);
     selected = null;
     currentHints = [];
     render();
@@ -6626,9 +6757,12 @@ function initChess() {
     castling = { wK: true, wQ: true, bK: true, bQ: true };
     selected = null;
     currentHints = [];
+    lastMove = null;
+    moveHistory = [];
     turn = 'white';
     gameOver = false;
     render();
+    renderMovesLog();
     if (mode === 'bot' && playerColor === 'black') {
       $('#chessStatus').textContent = 'Ход бота (белые)...';
       setTimeout(botMove, 500);
@@ -6639,10 +6773,12 @@ function initChess() {
     }
   }
 
+  const resetBtn = $('#chessResetBtn');
+  if (resetBtn) resetBtn.onclick = resetGame;
+
   resetGame();
   activeGame.cleanup = () => { gameOver = true; themeObserver.disconnect(); };
 }
-
 /* ===================== ЗВУКОВОЙ МОДУЛЬ ГОНКИ (WEBAUDIO) ===================== */
 window.RaceAudio = (function () {
   let ctx = null;
@@ -7413,6 +7549,10 @@ function initRace() {
   /**
    * Режим камеры B: Псевдо-3D вид от первого лица (из кабины).
    */
+ /**
+   * Режим камеры B: Псевдо-3D вид от первого лица с привязкой камеры к полосе игрока
+   * и детализированными объёмными 3D-препятствиями.
+   */
   function drawRaceFirstPerson(skin) {
     const horizonY = 195;
     const dn = getDayNightFactor();
@@ -7432,7 +7572,7 @@ function initRace() {
     ctx.fillStyle = skyGrad;
     ctx.fillRect(0, 0, W, horizonY);
 
-    // Солнце / Луна на горизонте
+    // Солнце / Луна
     ctx.fillStyle = dn < 0.78 ? '#fef08a' : '#e2e8f0';
     ctx.beginPath();
     ctx.arc(W * 0.74, horizonY - 38 + dn * 24, 22, 0, Math.PI * 2);
@@ -7442,94 +7582,255 @@ function initRace() {
     ctx.fillStyle = dn > 0.75 ? '#14331d' : '#2e8538';
     ctx.fillRect(0, horizonY, W, H - horizonY);
 
-    // Смещение перспективы при рулении машины
-    const playerNormX = ((car.x + car.w / 2) - W / 2) / (ROAD_W / 2);
-    const vanishX = W / 2 - playerNormX * 65;
+    // Нормализованная позиция игрока поперёк дороги (-1 = левый край, 0 = центр, +1 = правый край)
+    const playerCenterX = car.x + car.w / 2;
+    const playerNormX = (playerCenterX - W / 2) / (ROAD_W / 2);
 
-    // 3. Трапеция дороги
+    // Камера привязана к машине: при повороте влево/вправо дорога смещается относительно капота!
+    const nearHalfW = W * 0.72;
+    const farHalfW = 44;
+    const nearCenterX = W / 2 - playerNormX * (nearHalfW * 0.78);
+    const vanishX = W / 2 - playerNormX * 95 - car.steerAngle * 24;
+
+    // 3. Трапеция дороги и красно-белые 3D-поребрики
     ctx.fillStyle = dn > 0.75 ? '#1f2430' : '#3b404e';
     ctx.beginPath();
-    ctx.moveTo(vanishX - 36, horizonY);
-    ctx.lineTo(vanishX + 36, horizonY);
-    ctx.lineTo(W + 60, H);
-    ctx.lineTo(-60, H);
+    ctx.moveTo(vanishX - farHalfW, horizonY);
+    ctx.lineTo(vanishX + farHalfW, horizonY);
+    ctx.lineTo(nearCenterX + nearHalfW, H);
+    ctx.lineTo(nearCenterX - nearHalfW, H);
     ctx.closePath();
     ctx.fill();
 
-    // Полосы разметки в перспективе
+    // Перспективные полосы: поребрики по краям + разделители 3 полос
     const stripePhase = (roadScroll % 60) / 60;
-    for (let i = 0; i < 10; i++) {
-      const z1 = (i + stripePhase) / 10;
-      const z2 = Math.min(1, z1 + 0.05);
-      const p1 = Math.pow(z1, 1.8);
-      const p2 = Math.pow(z2, 1.8);
+    for (let i = 0; i < 12; i++) {
+      const z1 = (i + stripePhase) / 12;
+      const z2 = Math.min(1, z1 + 0.055);
+      const p1 = Math.pow(z1, 1.85);
+      const p2 = Math.pow(z2, 1.85);
       const y1 = horizonY + p1 * (H - horizonY);
       const y2 = horizonY + p2 * (H - horizonY);
 
-      [-0.33, 0.33].forEach(laneOff => {
-        const x1 = vanishX + laneOff * (36 + p1 * (W * 0.55));
-        const x2 = vanishX + laneOff * (36 + p2 * (W * 0.55));
-        ctx.strokeStyle = 'rgba(255,255,255,0.75)';
-        ctx.lineWidth = 1.5 + p1 * 4;
+      const cx1 = vanishX + (nearCenterX - vanishX) * p1;
+      const cx2 = vanishX + (nearCenterX - vanishX) * p2;
+      const hw1 = farHalfW + (nearHalfW - farHalfW) * p1;
+      const hw2 = farHalfW + (nearHalfW - farHalfW) * p2;
+
+      // Красно-белые поребрики слева и справа
+      const isRed = (i + Math.floor(roadScroll / 60)) % 2 === 0;
+      ctx.strokeStyle = isRed ? '#ef4444' : '#f8fafc';
+      ctx.lineWidth = 2 + p1 * 7;
+      ctx.beginPath();
+      ctx.moveTo(cx1 - hw1, y1); ctx.lineTo(cx2 - hw2, y2);
+      ctx.moveTo(cx1 + hw1, y1); ctx.lineTo(cx2 + hw2, y2);
+      ctx.stroke();
+
+      // Разделительная разметка 3 полос (левая, центральная, правая)
+      [-0.333, 0.333].forEach(laneOff => {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.lineWidth = 1.4 + p1 * 4.5;
         ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
+        ctx.moveTo(cx1 + laneOff * hw1, y1);
+        ctx.lineTo(cx2 + laneOff * hw2, y2);
         ctx.stroke();
       });
     }
 
-    // 4. Пролетающие деревья и столбы по бокам дороги
+    // 4. Пролетающие деревья и столбы вдоль обочин
     for (const prop of roadsideProps) {
       const z = Math.max(0.02, Math.min(1, prop.y / H));
-      const persp = Math.pow(z, 1.7);
+      const persp = Math.pow(z, 1.85);
       const py = horizonY + persp * (H - horizonY);
+      const cx = vanishX + (nearCenterX - vanishX) * persp;
+      const hw = farHalfW + (nearHalfW - farHalfW) * persp;
       const sideSign = prop.isLeft ? -1 : 1;
-      const roadHalf = 42 + persp * (W * 0.58);
-      const px = vanishX + sideSign * (roadHalf + 18 * persp);
-      const scale = 0.25 + persp * 1.4;
+      const px = cx + sideSign * (hw + 22 * persp + 6);
+      const scale = 0.22 + persp * 1.45;
 
       ctx.save();
       ctx.translate(px, py);
       ctx.scale(scale, scale);
-      ctx.fillStyle = '#78350f';
-      ctx.fillRect(-3, -10, 6, 16);
-      ctx.fillStyle = '#16a34a';
+      ctx.fillStyle = 'rgba(0,0,0,0.28)';
       ctx.beginPath();
-      ctx.arc(0, -18, 15, 0, Math.PI * 2);
+      ctx.ellipse(0, 4, 14, 4, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(-3, -12, 6, 16);
+      ctx.fillStyle = dn > 0.75 ? '#14532d' : '#16a34a';
+      ctx.beginPath();
+      ctx.arc(0, -20, 15, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
     }
 
-    // 5. Препятствия в перспективе (растут из точки схода)
-    const sortedObs = obstacles.slice().sort((a, b) => a.y - b.y);
-    for (const o of sortedObs) {
-      if (o.y < -40 || o.y > H) continue;
-      const z = Math.max(0.03, Math.min(1, (o.y + 40) / (H + 40)));
-      const persp = Math.pow(z, 1.7);
-      const py = horizonY + persp * (H - horizonY);
-      const obsNormX = ((o.x + o.w / 2) - W / 2) / (ROAD_W / 2);
-      const roadHalf = 36 + persp * (W * 0.52);
-      const px = vanishX + obsNormX * roadHalf;
-      const ow = o.w * (0.22 + persp * 1.35);
-      const oh = o.h * (0.22 + persp * 1.35);
+    // 5. Машина-соперник в 3D (если едет впереди игрока)
+    const rivalRelY = car.y - (rivalBot.distance - playerDistance);
+    if (rivalRelY > -80 && rivalRelY < car.y - 10) {
+      const rz = Math.max(0.04, Math.min(1, (rivalRelY + 80) / (car.y + 80)));
+      const rPersp = Math.pow(rz, 1.85);
+      const rpy = horizonY + rPersp * (H - horizonY);
+      const rcx = vanishX + (nearCenterX - vanishX) * rPersp;
+      const rhw = farHalfW + (nearHalfW - farHalfW) * rPersp;
+      const rivalNormX = ((rivalBot.x + rivalBot.w / 2) - W / 2) / (ROAD_W / 2);
+      const rpx = rcx + rivalNormX * rhw;
+      const rw = 54 * (0.2 + rPersp * 1.45);
+      const rh = 34 * (0.2 + rPersp * 1.45);
 
-      if (o.type === 'cone') {
-        ctx.fillStyle = '#f97316';
-        ctx.beginPath();
-        ctx.moveTo(px, py - oh);
-        ctx.lineTo(px + ow / 2, py);
-        ctx.lineTo(px - ow / 2, py);
-        ctx.closePath();
-        ctx.fill();
-      } else {
-        ctx.fillStyle = '#64748b';
-        ctx.fillRect(px - ow / 2, py - oh, ow, oh);
-        ctx.fillStyle = '#facc15';
-        ctx.fillRect(px - ow / 2 + 2, py - oh * 0.65, ow - 4, oh * 0.22);
-      }
+      ctx.save();
+      ctx.translate(rpx, rpy);
+      ctx.fillStyle = 'rgba(0,0,0,0.4)';
+      ctx.beginPath();
+      ctx.ellipse(0, 2, rw * 0.56, rh * 0.2, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#7c3aed';
+      ctx.beginPath();
+      ctx.roundRect(-rw / 2, -rh, rw, rh * 0.65, 5);
+      ctx.fill();
+      ctx.fillStyle = '#ddd6fe';
+      ctx.beginPath();
+      ctx.roundRect(-rw * 0.36, -rh * 1.32, rw * 0.72, rh * 0.42, 4);
+      ctx.fill();
+      ctx.fillStyle = '#ef4444';
+      ctx.fillRect(-rw * 0.42, -rh * 0.68, rw * 0.2, rh * 0.16);
+      ctx.fillRect(rw * 0.22, -rh * 0.68, rw * 0.2, rh * 0.16);
+      ctx.restore();
     }
 
-    // 6. Капот, руль и зеркало заднего вида
+    // 6. Детализированные объёмные 3D-препятствия (сортировка от дальних к ближним)
+    const sortedObs = obstacles.slice().sort((a, b) => a.y - b.y);
+    for (const o of sortedObs) {
+      if (o.y < -50 || o.y > H) continue;
+      // Согласуем координату Y столкновения с моментом проезда под капотом (car.y)
+      const z = Math.max(0.03, Math.min(1.08, (o.y + 50) / (car.y + 50)));
+      const persp = Math.pow(z, 1.85);
+      const py = horizonY + persp * (H - horizonY);
+
+      const cx = vanishX + (nearCenterX - vanishX) * persp;
+      const hw = farHalfW + (nearHalfW - farHalfW) * persp;
+      const obsNormX = ((o.x + o.w / 2) - W / 2) / (ROAD_W / 2);
+      const px = cx + obsNormX * hw;
+
+      const scale = 0.2 + persp * 1.55;
+      const ow = o.w * scale * 1.15;
+      const oh = o.h * scale * 1.05;
+
+      ctx.save();
+      ctx.translate(px, py);
+
+      if (o.type === 'cone') {
+        // Тень на асфальте
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.42)';
+        ctx.beginPath();
+        ctx.ellipse(3 * scale, 2 * scale, ow * 0.64, oh * 0.18, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Тёмная резиновая платформа конуса
+        ctx.fillStyle = '#1e293b';
+        ctx.beginPath();
+        ctx.roundRect(-ow * 0.56, -oh * 0.14, ow * 1.12, oh * 0.18, 3 * scale);
+        ctx.fill();
+
+        // Объёмный оранжевый конус с градиентом
+        const coneGrad = ctx.createLinearGradient(-ow * 0.45, 0, ow * 0.45, 0);
+        coneGrad.addColorStop(0, '#c2410c');
+        coneGrad.addColorStop(0.35, '#fb923c');
+        coneGrad.addColorStop(1, '#9a3412');
+        ctx.fillStyle = coneGrad;
+        ctx.beginPath();
+        ctx.moveTo(-ow * 0.13, -oh);
+        ctx.lineTo(ow * 0.13, -oh);
+        ctx.lineTo(ow * 0.46, -oh * 0.12);
+        ctx.lineTo(-ow * 0.46, -oh * 0.12);
+        ctx.closePath();
+        ctx.fill();
+
+        // Светоотражающая белая полоса по центру конуса
+        ctx.fillStyle = '#f8fafc';
+        ctx.beginPath();
+        ctx.moveTo(-ow * 0.24, -oh * 0.62);
+        ctx.lineTo(ow * 0.24, -oh * 0.62);
+        ctx.lineTo(ow * 0.33, -oh * 0.36);
+        ctx.lineTo(-ow * 0.33, -oh * 0.36);
+        ctx.closePath();
+        ctx.fill();
+
+        // Сигнальный фонарик на вершине конуса
+        ctx.fillStyle = '#fef08a';
+        ctx.beginPath();
+        ctx.arc(0, -oh - 2 * scale, 3 * scale, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        // Объёмный 3D-барьер (бетонно-металлический блок)
+        const depth = 10 * scale;
+
+        // Тень под блоком
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+        ctx.fillRect(-ow / 2 + 4 * scale, -4 * scale, ow + 4 * scale, 9 * scale);
+
+        // Опорные стальные ножки
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(-ow * 0.42, -oh * 0.22, ow * 0.14, oh * 0.24);
+        ctx.fillRect(ow * 0.28, -oh * 0.22, ow * 0.14, oh * 0.24);
+
+        // Верхняя 3D-крышка блока
+        ctx.fillStyle = '#94a3b8';
+        ctx.beginPath();
+        ctx.moveTo(-ow / 2, -oh);
+        ctx.lineTo(-ow / 2 + depth * 0.5, -oh - depth * 0.6);
+        ctx.lineTo(ow / 2 + depth * 0.5, -oh - depth * 0.6);
+        ctx.lineTo(ow / 2, -oh);
+        ctx.closePath();
+        ctx.fill();
+
+        // Боковая 3D-грань блока
+        ctx.fillStyle = '#475569';
+        ctx.beginPath();
+        ctx.moveTo(ow / 2, -oh);
+        ctx.lineTo(ow / 2 + depth * 0.5, -oh - depth * 0.6);
+        ctx.lineTo(ow / 2 + depth * 0.5, -oh * 0.2 - depth * 0.6);
+        ctx.lineTo(ow / 2, -oh * 0.2);
+        ctx.closePath();
+        ctx.fill();
+
+        // Лицевая панель с жёлто-чёрными полосами опасности
+        const bodyH = oh * 0.8;
+        ctx.fillStyle = '#facc15';
+        ctx.fillRect(-ow / 2, -oh, ow, bodyH);
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(-ow / 2, -oh, ow, bodyH);
+        ctx.clip();
+        ctx.fillStyle = '#1e293b';
+        const stripeStep = Math.max(6, ow / 4);
+        for (let sx = -ow; sx < ow; sx += stripeStep) {
+          ctx.beginPath();
+          ctx.moveTo(sx, -oh);
+          ctx.lineTo(sx + stripeStep * 0.45, -oh);
+          ctx.lineTo(sx + stripeStep * 0.45 - bodyH * 0.5, -oh + bodyH);
+          ctx.lineTo(sx - bodyH * 0.5, -oh + bodyH);
+          ctx.closePath();
+          ctx.fill();
+        }
+        ctx.restore();
+
+        // Рамка и красные катафоты по углам барьера
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = Math.max(1, 1.5 * scale);
+        ctx.strokeRect(-ow / 2, -oh, ow, bodyH);
+
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(-ow * 0.4, -oh + bodyH * 0.5, 2.8 * scale, 0, Math.PI * 2);
+        ctx.arc(ow * 0.4, -oh + bodyH * 0.5, 2.8 * scale, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    // 7. Капот, руль и зеркало заднего вида
     drawCarFirstPerson(skin);
   }
 
@@ -7957,14 +8258,68 @@ function initRace() {
   activeGame.cleanup = raceCleanup;
 }
 
-/* ===================== ТЕТРИС ===================== */
+/* ===================== ОБЩИЙ ЗВУКОВОЙ МОДУЛЬ ДЛЯ АРКАД (WEBAUDIO) ===================== */
+window.ArcadeAudio = (function () {
+  let ctx = null;
+
+  function ensureCtx() {
+    if (!ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) ctx = new AC();
+    }
+    if (ctx && ctx.state === 'suspended') ctx.resume();
+  }
+
+  function tone(freq, type = 'sine', dur = 0.08, vol = 0.1, delay = 0, endFreq = null) {
+    ensureCtx();
+    if (!ctx) return;
+    const now = ctx.currentTime + delay;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, now);
+    if (endFreq) osc.frequency.exponentialRampToValueAtTime(endFreq, now + dur);
+    gain.gain.setValueAtTime(vol, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + dur + 0.01);
+  }
+
+  return {
+    move: () => tone(240, 'triangle', 0.04, 0.05),
+    rotate: () => tone(420, 'sine', 0.06, 0.08, 0, 560),
+    drop: () => tone(150, 'triangle', 0.09, 0.12, 0, 55),
+    clearLine: (lines = 1) => {
+      const notes = [440, 554.37, 659.25, 880];
+      for (let i = 0; i < Math.min(4, lines); i++) {
+        tone(notes[i], 'triangle', 0.16, 0.13, i * 0.06);
+      }
+    },
+    eat: (combo = 0) => tone(480 + Math.min(300, combo * 25), 'sine', 0.09, 0.12, 0, 720),
+    goldenEat: () => {
+      tone(587.33, 'triangle', 0.12, 0.14, 0);
+      tone(880, 'triangle', 0.18, 0.14, 0.08);
+    },
+    gameOver: () => {
+      tone(300, 'sawtooth', 0.18, 0.11, 0, 220);
+      tone(210, 'sawtooth', 0.28, 0.11, 0.16, 110);
+    }
+  };
+})();
+
+/* ===================== ТЕТРИС (NEON CYBER EDITION) ===================== */
 let tetrisAnimId = null;
 
 function initTetris() {
   const canvas = $('#tetrisCanvas');
   const ctx = canvas.getContext('2d');
+  const nextCanvas = $('#tetrisNextCanvas');
+  const nctx = nextCanvas ? nextCanvas.getContext('2d') : null;
+
   const COLS = 10, ROWS = 20, CELL = canvas.width / COLS;
-  const colors = ['#c9b8e8','#b8e8d5','#b8d8e8','#e8c8d5','#f5e6a8','#d8b8e8','#a8e8c8'];
+  const colors = ['#b5a0e8', '#6dbf9a', '#64b5f6', '#f06292', '#ffd54f', '#ba68c8', '#4dd0e1'];
   const shapes = [
     [[1,1,1,1]], [[1,1],[1,1]], [[0,1,0],[1,1,1]],
     [[1,0,0],[1,1,1]], [[0,0,1],[1,1,1]],
@@ -7978,26 +8333,69 @@ function initTetris() {
   ];
   initQuests('tetris', TETRIS_QUESTS, 'tetrisQuests');
 
-  let board, current, score, lines, record, gameOver, dropInterval, lastTime, running, keyHandler;
+  let board, current, nextPieceObj, score, lines, combo, record, gameOver, dropInterval, lastTime, running, keyHandler;
+  let particles = [];
+  let flashRows = [];
+  let shakeTime = 0;
+
+  function randomPiece() {
+    const idx = Math.floor(Math.random() * shapes.length);
+    const shape = shapes[idx].map(r => r.slice());
+    return {
+      shape,
+      color: colors[idx % colors.length],
+      x: Math.floor((COLS - shape[0].length) / 2),
+      y: 0
+    };
+  }
+
+  function drawNextPreview() {
+    if (!nctx || !nextPieceObj) return;
+    nctx.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
+    const s = nextPieceObj.shape;
+    const bs = 18;
+    const offX = (nextCanvas.width - s[0].length * bs) / 2;
+    const offY = (nextCanvas.height - s.length * bs) / 2;
+    for (let r = 0; r < s.length; r++) {
+      for (let c = 0; c < s[r].length; c++) {
+        if (s[r][c]) drawNeonBlock(nctx, offX + c * bs, offY + r * bs, bs, nextPieceObj.color);
+      }
+    }
+  }
 
   function reset() {
-    board = Array.from({length: ROWS}, () => Array(COLS).fill(0));
-    current = null; score = 0; lines = 0; gameOver = false; dropInterval = 500; running = true;
+    board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+    particles = [];
+    flashRows = [];
+    shakeTime = 0;
+    combo = -1;
+    score = 0;
+    lines = 0;
+    gameOver = false;
+    dropInterval = 500;
+    running = true;
     record = LS.get('mw_tetris_record', 0);
     $('#tetrisRecord').textContent = record;
     $('#tetrisScore').textContent = 0;
     $('#tetrisLines').textContent = 0;
-    newPiece();
+    nextPieceObj = randomPiece();
+    spawnNextPiece();
     lastTime = performance.now();
     cancelAnimationFrame(tetrisAnimId);
     tetrisAnimId = requestAnimationFrame(loop);
   }
-  function newPiece() {
-    const idx = Math.floor(Math.random() * shapes.length);
-    const shape = shapes[idx].map(r => r.slice());
-    current = { shape, color: colors[idx % colors.length], x: Math.floor((COLS - shape[0].length) / 2), y: 0 };
-    if (collision(current, 0, 0)) { gameOver = true; finish(); }
+
+  function spawnNextPiece() {
+    current = nextPieceObj;
+    nextPieceObj = randomPiece();
+    drawNextPreview();
+    if (collision(current, 0, 0)) {
+      gameOver = true;
+      window.ArcadeAudio.gameOver();
+      finish();
+    }
   }
+
   function collision(piece, dx, dy) {
     for (let r = 0; r < piece.shape.length; r++) {
       for (let c = 0; c < piece.shape[r].length; c++) {
@@ -8009,19 +8407,50 @@ function initTetris() {
     }
     return false;
   }
+
   function rotatePiece() {
     if (!current) return;
     const rotated = current.shape[0].map((_, i) => current.shape.map(row => row[i]).reverse());
     const test = { ...current, shape: rotated };
     for (const dx of [0, -1, 1, -2, 2]) {
-      if (!collision(test, dx, 0)) { current.shape = rotated; current.x += dx; return; }
+      if (!collision(test, dx, 0)) {
+        current.shape = rotated;
+        current.x += dx;
+        window.ArcadeAudio.rotate();
+        return;
+      }
     }
   }
-  function movePiece(dx, dy) {
+
+  function movePiece(dx, dy, playSound = false) {
     if (!current) return false;
-    if (!collision(current, dx, dy)) { current.x += dx; current.y += dy; return true; }
+    if (!collision(current, dx, dy)) {
+      current.x += dx;
+      current.y += dy;
+      if (playSound && dx !== 0) window.ArcadeAudio.move();
+      return true;
+    }
     return false;
   }
+
+  function spawnRowParticles(rowIdx, rowColors) {
+    for (let c = 0; c < COLS; c++) {
+      const col = rowColors[c] || '#ffffff';
+      for (let k = 0; k < 4; k++) {
+        particles.push({
+          x: c * CELL + CELL / 2,
+          y: rowIdx * CELL + CELL / 2,
+          vx: (Math.random() - 0.5) * 220,
+          vy: (Math.random() - 0.7) * 220,
+          color: col,
+          size: 3 + Math.random() * 3,
+          life: 0.45 + Math.random() * 0.25,
+          maxLife: 0.7
+        });
+      }
+    }
+  }
+
   function lockPiece() {
     for (let r = 0; r < current.shape.length; r++) {
       for (let c = 0; c < current.shape[r].length; c++) {
@@ -8031,53 +8460,157 @@ function initTetris() {
         }
       }
     }
+
     let cleared = 0;
     for (let r = ROWS - 1; r >= 0; r--) {
       if (board[r].every(v => v)) {
-        board.splice(r, 1); board.unshift(Array(COLS).fill(0));
-        cleared++; r++;
+        spawnRowParticles(r, board[r]);
+        flashRows.push({ y: r * CELL, alpha: 0.85 });
+        board.splice(r, 1);
+        board.unshift(Array(COLS).fill(0));
+        cleared++;
+        r++;
       }
     }
+
     if (cleared) {
-      score += cleared * 10;
+      combo += 1;
+      const comboBonus = combo > 0 ? combo * 5 : 0;
+      score += cleared * 10 + comboBonus;
       lines += cleared;
-      dropInterval = Math.max(120, 500 - lines * 12);
+      dropInterval = Math.max(115, 500 - lines * 12);
       $('#tetrisScore').textContent = score;
       $('#tetrisLines').textContent = lines;
+      window.ArcadeAudio.clearLine(cleared);
+      shakeTime = 0.14;
+
       addQuestProgress('tetris', 'tetrisQuests', 0, cleared);
       addQuestProgress('tetris', 'tetrisQuests', 1, cleared);
       if (score >= 100) addQuestProgress('tetris', 'tetrisQuests', 2, 1);
       if (score >= 300) addQuestProgress('tetris', 'tetrisQuests', 3, 1);
+    } else {
+      combo = -1;
+      window.ArcadeAudio.drop();
     }
-    current = null; newPiece();
+    current = null;
+    spawnNextPiece();
   }
-  function draw() {
-    ctx.fillStyle = '#1a1723'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = 'rgba(255,255,255,.05)';
-    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) ctx.strokeRect(c * CELL, r * CELL, CELL, CELL);
+
+  function drawNeonBlock(context, x, y, size, color, alpha = 1) {
+    context.save();
+    context.globalAlpha = alpha;
+    context.fillStyle = color;
+    context.beginPath();
+    context.roundRect(x + 1.5, y + 1.5, size - 3, size - 3, 5);
+    context.fill();
+
+    // Внутренний стеклянный блик сверху
+    const grad = context.createLinearGradient(x, y, x, y + size);
+    grad.addColorStop(0, 'rgba(255, 255, 255, 0.42)');
+    grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.05)');
+    grad.addColorStop(1, 'rgba(0, 0, 0, 0.25)');
+    context.fillStyle = grad;
+    context.beginPath();
+    context.roundRect(x + 2, y + 2, size - 4, size - 4, 4);
+    context.fill();
+
+    context.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+    context.lineWidth = 1;
+    context.strokeRect(x + 3.5, y + 3.5, size - 7, size - 7);
+    context.restore();
+  }
+
+  function draw(dtSec) {
+    ctx.save();
+    if (shakeTime > 0) {
+      shakeTime = Math.max(0, shakeTime - dtSec);
+      ctx.translate((Math.random() - 0.5) * 5, (Math.random() - 0.5) * 5);
+    }
+
+    // Фон с радиальным градиентом
+    const bg = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    bg.addColorStop(0, '#171422');
+    bg.addColorStop(1, '#211c33');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Сетка
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.045)';
+    ctx.lineWidth = 1;
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
-        if (board[r][c]) {
-          ctx.fillStyle = board[r][c];
-          ctx.beginPath();
-          ctx.roundRect(c * CELL + 1, r * CELL + 1, CELL - 2, CELL - 2, 4);
-          ctx.fill();
-        }
+        ctx.strokeRect(c * CELL, r * CELL, CELL, CELL);
       }
     }
+
+    // Установленные блоки
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        if (board[r][c]) drawNeonBlock(ctx, c * CELL, r * CELL, CELL, board[r][c]);
+      }
+    }
+
+    // Призрак приземления (Ghost Piece) + текущая фигура
     if (current) {
+      let ghostY = current.y;
+      while (!collision(current, 0, ghostY - current.y + 1)) ghostY++;
+
       for (let r = 0; r < current.shape.length; r++) {
         for (let c = 0; c < current.shape[r].length; c++) {
-          if (current.shape[r][c]) {
-            ctx.fillStyle = current.color;
-            ctx.beginPath();
-            ctx.roundRect((current.x + c) * CELL + 1, (current.y + r) * CELL + 1, CELL - 2, CELL - 2, 4);
-            ctx.fill();
-          }
+          if (!current.shape[r][c]) continue;
+          // Контур призрака
+          ctx.save();
+          ctx.strokeStyle = current.color;
+          ctx.globalAlpha = 0.32;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.roundRect((current.x + c) * CELL + 3, (ghostY + r) * CELL + 3, CELL - 6, CELL - 6, 4);
+          ctx.stroke();
+          ctx.restore();
+
+          // Активный блок
+          drawNeonBlock(ctx, (current.x + c) * CELL, (current.y + r) * CELL, CELL, current.color);
         }
       }
     }
+
+    // Вспышки сгоревших линий
+    for (let i = flashRows.length - 1; i >= 0; i--) {
+      const fl = flashRows[i];
+      ctx.fillStyle = `rgba(255, 255, 255, ${fl.alpha})`;
+      ctx.fillRect(0, fl.y, canvas.width, CELL);
+      fl.alpha -= dtSec * 3.2;
+      if (fl.alpha <= 0) flashRows.splice(i, 1);
+    }
+
+    // Частицы взрыва линий
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const pt = particles[i];
+      pt.x += pt.vx * dtSec;
+      pt.y += pt.vy * dtSec;
+      pt.vy += 320 * dtSec;
+      pt.life -= dtSec;
+      if (pt.life <= 0) { particles.splice(i, 1); continue; }
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, pt.life / pt.maxLife);
+      ctx.fillStyle = pt.color;
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Индикатор комбо
+    if (combo > 0) {
+      ctx.fillStyle = '#ffd54f';
+      ctx.font = 'bold 13px sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(`🔥 COMBO ×${combo + 1}`, canvas.width - 10, 22);
+    }
+
+    ctx.restore();
   }
+
   function finish() {
     running = false;
     if (score > record) {
@@ -8085,33 +8618,46 @@ function initTetris() {
       LS.set('mw_tetris_record', record);
       $('#tetrisRecord').textContent = record;
     }
-    draw();
-    ctx.fillStyle = 'rgba(0,0,0,.7)';
+    draw(0);
+    ctx.fillStyle = 'rgba(14, 12, 22, 0.78)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#fff';
     ctx.font = 'bold 26px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Игра окончена', canvas.width/2, canvas.height/2 - 20);
+    ctx.fillText('Игра окончена', canvas.width / 2, canvas.height / 2 - 24);
     ctx.font = '18px sans-serif';
-    ctx.fillText('Счёт: ' + score, canvas.width/2, canvas.height/2 + 15);
-    ctx.fillText('Линий: ' + lines, canvas.width/2, canvas.height/2 + 45);
+    ctx.fillStyle = '#b5a0e8';
+    ctx.fillText('Счёт: ' + score, canvas.width / 2, canvas.height / 2 + 12);
+    ctx.fillStyle = '#6dbf9a';
+    ctx.fillText('Линий: ' + lines, canvas.width / 2, canvas.height / 2 + 42);
   }
+
+  let prevFrame = performance.now();
   function loop(t) {
     if (!running || gameOver) return;
-    const dt = t - lastTime;
-    lastTime = t;
-    if (dt > dropInterval) { if (!movePiece(0, 1)) lockPiece(); lastTime = t; }
-    draw();
+    const dtSec = Math.min(0.05, (t - prevFrame) / 1000);
+    prevFrame = t;
+
+    if (t - lastTime > dropInterval) {
+      if (!movePiece(0, 1, false)) lockPiece();
+      lastTime = t;
+    }
+    draw(dtSec);
     tetrisAnimId = requestAnimationFrame(loop);
   }
+
   keyHandler = e => {
     if (!running || gameOver) return;
-    if (['ArrowLeft','ArrowRight','ArrowDown','ArrowUp',' '].includes(e.key)) e.preventDefault();
-    if (e.key === 'ArrowLeft') movePiece(-1, 0);
-    else if (e.key === 'ArrowRight') movePiece(1, 0);
-    else if (e.key === 'ArrowDown') { if (!movePiece(0, 1)) lockPiece(); }
+    if (['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', ' '].includes(e.key)) e.preventDefault();
+    if (e.key === 'ArrowLeft') movePiece(-1, 0, true);
+    else if (e.key === 'ArrowRight') movePiece(1, 0, true);
+    else if (e.key === 'ArrowDown') { if (!movePiece(0, 1, false)) lockPiece(); }
     else if (e.key === 'ArrowUp') rotatePiece();
-    else if (e.key === ' ') { while (movePiece(0, 1)) {} lockPiece(); }
+    else if (e.key === ' ') {
+      while (movePiece(0, 1, false)) {}
+      shakeTime = 0.1;
+      lockPiece();
+    }
   };
   document.addEventListener('keydown', keyHandler);
   canvas.addEventListener('click', () => { if (running && !gameOver) rotatePiece(); });
@@ -8125,7 +8671,7 @@ function initTetris() {
   };
 }
 
-/* ===================== ЗМЕЙКА ===================== */
+/* ===================== ЗМЕЙКА (NEON GARDEN EDITION) ===================== */
 let snakeAnimId = null;
 
 function initSnake() {
@@ -8143,9 +8689,12 @@ function initSnake() {
   initQuests('snake', SNAKE_QUESTS, 'snakeQuests');
 
   let snake = [];
+  let prevSnake = [];
   let dir = { x: 1, y: 0 };
   let nextDir = { x: 1, y: 0 };
   let food = { x: 0, y: 0 };
+  let goldenFood = null;
+  let particles = [];
   let score = 0;
   let totalApples = LS.get('mw_snake_total_apples', 0);
   let running = true;
@@ -8158,10 +8707,31 @@ function initSnake() {
 
   $('#snakeRecord').textContent = record;
 
+  function spawnEatParticles(gx, gy, color, count = 12) {
+    const cx = gx * CELL + CELL / 2;
+    const cy = gy * CELL + CELL / 2;
+    for (let i = 0; i < count; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const spd = 45 + Math.random() * 110;
+      particles.push({
+        x: cx, y: cy,
+        vx: Math.cos(a) * spd,
+        vy: Math.sin(a) * spd,
+        color,
+        size: 2.5 + Math.random() * 2.5,
+        life: 0.4 + Math.random() * 0.25,
+        maxLife: 0.65
+      });
+    }
+  }
+
   function reset() {
     snake = [{ x: 5, y: 11 }, { x: 4, y: 11 }, { x: 3, y: 11 }];
+    prevSnake = snake.map(s => ({ ...s }));
     dir = { x: 1, y: 0 };
     nextDir = { x: 1, y: 0 };
+    goldenFood = null;
+    particles = [];
     score = 0;
     stepInterval = 130;
     running = true;
@@ -8174,54 +8744,85 @@ function initSnake() {
     cancelAnimationFrame(snakeAnimId);
     snakeAnimId = requestAnimationFrame(loop);
   }
-  function placeFood() {
+
+  function freeCell() {
     let tries = 0;
     while (tries++ < 500) {
       const x = Math.floor(Math.random() * COLS);
       const y = Math.floor(Math.random() * ROWS);
-      if (!snake.some(s => s.x === x && s.y === y)) { food = { x, y }; return; }
+      if (!snake.some(s => s.x === x && s.y === y) && (food.x !== x || food.y !== y)) return { x, y };
     }
-    food = { x: 0, y: 0 };
+    return { x: 0, y: 0 };
   }
+
+  function placeFood() {
+    food = freeCell();
+    if (!goldenFood && Math.random() < 0.28) {
+      const pos = freeCell();
+      goldenFood = { x: pos.x, y: pos.y, ttl: 8.5 };
+    }
+  }
+
   function step() {
+    prevSnake = snake.map(s => ({ ...s }));
     if (!(nextDir.x === -dir.x && nextDir.y === -dir.y)) dir = nextDir;
     const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
     if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) return endGame();
-    const willEat = (head.x === food.x && head.y === food.y);
-    const bodyToCheck = willEat ? snake : snake.slice(0, -1);
+
+    const willEatNormal = (head.x === food.x && head.y === food.y);
+    const willEatGolden = goldenFood && (head.x === goldenFood.x && head.y === goldenFood.y);
+    const bodyToCheck = (willEatNormal || willEatGolden) ? snake : snake.slice(0, -1);
     if (bodyToCheck.some(s => s.x === head.x && s.y === head.y)) return endGame();
+
     snake.unshift(head);
-    if (willEat) {
-      score += 1;
+    prevSnake.unshift({ ...head });
+
+    if (willEatNormal || willEatGolden) {
+      const pts = willEatGolden ? 3 : 1;
+      score += pts;
       totalApples += 1;
       LS.set('mw_snake_total_apples', totalApples);
       $('#snakeScore').textContent = score;
+
       if (score > record) {
         record = score;
         LS.set('mw_snake_record', record);
         $('#snakeRecord').textContent = record;
       }
-      stepInterval = Math.max(70, stepInterval - 3);
-      placeFood();
+
+      if (willEatGolden) {
+        spawnEatParticles(goldenFood.x, goldenFood.y, '#ffd54f', 18);
+        window.ArcadeAudio.goldenEat();
+        goldenFood = null;
+      } else {
+        spawnEatParticles(food.x, food.y, '#ff6b8b', 12);
+        window.ArcadeAudio.eat(score);
+        stepInterval = Math.max(68, stepInterval - 3);
+        placeFood();
+      }
+
       addQuestProgress('snake', 'snakeQuests', 0, 1);
       addQuestProgress('snake', 'snakeQuests', 1, 1);
       addQuestProgress('snake', 'snakeQuests', 2, 1);
       if (snake.length >= 20) addQuestProgress('snake', 'snakeQuests', 3, 1);
     } else {
       snake.pop();
+      prevSnake.pop();
     }
     $('#snakeLen').textContent = snake.length;
   }
+
   function endGame() {
     gameOver = true;
     running = false;
+    window.ArcadeAudio.gameOver();
     if (score > record) {
       record = score;
       LS.set('mw_snake_record', record);
       $('#snakeRecord').textContent = record;
     }
-    draw();
-    ctx.fillStyle = 'rgba(0,0,0,.72)';
+    draw(0, 1);
+    ctx.fillStyle = 'rgba(14, 12, 22, 0.78)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.textAlign = 'center';
     ctx.fillStyle = '#e07a8b';
@@ -8235,64 +8836,161 @@ function initSnake() {
     ctx.fillText('Рекорд: ' + record, canvas.width / 2, canvas.height / 2 + 45);
     ctx.fillText('Нажми «Заново»', canvas.width / 2, canvas.height / 2 + 75);
   }
-  function draw() {
-    ctx.fillStyle = '#1a1723';
+
+  function draw(dtSec, interp = 1) {
+    const tSec = performance.now() / 1000;
+
+    // Глубокий фон поля
+    const bg = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 40, canvas.width / 2, canvas.height / 2, canvas.width * 0.75);
+    bg.addColorStop(0, '#1f1b2e');
+    bg.addColorStop(1, '#14111d');
+    ctx.fillStyle = bg;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = 'rgba(255,255,255,.04)';
-    ctx.lineWidth = 1;
-    for (let c = 0; c <= COLS; c++) {
-      ctx.beginPath(); ctx.moveTo(c * CELL, 0); ctx.lineTo(c * CELL, canvas.height); ctx.stroke();
+
+    // Шахматная подсветка клеток
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        if ((r + c) % 2 === 0) {
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.02)';
+          ctx.fillRect(c * CELL, r * CELL, CELL, CELL);
+        }
+      }
     }
-    for (let r = 0; r <= ROWS; r++) {
-      ctx.beginPath(); ctx.moveTo(0, r * CELL); ctx.lineTo(canvas.width, r * CELL); ctx.stroke();
-    }
+
+    // Пульсирующее яблоко со свечением и листиком
+    const pulse = 1 + Math.sin(tSec * 6) * 0.1;
     const fx = food.x * CELL + CELL / 2;
     const fy = food.y * CELL + CELL / 2;
-    ctx.fillStyle = '#e07a8b';
+
+    ctx.save();
+    ctx.shadowColor = '#ff5c7c';
+    ctx.shadowBlur = 14;
+    ctx.fillStyle = '#ff5c7c';
     ctx.beginPath();
-    ctx.arc(fx, fy, CELL / 2 - 2, 0, Math.PI * 2);
+    ctx.arc(fx, fy, (CELL / 2 - 2.5) * pulse, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,.5)';
+    ctx.restore();
+
+    // Листик и блик яблока
+    ctx.fillStyle = '#6dbf9a';
+    ctx.beginPath();
+    ctx.ellipse(fx + 2, fy - 7, 4, 2, -0.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
     ctx.beginPath();
     ctx.arc(fx - 3, fy - 3, 2, 0, Math.PI * 2);
     ctx.fill();
+
+    // Золотой бонусный плод (если активен)
+    if (goldenFood) {
+      const gx = goldenFood.x * CELL + CELL / 2;
+      const gy = goldenFood.y * CELL + CELL / 2;
+      ctx.save();
+      ctx.shadowColor = '#ffd54f';
+      ctx.shadowBlur = 18;
+      ctx.fillStyle = '#ffd54f';
+      ctx.beginPath();
+      ctx.arc(gx, gy, (CELL / 2 - 2) * (1 + Math.sin(tSec * 9) * 0.14), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Сегменты змейки с плавной интерполяцией и свечением
     for (let i = snake.length - 1; i >= 0; i--) {
-      const s = snake[i];
+      const cur = snake[i];
+      const prv = prevSnake[i] || cur;
+      const ix = prv.x + (cur.x - prv.x) * interp;
+      const iy = prv.y + (cur.y - prv.y) * interp;
+
       const isHead = i === 0;
       const t = i / Math.max(1, snake.length - 1);
-      const r = Math.round(126 + (185 - 126) * t);
-      const g = Math.round(216 + (160 - 216) * t);
-      const b = Math.round(176 + (232 - 176) * t);
-      ctx.fillStyle = `rgb(${r},${g},${b})`;
-      ctx.beginPath();
-      ctx.roundRect(s.x * CELL + 1, s.y * CELL + 1, CELL - 2, CELL - 2, isHead ? 7 : 5);
-      ctx.fill();
+      const r = Math.round(110 + (181 - 110) * t);
+      const g = Math.round(220 + (160 - 220) * t);
+      const b = Math.round(175 + (232 - 175) * t);
+
+      ctx.save();
       if (isHead) {
-        ctx.fillStyle = '#1a1723';
-        const ex = s.x * CELL + CELL / 2;
-        const ey = s.y * CELL + CELL / 2;
-        const off = 4;
+        ctx.shadowColor = 'rgba(110, 220, 175, 0.6)';
+        ctx.shadowBlur = 12;
+      }
+      ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+      const pad = isHead ? 0.5 : 1.5;
+      ctx.beginPath();
+      ctx.roundRect(ix * CELL + pad, iy * CELL + pad, CELL - pad * 2, CELL - pad * 2, isHead ? 8 : 6);
+      ctx.fill();
+      ctx.restore();
+
+      if (isHead) {
+        const cx = ix * CELL + CELL / 2;
+        const cy = iy * CELL + CELL / 2;
+
+        // Раздвоенный красный язычок
+        if (Math.sin(tSec * 8) > 0.2) {
+          ctx.strokeStyle = '#ff6b8b';
+          ctx.lineWidth = 1.6;
+          ctx.beginPath();
+          ctx.moveTo(cx + dir.x * 9, cy + dir.y * 9);
+          ctx.lineTo(cx + dir.x * 15, cy + dir.y * 15);
+          ctx.stroke();
+        }
+
+        // Глаза с белыми белками и зрачками
+        const off = 4.2;
         let ex1, ey1, ex2, ey2;
-        if (dir.x === 1) { ex1 = ex + off; ey1 = ey - off; ex2 = ex + off; ey2 = ey + off; }
-        else if (dir.x === -1) { ex1 = ex - off; ey1 = ey - off; ex2 = ex - off; ey2 = ey + off; }
-        else if (dir.y === 1) { ex1 = ex - off; ey1 = ey + off; ex2 = ex + off; ey2 = ey + off; }
-        else { ex1 = ex - off; ey1 = ey - off; ex2 = ex + off; ey2 = ey - off; }
-        ctx.beginPath(); ctx.arc(ex1, ey1, 2, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(ex2, ey2, 2, 0, Math.PI * 2); ctx.fill();
+        if (dir.x === 1) { ex1 = cx + off; ey1 = cy - off; ex2 = cx + off; ey2 = cy + off; }
+        else if (dir.x === -1) { ex1 = cx - off; ey1 = cy - off; ex2 = cx - off; ey2 = cy + off; }
+        else if (dir.y === 1) { ex1 = cx - off; ey1 = cy + off; ex2 = cx + off; ey2 = cy + off; }
+        else { ex1 = cx - off; ey1 = cy - off; ex2 = cx + off; ey2 = cy - off; }
+
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath(); ctx.arc(ex1, ey1, 2.8, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(ex2, ey2, 2.8, 0, Math.PI * 2); ctx.fill();
+
+        ctx.fillStyle = '#14111d';
+        ctx.beginPath(); ctx.arc(ex1 + dir.x * 0.8, ey1 + dir.y * 0.8, 1.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(ex2 + dir.x * 0.8, ey2 + dir.y * 0.8, 1.5, 0, Math.PI * 2); ctx.fill();
       }
     }
+
+    // Всплеск частиц при поедании фруктов
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const pt = particles[i];
+      pt.x += pt.vx * dtSec;
+      pt.y += pt.vy * dtSec;
+      pt.life -= dtSec;
+      if (pt.life <= 0) { particles.splice(i, 1); continue; }
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, pt.life / pt.maxLife);
+      ctx.fillStyle = pt.color;
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
   }
+
   function loop(t) {
     if (!running) return;
-    const dt = t - lastTime;
+    const dt = Math.min(50, t - lastTime);
+    const dtSec = dt / 1000;
     lastTime = t;
+
     if (!gameOver) {
       timer += dt;
-      if (timer >= stepInterval) { timer = 0; step(); }
+      if (goldenFood) {
+        goldenFood.ttl -= dtSec;
+        if (goldenFood.ttl <= 0) goldenFood = null;
+      }
+      if (timer >= stepInterval) {
+        timer -= stepInterval;
+        step();
+      }
     }
-    draw();
+    const interp = gameOver ? 1 : Math.min(1, timer / stepInterval);
+    draw(dtSec, interp);
     if (!gameOver) snakeAnimId = requestAnimationFrame(loop);
   }
+
   keyHandler = e => {
     if (!running || gameOver) return;
     const k = e.key;
@@ -8331,7 +9029,6 @@ function initSnake() {
     activeGame.cleanup = null;
   };
 }
-
 /* ===================== ФУТБОЛ 1×1 (PRO EDITION) ===================== */
 let footballAnimId = null;
 let footballCleanup = null;
