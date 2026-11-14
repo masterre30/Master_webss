@@ -1509,6 +1509,86 @@ header {
 .game-card.is-tilting {
   transition: transform 0.08s ease-out, box-shadow 0.35s var(--spring), border-color 0.35s ease !important;
 }
+  /* ===================== МОБИЛЬНАЯ ОПТИМИЗАЦИЯ И СЕНСОРНЫЙ ГЕЙМПАД ===================== */
+@media (max-width: 820px) {
+  /* Уменьшаем тяжесть blur на слабых мобильных GPU для плавных 60 FPS */
+  .card, .preview-card, .script-card, .exchange-card, .game-card, .install-box {
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+  .preview-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+  .preview-card { padding: 16px 14px !important; }
+  .games-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+  .game-card {
+    aspect-ratio: auto !important;
+    min-height: 155px;
+    padding: 16px !important;
+  }
+  .game-card .game-icon { font-size: 2.1rem !important; top: 14px !important; right: 14px !important; }
+  .game-card h3 { font-size: 1.1rem !important; }
+  .game-card p { font-size: .8rem !important; }
+  #tanksCanvas, #footballCanvas, #raceCanvas {
+    max-height: 56vh;
+    object-fit: contain;
+  }
+}
+
+/* Универсальный сенсорный контроллер для мобильных устройств */
+.mobile-touch-pad {
+  display: none;
+  width: 100%;
+  max-width: 520px;
+  margin: 12px auto 0;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+@media (pointer: coarse), (max-width: 820px) {
+  .mobile-touch-pad { display: flex; }
+}
+.mtp-dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 48px);
+  grid-template-rows: repeat(3, 48px);
+  gap: 5px;
+}
+.mtp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+  max-width: 190px;
+}
+.mtp-btn {
+  background: var(--surface-2);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  color: var(--text);
+  font-weight: 800;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 0 12px;
+  box-shadow: 0 4px 12px var(--shadow);
+  touch-action: none;
+}
+.mtp-btn:active, .mtp-btn.pressed {
+  background: var(--accent);
+  color: #fff;
+  transform: scale(0.93);
+}
 </style>
 </head>
 <body>
@@ -10159,6 +10239,139 @@ function initFootball() {
       });
     };
   }
+})();
+  /* ===================== PWA ОФЛАЙН-РЕЖИМ + МОБИЛЬНЫЙ СЕНСОРНЫЙ ГЕЙМПАД ===================== */
+(function initMobileAndOffline() {
+  // 1. Динамический Web App Manifest (для установки как приложение на Android/iOS)
+  try {
+    const manifestObj = {
+      name: 'Master.Web — Полезные инструменты и игры',
+      short_name: 'Master.Web',
+      start_url: './index.html',
+      display: 'standalone',
+      background_color: '#1a1723',
+      theme_color: '#9b7ede',
+      icons: [{
+        src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="%239b7ede"/><text x="50" y="68" font-size="56" text-anchor="middle" fill="white">⚡</text></svg>',
+        sizes: '192x192',
+        type: 'image/svg+xml'
+      }]
+    };
+    const mBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/json' });
+    const mLink = document.getElementById('pwaManifestLink');
+    if (mLink) mLink.href = URL.createObjectURL(mBlob);
+  } catch {}
+
+  // 2. Регистрация Service Worker (если открыто по http/https, например с GitHub Pages)
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+
+  // 3. Обработка кнопки «📥 Офлайн» (установка PWA или скачивание единого автономного HTML-файла)
+  let deferredInstallPrompt = null;
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+  });
+
+  const offlineBtn = document.getElementById('offlineSaveBtn');
+  if (offlineBtn) {
+    offlineBtn.addEventListener('click', async () => {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        await deferredInstallPrompt.userChoice;
+        deferredInstallPrompt = null;
+        return;
+      }
+      // Скачиваем полностью автономный HTML-файл на телефон (работает вообще без интернета)
+      try {
+        const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'MasterWeb_Offline.html';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        toast('📥 Файл MasterWeb_Offline.html скачан! Его можно открывать без интернета.');
+      } catch {
+        toast('Открой меню браузера (⋮) → «Добавить на гл. экран» для офлайн-работы');
+      }
+    });
+  }
+
+  // 4. Универсальный сенсорный геймпад (эмулирует нажатие клавиш для Гонки, Тетриса, Змейки, Футбола и Танков)
+  function dispatchKey(type, code, key) {
+    const ev = new KeyboardEvent(type, { code, key, bubbles: true, cancelable: true });
+    document.dispatchEvent(ev);
+  }
+
+  function createTouchPad(gameId, actions) {
+    const win = document.getElementById('game-' + gameId);
+    if (!win || win.querySelector('.mobile-touch-pad')) return;
+
+    const pad = document.createElement('div');
+    pad.className = 'mobile-touch-pad';
+    pad.innerHTML = `
+      <div class="mtp-dpad">
+        <div></div>
+        <button class="mtp-btn" data-code="ArrowUp" data-key="ArrowUp">▲</button>
+        <div></div>
+        <button class="mtp-btn" data-code="ArrowLeft" data-key="ArrowLeft">◀</button>
+        <button class="mtp-btn" data-code="ArrowDown" data-key="ArrowDown">▼</button>
+        <button class="mtp-btn" data-code="ArrowRight" data-key="ArrowRight">▶</button>
+      </div>
+      <div class="mtp-actions">
+        ${actions.map(a => `<button class="mtp-btn" data-code="${a.code}" data-key="${a.key}">${a.label}</button>`).join('')}
+      </div>
+    `;
+    win.appendChild(pad);
+
+    pad.querySelectorAll('.mtp-btn[data-code]').forEach(btn => {
+      const code = btn.dataset.code;
+      const key = btn.dataset.key;
+      const press = e => {
+        e.preventDefault();
+        btn.classList.add('pressed');
+        dispatchKey('keydown', code, key);
+        // Для Танков дублируем WASD
+        if (code === 'ArrowUp') dispatchKey('keydown', 'KeyW', 'w');
+        if (code === 'ArrowDown') dispatchKey('keydown', 'KeyS', 's');
+        if (code === 'ArrowLeft') dispatchKey('keydown', 'KeyA', 'a');
+        if (code === 'ArrowRight') dispatchKey('keydown', 'KeyD', 'd');
+      };
+      const release = e => {
+        e.preventDefault();
+        btn.classList.remove('pressed');
+        dispatchKey('keyup', code, key);
+        if (code === 'ArrowUp') dispatchKey('keyup', 'KeyW', 'w');
+        if (code === 'ArrowDown') dispatchKey('keyup', 'KeyS', 's');
+        if (code === 'ArrowLeft') dispatchKey('keyup', 'KeyA', 'a');
+        if (code === 'ArrowRight') dispatchKey('keyup', 'KeyD', 'd');
+      };
+      btn.addEventListener('touchstart', press, { passive: false });
+      btn.addEventListener('touchend', release, { passive: false });
+      btn.addEventListener('touchcancel', release, { passive: false });
+      btn.addEventListener('mousedown', press);
+      btn.addEventListener('mouseup', release);
+    });
+  }
+
+  createTouchPad('race', [
+    { code: 'ShiftLeft', key: 'Shift', label: '⚡ NITRO' },
+    { code: 'KeyC', key: 'c', label: '📷 Вид' }
+  ]);
+  createTouchPad('tetris', [
+    { code: 'ArrowUp', key: 'ArrowUp', label: '🔄 Поворот' },
+    { code: 'Space', key: ' ', label: '⬇ Сброс' }
+  ]);
+  createTouchPad('snake', []);
+  createTouchPad('football', []);
+  createTouchPad('tanks', [
+    { code: 'Space', key: ' ', label: '🔥 Огонь' },
+    { code: 'ShiftLeft', key: 'Shift', label: '⚡ Boost' },
+    { code: 'KeyE', key: 'e', label: '🎁 Бонус' }
+  ]);
 })();
 </script>
 </body>
